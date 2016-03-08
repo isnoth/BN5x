@@ -22,6 +22,15 @@ class List extends React.Component{
         fontSize: 17
       }
     };
+    console.log(this.props.items)
+    this.props.items.map((children, index) =>{
+      console.log(children)
+
+      children.map((child, index2) =>{
+        console.log(child)
+      })
+    })
+
     var listItems = this.props.items.map((item, index) => {
       return (
         <li key={index} className="list-group-item" style={styles.listGroup}>
@@ -31,7 +40,7 @@ class List extends React.Component{
             onClick={this.props.remove.bind(null, index)}
           />
           <span style={styles.todoItem}>
-            {item}
+            {item.name}
           </span>
         </li>
       )
