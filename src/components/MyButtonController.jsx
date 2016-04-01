@@ -2,7 +2,7 @@ var React = require('react')
 var ListStore = require('../store/ListStore') 
 var MyButton = require('./MyButton')
 var ButtonActions = require('../actions/ButtonActions')
-var FirebaseRef = require('../utils/firebaseUtil')
+//var FirebaseRef = require('../utils/firebaseUtil')
 
 
 var MyButtonController = React.createClass({
@@ -15,6 +15,12 @@ var MyButtonController = React.createClass({
 
   componentDidMount: function(){
     ListStore.addChangeListener(this._onChange)
+    ListStore.addFirebaseListener("https://thisisatestapp.firebaseio.com/items/")
+  },
+
+  componentWillUnmount: function() {
+    ListStore.removeChangeListener(this._onChange);
+    ListStore.removeFirebaseListner()
   },
 
   createNewItem: function(){

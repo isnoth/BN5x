@@ -2,6 +2,10 @@ var Firebase = require('firebase')
 var ListStore = require('../store/ListStore')
 var ButtonActions = require('../actions/ButtonActions')
 
+
+var fb = function(url){
+}
+
 var ref = new Firebase('https://thisisatestapp.firebaseio.com/items/');
 console.log(ref)
 ref.on('value', function(dataSnapshot) {
