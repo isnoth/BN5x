@@ -7,6 +7,7 @@ var ListStore = assign({}, EventEmitter.prototype,  {
   items : [1,2,3,4,5],
 
   getAll: function(){
+    console.log('getAll:', this.items)
     return this.items
   },
 
@@ -28,7 +29,8 @@ var ListStore = assign({}, EventEmitter.prototype,  {
 
   addFirebaseListener: function(url){
     var that= this
-    this.ref = new Firebase('https://thisisatestapp.firebaseio.com/items/');
+    //this.ref = new Firebase('https://thisisatestapp.firebaseio.com/items/');
+    this.ref = new Firebase('https://burning-torch-9051.firebaseio.com/notes/users/simplelogin:f03ad24b-e53c-4a0b-aceb-ee09655742c8/files/BN-1457183852775-qAKrG/nodes/')
     this.ref.on('value', function(dataSnapshot) {
       var items = []
       dataSnapshot.forEach(function(childSnapshot){
@@ -38,7 +40,7 @@ var ListStore = assign({}, EventEmitter.prototype,  {
         console.log(item)
 
         //ButtonActions.addNewItem(item.text)
-        items.push(item.text);
+        items.push(item);
       }.bind(this));
 
       that.items = items
