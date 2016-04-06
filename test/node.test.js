@@ -6,7 +6,6 @@ import TestNode from '../src/components/MyButton';
 import {Node} from "../src/utils/common"
 //import {getRoot} from "../src/components/MyButton"
 
-
 describe.skip('Shallow Rendering', function () {
   it('Todo item should not have todo-done class', function () {
     const nodes = [{id: 'BN1', content: "taobao"}, {id: "root"}]
@@ -22,22 +21,24 @@ describe.skip('Shallow Rendering', function () {
 
 describe('TestNode', function () {
   it('getRoot() get root should return ok', function () {
-    const nodes = [{id: 'BN1', content: "taobao"}, {id: "root"}]
+    const nodes = [
+      {id: 'BN1', content: "taobao"},
+      {id: 'BN2', content: "taobao"},
+      {id: 'BN3', content: "taobao"}, 
+      {id: "root"}, 
+      {id: 'BNx', children:["BN1","BN2",'BN3']}
+    ]
     //const nodeItm = shallowRender(Node, {nodes: nodes});
     //console.log("nodeItm: ", nodeItm)
     var node = new Node(nodes)
-    console.log(node.root())
-    console.log(node.getbyName('BN1'))
-    //console.log(node)
-    //node._lNodes = node
     //console.log(node.root())
+    //console.log(node.getbyName('BN1'))
+    //console.log(node.getChildren("BNx"))
 
+    expect(node.root().id).to.equal("root")
+    expect(node.getbyName("BN1").id).to.equal("BN1")
 
-    
-    //var root = getRoot(nodes)
-    //console.log(getRoot)
-    //console.log(root)
-
-    //expect(nodeItm.props.children[0].props.className.indexOf('todo-done')).to.equal(-1);
+    expect(node.getChildren("BNx").length).to.equal(3)
+    expect(node.getChildren("BNx")[2].id).to.equal('BN3')
   });
 });

@@ -4,7 +4,8 @@ var MyButton = require('./MyButton')
 var ButtonActions = require('../actions/ButtonActions')
 //var FirebaseRef = require('../utils/firebaseUtil')
 var TestTree = require("./TestTree")
-var TestNode = require('./TestNode')
+var RootNode = require('./TestNode')
+//import {RootNode} from "./TestNode"
 
 var MyButtonController = React.createClass({
   getInitialState: function(){
@@ -60,7 +61,7 @@ var MyButtonController = React.createClass({
           onClick={this.createNewItem}
         />
         {/*<TestTree item={data.item}/>*/}
-        {<TestNode nodes={nodes}/>}
+        {<RootNode nodes={this.state.items}/>}
       </div>
     ) } }) 
 module.exports = MyButtonController

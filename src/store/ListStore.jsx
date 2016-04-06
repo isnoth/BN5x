@@ -4,7 +4,8 @@ var assign = require('object-assign')
 var Firebase = require('firebase')
 
 var ListStore = assign({}, EventEmitter.prototype,  {
-  items : [1,2,3,4,5],
+  //items : [1,2,3,4,5],
+  items : [],
 
   getAll: function(){
     console.log('getAll:', this.items)

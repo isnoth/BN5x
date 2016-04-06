@@ -4,7 +4,7 @@
     }
 
     root(){
-      console.log(this._lNodes)
+      //console.log(this._lNodes)
       var root = this._lNodes.filter(function(itm){
         return itm.id == 'root'
       })
@@ -28,13 +28,22 @@
       }
     }
 
-    getChildren(node, l_vm){
-      if(!node.children){
+    getChildren(idName){
+      
+      var that = this
+      if(!this.getbyName(idName)){
         return []
       }else{
-        node.children.map(function(cid){
-          cid.find()
-        })
+        var l = []
+        if (this.getbyName(idName).children == null){
+          return []
+        }else{
+          this.getbyName(idName).children.map(function(cid){
+            //console.log(cid)
+            l.push(that.getbyName(cid))
+          })
+          return l
+        }
       }
     }
   }
