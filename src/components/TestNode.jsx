@@ -1,5 +1,6 @@
 import {Node} from "../utils/common"
 var React = require('react')
+import {Glyphicon} from "react-bootstrap"
 
 
 var TestNode = React.createClass({
@@ -12,18 +13,24 @@ var TestNode = React.createClass({
     //console.log(node)
     var that = this
     var node = new Node(this.props.nodes)
+    var thisnode = node.getbyName(this.props.id)
+    var collapsed = thisnode.collapsed
+
+
     var children = node.getChildren(this.props.id).map(function(children){
-      return <li>
+      return <div className="tree-node-child-list">
         <TestNode nodes={that.props.nodes} id={children.id} />
-      </li>
+      </div>
     })
 
     return (
       <div>
-        {/*this.props.id*/}
-        {node.getbyName(this.props.id).content}
+        <div className="tree-node-icon-container">
+          <Glyphicon glyph={collapsed==false?"minus":"plus"}/>
+        </div>
+        <textarea rows={1} className="tree-textarea" cols={60} value={thisnode.content}></textarea>
         <ul>
-          {children}
+          {collapsed==false?children:null}
         </ul>
       </div>
     )
