@@ -32,17 +32,17 @@ export default class Articles extends Component {
 						cancel={p.cancelEdit.bind(this, qid)}
 						submit={p.submitEdit.bind(this, qid)}
 						delete={p.deleteArticle.bind(this, qid)}
-						mayedit={p.auth.uid === article.uid}
+						//mayedit={p.auth.uid === article.uid}
 					/>
 				);
 			});
 		}
 		return (
 			<div className="articleslist">
-				{p.auth.uid ? <form onSubmit={this.newArticle}>
+				<form onSubmit={this.newArticle}>
 					<input ref="newarticle" placeholder="write something clever!"/>
 					<button type="submit" disabled={p.articles.submittingnew}>{p.articles.submittingnew ? 'Submitting...' : 'Submit'}</button>
-				</form> : <p>Log in to add a new article of your own!</p>}
+				</form>
 				{p.articles.hasreceiveddata ? rows : 'Loading articles...'}
 			</div>
 		);
@@ -52,7 +52,7 @@ export default class Articles extends Component {
 const mapStateToProps = (appState) => {
 	return {
 		articles: appState.articles,
-		auth: appState.auth
+		//auth: appState.auth
 	};
 };
 

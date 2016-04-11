@@ -1,6 +1,6 @@
 export default {
 	// MISC
-	FIREBASE: 'https://brilliant-inferno-6675.firebaseio.com',
+	FIREBASE: 'https://thisisatestapp.firebaseio.com/items/testx/',
 
 	// UI FEEDBACK ACTIONS
 	DISPLAY_ERROR: 'DISPLAY_ERROR',

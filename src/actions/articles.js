@@ -35,8 +35,8 @@ const articlesActions = {
 	submitArticleEdit(qid, content) {
 		return (dispatch, getState) => {
 			const state = getState();
-			const username = state.auth.username;
-			const uid = state.auth.uid;
+			const username = 'test username'
+			const uid = '12345'
 			const error = false;
 			if (error) {
 				dispatch({ type: C.DISPLAY_ERROR, error });
@@ -56,8 +56,8 @@ const articlesActions = {
 	submitNewArticle(content) {
 		return (dispatch, getState) => {
 			const state = getState();
-			const username = state.auth.username;
-			const uid = state.auth.uid;
+			const username = 'test username'
+			const uid = '12345'
 			const error = false;
 			if (error) {
 				dispatch({ type: C.DISPLAY_ERROR, error });

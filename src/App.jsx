@@ -8,7 +8,6 @@ import Articles from './pages/articles';
 
 export class App extends Component {
 	componentWillMount() {
-		store.dispatch(actions.startListeningToAuth());
 		store.dispatch(actions.startListeningToArticles());
 	}
 	render() {
