@@ -33,6 +33,10 @@
     "webpack": "^1.12.14"
   },
   "dependencies": {
-    "react-bootstrap": "^0.28.5"
+    "react-bootstrap": "^0.28.5",
+    "react-redux": "^4.4.2",
+    "react-router": "^2.0.1",
+    "redux": "^3.4.0",
+    "redux-thunk": "^2.0.1"
   }
 }
