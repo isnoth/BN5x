@@ -82,7 +82,7 @@ const articlesActions = {
   testPlusTomato(qid, content){
     return (dispatch, getState) =>{
     console.log("content:", content)
-    articlesRef.child(qid).set({ content,  username:"test", uid:"12345", tomato_total: content+1, tomato_passed: content }, (error2) => {
+    articlesRef.child(qid).set({ content: content.a,  username:"test", uid:"12345", tomato_total: content.b+1, tomato_passed: content.b }, (error2) => {
       console.log("testPlusTomato")
       })
     }

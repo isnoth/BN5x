@@ -15,7 +15,7 @@ class Article extends Component {
 
   tomatoPlue(e){
     console.log('this.refs:', this.refs)
-    this.props.test(parseInt(this.refs.tomato.innerText), this.refs.content)
+    this.props.test({a:this.refs.content.innerText, b:parseInt(this.refs.tomato.innerText)})
 		e.preventDefault();
   }
 
