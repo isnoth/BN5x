@@ -28,10 +28,19 @@ class Article extends Component {
 		} else {
 			button = <span><button onClick={p.edit}>Edit</button><button onClick={p.delete}>Delete</button></span>;
 		}
+
+
+    let tomatoButton =(
+      <span>
+        <button onClick={p.test}>+</button>
+        <button>-</button>
+      </span>
+    )
 		return (
 			<div className="article">
 				<span className="author">{p.article.username + ' said: '}</span>
-				{p.article.content} {button}
+				{p.article.content} {button} 
+        <span ref="tomato">{p.article.tomato_total}</span> {' '}  {tomatoButton} {p.article.tomato_passed}
 			</div>
 		);
 	}

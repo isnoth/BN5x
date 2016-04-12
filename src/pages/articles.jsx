@@ -32,7 +32,8 @@ export default class Articles extends Component {
 						cancel={p.cancelEdit.bind(this, qid)}
 						submit={p.submitEdit.bind(this, qid)}
 						delete={p.deleteArticle.bind(this, qid)}
-						//mayedit={p.auth.uid === article.uid}
+            test={p.testPlusTomato.bind(this,qid)}
+						mayedit={true}
 					/>
 				);
 			});
@@ -62,7 +63,8 @@ const mapDispatchToProps = (dispatch) => {
 		startEdit(qid) { dispatch(actions.startArticleEdit(qid)); },
 		cancelEdit(qid) { dispatch(actions.cancelArticleEdit(qid)); },
 		submitEdit(qid, content) { dispatch(actions.submitArticleEdit(qid, content)); },
-		deleteArticle(qid) { dispatch(actions.deleteArticle(qid)); }
+		deleteArticle(qid) { dispatch(actions.deleteArticle(qid)); },
+    testPlusTomato(qid) {dispatch(actions.testPlusTomato(qid, content))}
 	};
 };
 

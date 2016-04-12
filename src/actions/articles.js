@@ -53,17 +53,21 @@ const articlesActions = {
 			}
 		};
 	},
+
 	submitNewArticle(content) {
 		return (dispatch, getState) => {
 			const state = getState();
 			const username = 'test username'
 			const uid = '12345'
 			const error = false;
+      const tomato_total =10;
+      const tomato_passed = 1;
+
 			if (error) {
 				dispatch({ type: C.DISPLAY_ERROR, error });
 			} else {
 				dispatch({ type: C.AWAIT_NEW_ARTICLE_RESPONSE });
-				articlesRef.push({ content, username, uid }, (error2) => {
+				articlesRef.push({ content, username, uid , tomato_total, tomato_passed }, (error2) => {
 					dispatch({ type: C.RECEIVE_NEW_ARTICLE_RESPONSE });
 					if (error2) {
 						dispatch({ type: C.DISPLAY_ERROR, error: 'Submission failed! ' + error });
@@ -73,7 +77,15 @@ const articlesActions = {
 				});
 			}
 		};
-	}
+	},
+
+  testPlusTomato(qid, content, tomato){
+    console.log()
+    articlesRef.child(qid).set({ content, username:"test", uid:"12345", tomato_total: tomato_total+1, tomato_passed }, (error2) => {
+      console.log("testPlusTomato")
+      })
+  },
+
 };
 
 export default articlesActions;
