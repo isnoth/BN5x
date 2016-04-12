@@ -1,6 +1,6 @@
 export default {
 	// MISC
-	FIREBASE: 'https://thisisatestapp.firebaseio.com/items/testx/',
+	FIREBASE: 'https://thisisatestapp.firebaseio.com/items/test1/',
 
 	// UI FEEDBACK ACTIONS
 	DISPLAY_ERROR: 'DISPLAY_ERROR',

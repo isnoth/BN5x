@@ -64,7 +64,7 @@ const mapDispatchToProps = (dispatch) => {
 		cancelEdit(qid) { dispatch(actions.cancelArticleEdit(qid)); },
 		submitEdit(qid, content) { dispatch(actions.submitArticleEdit(qid, content)); },
 		deleteArticle(qid) { dispatch(actions.deleteArticle(qid)); },
-    testPlusTomato(qid) {dispatch(actions.testPlusTomato(qid, content))}
+    testPlusTomato(qid, content) {dispatch(actions.testPlusTomato(qid, content))}
 	};
 };
 

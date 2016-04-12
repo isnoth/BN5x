@@ -5,12 +5,20 @@ class Article extends Component {
 	constructor() {
 		super();
 		this.submit = this.submit.bind(this);
+    this.tomatoPlue = this.tomatoPlue.bind(this);
 	}
 	submit(e) {
 		this.props.submit(this.refs.field.value);
 		this.refs.field.value = '';
 		e.preventDefault();
 	}
+
+  tomatoPlue(e){
+    console.log('this.refs:', this.refs)
+    this.props.test(parseInt(this.refs.tomato.innerText), this.refs.content)
+		e.preventDefault();
+  }
+
 	render() {
 		const p = this.props;
 		let button;
@@ -30,16 +38,19 @@ class Article extends Component {
 		}
 
 
+
     let tomatoButton =(
       <span>
-        <button onClick={p.test}>+</button>
+        <button onClick={this.tomatoPlue}>+</button>
         <button>-</button>
       </span>
     )
+
+
 		return (
 			<div className="article">
 				<span className="author">{p.article.username + ' said: '}</span>
-				{p.article.content} {button} 
+				<span ref="content" >{p.article.content}</span> {button} 
         <span ref="tomato">{p.article.tomato_total}</span> {' '}  {tomatoButton} {p.article.tomato_passed}
 			</div>
 		);
