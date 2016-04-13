@@ -264,3 +264,20 @@ textarea:focus{
 .mosaic-tile {
   width: 100%;
 }
+
+.content {
+  width: 200px;
+  display:inline
+}
+
+.tomatos {
+  width: 200px;
+  display:inline
+}
+
+.pomodario {
+  width: 400px;
+  display:inline
+}
+
+

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import {Col, Input, Button, ProgressBar } from "react-bootstrap"
+import Pomodario from './pomodario';
 import C from '../../constants';
 
 
@@ -88,6 +90,9 @@ class Article extends Component {
 				<button type="submit" onClick={this.submit}>Submit</button>
 			</form>);
 		}
+
+
+
 		if (!p.mayedit) {
 			button = '';
 		} else if (p.state === C.SUBMITTING_ARTICLE) {
@@ -97,15 +102,20 @@ class Article extends Component {
 		}
 
 
-
 		return (
 			<div className="article">
-				<span className="author">{p.article.username + ' said: '}</span>
-				<span ref="content">{p.article.content}</span> {button} 
-        <Tomato 
-          test={this.props.test}
-          article={p.article}
-        />
+        <div className="content">
+				  <span ref="content">{p.article.content}</span> {button} 
+        </div>
+        <div className="tomatos">
+          <Tomato 
+            test={this.props.test}
+            article={p.article}
+          />
+        </div>
+        <div className="pomodario">
+          <Pomodario/>
+        </div>
 			</div>
 		);
 	}

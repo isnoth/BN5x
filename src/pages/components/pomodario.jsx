@@ -1,5 +1,6 @@
-import React, from 'react';
-improt {Col, Input, Button, ProgressBar } from "react-bootstrap"
+import React from 'react';
+import {Col, Input, Button, ProgressBar } from "react-bootstrap"
+var Notify = require('notifyjs');
 
 
 var LaterApp = React.createClass({
@@ -36,8 +37,6 @@ var LaterApp = React.createClass({
   },
   
   render: function(){
-    var ProgressBar = ReactBootstrap.ProgressBar
-    var Col = ReactBootstrap.Col
     var remain = this.state.timer - this.state.count
 
     return (
@@ -114,9 +113,6 @@ var TestNotify= React.createClass({
     })
   },
   render: function(){
-    var Button = ReactBootstrap.Button
-    var Input = ReactBootstrap.Input
-    var Col = ReactBootstrap.Col
 
     if (this.state.edit){
       return (

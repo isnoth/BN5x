@@ -29,6 +29,11 @@ export default (currentstate, action) => {
 			newstate = Object.assign({}, currentstate);
 			newstate.states[action.qid] = C.SUBMITTING_ARTICLE;
 			return newstate;
+    case C.CHANGE_STATE_POMODARIO:
+			newstate = Object.assign({}, currentstate);
+			newstate.states[action.qid].showPomodario = !newstate.states[action.qid].showPomodario 
+			return newstate;
+
 		default: return currentstate || initialState.articles;
 	}
 };

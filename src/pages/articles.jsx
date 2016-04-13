@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import actions from '../actions';
 import Article from './components/article';
 
+
 export default class Articles extends Component {
 	constructor() {
 		super();
@@ -23,6 +24,7 @@ export default class Articles extends Component {
 				const article = p.articles.data[qid];
 				const articlestate = p.articles.states[qid];
 				return (
+          <li>
 					<Article
 						key={qid}
 						article={article}
@@ -35,6 +37,7 @@ export default class Articles extends Component {
             test={p.testPlusTomato.bind(this,qid)}
 						mayedit={true}
 					/>
+          </li>
 				);
 			});
 		}

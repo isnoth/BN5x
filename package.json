@@ -33,6 +33,7 @@
     "webpack": "^1.12.14"
   },
   "dependencies": {
+    "notifyjs": "^1.3.0",
     "react-bootstrap": "^0.28.5",
     "react-redux": "^4.4.2",
     "react-router": "^2.1.1",

@@ -15,6 +15,7 @@ export default {
 		hasreceiveddata: false,
 		submittingnew: false,
 		states: {}, // articles UI state
-		data: {} // articles data
+		data: {}, // articles data
+    showPomodario: false //tells ui if pomodario panel need be shown
 	}
 };
