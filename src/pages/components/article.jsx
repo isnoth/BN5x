@@ -1,11 +1,73 @@
 import React, { Component } from 'react';
 import C from '../../constants';
 
+
+class Tomato extends Component{
+	constructor() {
+		super();
+    this.tomatoPlue = this.tomatoPlue.bind(this);
+    this.tomatoMinus = this.tomatoMinus.bind(this);
+    this.tomatoActualPlus = this.tomatoActualPlus.bind(this);
+    this.tomatoActualMinus = this.tomatoActualMinus.bind(this);
+	}
+
+  tomatoPlue(e){
+    console.log('this.refs:', this.refs)
+    this.props.test({a: this.props.article.content, b:this.props.article.tomato_total+1, c: this.props.article.tomato_passed})
+		e.preventDefault();
+  }
+
+  tomatoMinus(e){
+    console.log('this.refs:', this.refs)
+    this.props.test({a: this.props.article.content, b:this.props.article.tomato_total-1, c: this.props.article.tomato_passed})
+		e.preventDefault();
+  }
+
+  tomatoActualPlus(e){
+    console.log('this.refs:', this.refs)
+    this.props.test({a: this.props.article.content, b:this.props.article.tomato_total, c: this.props.article.tomato_passed+1})
+		e.preventDefault();
+  }
+
+  tomatoActualMinus(e){
+    console.log('this.refs:', this.refs)
+    this.props.test({a: this.props.article.content, b:this.props.article.tomato_total, c: this.props.article.tomato_passed-1})
+		e.preventDefault();
+  }
+
+  render(){
+		const p = this.props;
+
+    let tomatoButton =(
+      <span>
+        <button onClick={this.tomatoPlue}>+</button>
+        <button onClick={this.tomatoMinus}>-</button>
+      </span>
+    )
+
+    let tomatoActualButton =(
+      <span>
+        <button onClick={this.tomatoActualPlus}>+</button>
+        <button onClick={this.tomatoActualMinus}>-</button>
+      </span>
+    )
+
+    return (
+      <span>
+        <span ref="tomato">{p.article.tomato_total}</span> {' '} {tomatoButton}
+        <span ref="tomato_actual"> {p.article.tomato_passed}</span> {' '} {tomatoActualButton}
+      </span>
+    )
+  }
+}
+
+
+
+
 class Article extends Component {
 	constructor() {
 		super();
 		this.submit = this.submit.bind(this);
-    this.tomatoPlue = this.tomatoPlue.bind(this);
 	}
 	submit(e) {
 		this.props.submit(this.refs.field.value);
@@ -13,11 +75,8 @@ class Article extends Component {
 		e.preventDefault();
 	}
 
-  tomatoPlue(e){
-    console.log('this.refs:', this.refs)
-    this.props.test({a:this.refs.content.innerText, b:parseInt(this.refs.tomato.innerText)})
-		e.preventDefault();
-  }
+
+
 
 	render() {
 		const p = this.props;
@@ -39,19 +98,14 @@ class Article extends Component {
 
 
 
-    let tomatoButton =(
-      <span>
-        <button onClick={this.tomatoPlue}>+</button>
-        <button>-</button>
-      </span>
-    )
-
-
 		return (
 			<div className="article">
 				<span className="author">{p.article.username + ' said: '}</span>
-				<span ref="content" >{p.article.content}</span> {button} 
-        <span ref="tomato">{p.article.tomato_total}</span> {' '}  {tomatoButton} {p.article.tomato_passed}
+				<span ref="content">{p.article.content}</span> {button} 
+        <Tomato 
+          test={this.props.test}
+          article={p.article}
+        />
 			</div>
 		);
 	}
