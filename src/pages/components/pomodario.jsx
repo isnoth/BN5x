@@ -41,7 +41,7 @@ var LaterApp = React.createClass({
 
     return (
       <div> 
-        <Col xs={3}>
+        <Col xs={4}>
           <ProgressBar active 
             now={(this.state.count/ this.state.timer)*100}
           />
@@ -123,13 +123,13 @@ var TestNotify= React.createClass({
     }else{
       return (
         <div >
-          <Col xs={1}>
+          <Col xs={2}>
             <Input type="text" 
                    value={this.state.min} 
                    onChange = {this.changeMin}
                    placeholder="minute"/> 
           </Col>
-          <Col xs={1}>
+          <Col xs={2}>
             <Input type="text" 
                    value={this.state.sec} 
                    onChange = {this.changeSec}

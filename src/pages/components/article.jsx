@@ -114,7 +114,7 @@ class Article extends Component {
           />
         </div>
         <div className="pomodario">
-          <Pomodario/>
+          <button onClick={p.toglePomodario}>POMODARIO</button>
         </div>
 			</div>
 		);

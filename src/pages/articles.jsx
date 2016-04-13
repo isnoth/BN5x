@@ -35,6 +35,7 @@ export default class Articles extends Component {
 						submit={p.submitEdit.bind(this, qid)}
 						delete={p.deleteArticle.bind(this, qid)}
             test={p.testPlusTomato.bind(this,qid)}
+            toglePomodario={p.toglePomodario.bind(this,qid)}
 						mayedit={true}
 					/>
           </li>
@@ -67,7 +68,8 @@ const mapDispatchToProps = (dispatch) => {
 		cancelEdit(qid) { dispatch(actions.cancelArticleEdit(qid)); },
 		submitEdit(qid, content) { dispatch(actions.submitArticleEdit(qid, content)); },
 		deleteArticle(qid) { dispatch(actions.deleteArticle(qid)); },
-    testPlusTomato(qid, content) {dispatch(actions.testPlusTomato(qid, content))}
+    testPlusTomato(qid, content) {dispatch(actions.testPlusTomato(qid, content))},
+    toglePomodario(qid, content) {dispatch(actions.toglePomodario(qid, content))}
 	};
 };
 
