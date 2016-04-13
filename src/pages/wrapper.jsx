@@ -5,6 +5,7 @@ contained in `this.props.children` and rendered out.
 
 import React, { Component } from 'react';
 import Feedbackpanel from './components/feedbackpanel';
+import Pomodario from "./components/pomodario"
 
 export default class Wrapper extends Component {
 	render() {
@@ -13,6 +14,7 @@ export default class Wrapper extends Component {
 				<div className="center">
 					<Feedbackpanel />
 					{this.props.children}
+          <Pomodario />
 				</div>
 			</div>
 		);

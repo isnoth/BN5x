@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {Col, Input, Button, ProgressBar } from "react-bootstrap"
 var Notify = require('notifyjs');
 
@@ -113,6 +114,12 @@ var TestNotify= React.createClass({
     })
   },
   render: function(){
+    let p = this.props
+
+    if (!p.pomodario){ //not show pomotoapp
+      return <span></span>
+    }
+    
 
     if (this.state.edit){
       return (
@@ -142,4 +149,19 @@ var TestNotify= React.createClass({
   }
 })
 
-export default TestNotify;
+//export default TestNotify;
+//
+//
+//
+//
+const mapStateToProps = (appState) => {
+	return { pomodario: appState.pomodario };
+};
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		//dismissFeedback(n) { dispatch(actions.dismissFeedback(n)); }
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TestNotify);

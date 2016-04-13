@@ -9,13 +9,6 @@ export default (currentstate=false, action) => {
       return false
     case C.TOGLE_POMODARIO:
       return !currentstate
-    /*
-      if (currentstate == false){
-        return true 
-      }else{
-        return false
-      }
-      */
     default:
       return false
   }
