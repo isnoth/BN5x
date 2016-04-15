@@ -95,10 +95,6 @@ const articlesActions = {
     }
   },
 
-
-
-
-
 };
 
 export default articlesActions;
