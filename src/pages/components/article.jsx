@@ -11,6 +11,7 @@ class Tomato extends Component{
     this.tomatoMinus = this.tomatoMinus.bind(this);
     this.tomatoActualPlus = this.tomatoActualPlus.bind(this);
     this.tomatoActualMinus = this.tomatoActualMinus.bind(this);
+    this.toglePomodario = this.toglePomodario.bind(this);
 	}
 
   tomatoPlue(e){
@@ -27,14 +28,20 @@ class Tomato extends Component{
 
   tomatoActualPlus(e){
     console.log('this.refs:', this.refs)
-    this.props.test({a: this.props.article.content, b:this.props.article.tomato_total, c: this.props.article.tomato_passed+1})
+    this.props.test({type: "PLUS"})
 		e.preventDefault();
   }
 
   tomatoActualMinus(e){
     console.log('this.refs:', this.refs)
+    //this.props.test({a: this.props.article.content, b:this.props.article.tomato_total, c: this.props.article.tomato_passed-1})
     this.props.test({a: this.props.article.content, b:this.props.article.tomato_total, c: this.props.article.tomato_passed-1})
 		e.preventDefault();
+  }
+
+  toglePomodario(e){
+    console.log('this.refs:', this.refs)
+    this.props.toglePomodario('reserve')
   }
 
   render(){
@@ -58,6 +65,9 @@ class Tomato extends Component{
       <span>
         <span ref="tomato">{p.article.tomato_total}</span> {' '} {tomatoButton}
         <span ref="tomato_actual"> {p.article.tomato_passed}</span> {' '} {tomatoActualButton}
+        <span className="pomodario">
+          <button onClick={this.toglePomodario}>POMODARIO</button>
+        </span>
       </span>
     )
   }
@@ -110,11 +120,9 @@ class Article extends Component {
         <div className="tomatos">
           <Tomato 
             test={this.props.test}
+            toglePomodario = {this.props.toglePomodario}
             article={p.article}
           />
-        </div>
-        <div className="pomodario">
-          <button onClick={p.toglePomodario}>POMODARIO</button>
         </div>
 			</div>
 		);

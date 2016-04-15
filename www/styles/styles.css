@@ -272,13 +272,9 @@ textarea:focus{
 
 .tomatos {
   width: 200px;
-  display:inline
+  display:inline;
 }
 
-.pomodario- {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  width: 600px;
-  background-color: white;
+.pomodario {
+  /*float: left;*/
 }

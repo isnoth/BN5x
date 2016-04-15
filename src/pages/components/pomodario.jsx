@@ -116,10 +116,9 @@ var TestNotify= React.createClass({
   render: function(){
     let p = this.props
 
-    if (!p.pomodario){ //not show pomotoapp
+    if (!p.pomodario.toggle){ //not show pomotoapp
       return <span></span>
     }
-    
 
     if (this.state.edit){
       return (
