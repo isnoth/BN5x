@@ -135,10 +135,12 @@ var TestNotify= React.createClass({
   render: function(){
     let p = this.props
 
+    /*
+    console.log(p.pomodario.toggle)
     if (!p.pomodario.toggle){ //not show pomotoapp
-      this.onInit.bind(this)
       return <span></span>
     }
+    */
 
     if (this.state.edit){
       return (
@@ -180,7 +182,7 @@ const mapDispatchToProps = (dispatch) => {
 		onTimeOut(qid) { 
       console.log('disp=>', qid)
       dispatch(actions.testPlusTomato(qid, {TYPE: "PLUS"}));
-      dispatch(actions.toglePomodarioOff(qid, "reserve"));
+      //dispatch(actions.toglePomodarioOff(qid, "reserve"));
       dispatch(actions.setPomodarioDone(qid, "reserve"));
     }
 	};

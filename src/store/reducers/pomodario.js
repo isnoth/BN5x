@@ -1,7 +1,7 @@
 import C from '../../constants';
 import initialState from '../initialstate';
 
-export default (currentstate={toggle:false, refkey:null}, action) => {
+export default (currentstate={toggle: true, refkey:null}, action) => {
   console.log('[pomodario action]: ', action)
 
   switch (action.type){
@@ -15,6 +15,6 @@ export default (currentstate={toggle:false, refkey:null}, action) => {
     case C.CHANGE_REF_KEY:
       return Object.assign({}, currentstate, {refkey: action.data})
     default:
-      return false
+      return currentstate
   }
 }
