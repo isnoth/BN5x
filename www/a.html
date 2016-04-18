@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>D3 Example</title>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+    <script src="/bower_components/d3/d3.min.js"></script>
     <script src="/bower_components/firebase/firebase.js"></script>
   </head>
   <body>
@@ -51,12 +51,30 @@
         return d;
       }
 
+      function toDay(l){
+      }
+
+
       
       var url = 'https://thisisatestapp.firebaseio.com/items/test4/'
       var ref = new Firebase(url).child('pomodarios'); 
       ref.once("value", function(snapshoot){
         console.log(snapshoot.val())
         var data = snapshoot.val()
+
+        var dataArray = Object.keys(data).map(function(key){
+          return data[key]
+        })
+
+        console.log("dataArray is:", dataArray)
+        console.log(dataArray.length)
+
+        filterData = dataArray.filter(function(each){
+          return ((each.date != undefined) && (each.qid != undefined) )
+        })
+
+        console.log("filterData:", filterData)
+        console.log(filterData.length)
 
         var data = [
               {name:"Shanghai",population: 22315474},

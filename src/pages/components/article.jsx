@@ -16,26 +16,25 @@ class Tomato extends Component{
 
   tomatoPlue(e){
     console.log('this.refs:', this.refs)
-    this.props.test({a: this.props.article.content, b:this.props.article.tomato_total+1, c: this.props.article.tomato_passed})
+    this.props.test({type: C.ESTIMATE_POMODARIO_PLUS})
 		e.preventDefault();
   }
 
   tomatoMinus(e){
     console.log('this.refs:', this.refs)
-    this.props.test({a: this.props.article.content, b:this.props.article.tomato_total-1, c: this.props.article.tomato_passed})
+    this.props.test({type: C.ESTIMATE_POMODARIO_MINUS})
 		e.preventDefault();
   }
 
   tomatoActualPlus(e){
     console.log('this.refs:', this.refs)
-    this.props.test({type: "PLUS"})
+    this.props.test({type: C.ACTUAL_POMODARIO_PLUS})
 		e.preventDefault();
   }
 
   tomatoActualMinus(e){
     console.log('this.refs:', this.refs)
-    //this.props.test({a: this.props.article.content, b:this.props.article.tomato_total, c: this.props.article.tomato_passed-1})
-    this.props.test({a: this.props.article.content, b:this.props.article.tomato_total, c: this.props.article.tomato_passed-1})
+    this.props.test({type: C.ACTUAL_POMODARIO_MINUS})
 		e.preventDefault();
   }
 

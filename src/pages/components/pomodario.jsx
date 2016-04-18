@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import actions from '../../actions';
+import C from '../../constants';
 
 import {Col, Input, Button, ProgressBar } from "react-bootstrap"
 var Notify = require('notifyjs');
-
 
 var LaterApp = React.createClass({
   getInitialState: function(){
@@ -181,7 +181,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		onTimeOut(qid) { 
       console.log('disp=>', qid)
-      dispatch(actions.testPlusTomato(qid, {TYPE: "PLUS"}));
+      dispatch(actions.testPlusTomato(qid, {type: C.ACTUAL_POMODARIO_PLUS}));
       //dispatch(actions.toglePomodarioOff(qid, "reserve"));
       dispatch(actions.setPomodarioDone(qid, "reserve"));
     }

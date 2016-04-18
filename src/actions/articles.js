@@ -81,20 +81,33 @@ const articlesActions = {
 
   testPlusTomato(qid, content){
     return (dispatch, getState) =>{
-    console.log("content:", content)
-    if (content.type="PLUS"){
-      console.log("type: plus")
-      articlesRef.child(qid).transaction((article) => {
-        return Object.assign({}, article, {tomato_passed: article.tomato_passed+1})
-        })
-    }else{
-      articlesRef.child(qid).set({ content: content.a,  username:"test", uid:"12345", tomato_total: content.b, tomato_passed: content.c }, (error2) => {
-        console.log("testPlusTomato")
-      })
+      console.log("content:", content)
+      switch(content.type){
+        case C.ACTUAL_POMODARIO_PLUS:
+          articlesRef.child(qid).transaction((article) => {
+            return Object.assign({}, article, {tomato_passed: article.tomato_passed+1})
+          })
+          return 
+        case C.ACTUAL_POMODARIO_MINUS:
+          articlesRef.child(qid).transaction((article) => {
+            return Object.assign({}, article, {tomato_passed: article.tomato_passed-1})
+          })
+          return 
+        case C.ESTIMATE_POMODARIO_PLUS:
+          articlesRef.child(qid).transaction((article) => {
+            return Object.assign({}, article, {tomato_total: article.tomato_total+1})
+          })
+          return 
+        case C.ESTIMATE_POMODARIO_MINUS:
+          articlesRef.child(qid).transaction((article) => {
+            return Object.assign({}, article, {tomato_total: article.tomato_total-1})
+          })
+          return 
+        default: 
+          console.log("unknown action type.", content)
+      }
     }
-    }
-  },
-
+  }
 };
 
 export default articlesActions;
