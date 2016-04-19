@@ -166,7 +166,9 @@ var TestNotify= React.createClass({
                    onChange = {this.changeSec}
                    placeholder="second"/> 
           </Col>
-          <Button onClick={this.changeEdit}>OK</Button>
+          <span><Button onClick={this.changeEdit}>OK</Button></span>
+          <span>{p.pomodario.refkey}</span>
+          <span><Button onClick={p.changeQid.bind(this, null)}>x </Button></span>
         </div>
       )
     }
@@ -184,7 +186,13 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(actions.testPlusTomato(qid, {type: C.ACTUAL_POMODARIO_PLUS}));
       //dispatch(actions.toglePomodarioOff(qid, "reserve"));
       dispatch(actions.setPomodarioDone(qid, "reserve"));
-    }
+    },
+
+		changeQid(qid) { 
+      console.log('change qid', qid)
+      dispatch(actions.changePomodarioKey(qid))
+    },
+
 	};
 };
 

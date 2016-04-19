@@ -5,7 +5,10 @@ const pomodarioActions = {
 
   setPomodarioDone(qid, article){
     return (dispatch) => {
-      pomodarioRef.push({qid, date: (new Date()).getTime()})
+      console.log(qid)
+      if (qid.refkey != null){
+        pomodarioRef.push({qid, date: (new Date()).getTime()})
+      }
     }
   },
 
@@ -13,6 +16,12 @@ const pomodarioActions = {
     return (dispatch) => {
       //pomodarioRef.push({article})
       dispatch({type: C.HIDE_POMODARIO})
+    }
+  },
+
+  changePomodarioKey(qid){
+    return (dispatch) => {
+      dispatch({type: C.CHANGE_REF_KEY, data: qid})
     }
   },
 
