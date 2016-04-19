@@ -61,13 +61,19 @@ class Tomato extends Component{
     )
 
     return (
-      <span>
-        <span ref="tomato">{p.article.tomato_total}</span> {' '} {tomatoButton}
-        <span ref="tomato_actual"> {p.article.tomato_passed}</span> {' '} {tomatoActualButton}
-        <span className="pomodario">
+      <div className="line">
+        <div className="line" ref="tomato">
+          {p.article.tomato_total}
+          {tomatoButton}
+        </div> 
+        <div className="line" ref="tomato_actual"> 
+          {p.article.tomato_passed}
+          {tomatoActualButton}
+        </div> 
+        <div className="line">
           <button onClick={this.toglePomodario}>POMODARIO</button>
-        </span>
-      </span>
+        </div>
+      </div>
     )
   }
 }

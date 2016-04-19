@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "d3": "^3.5.16",
-    "firebase": "^2.4.2"
+    "firebase": "^2.4.2",
+    "lodash": "~4.11.1"
   }
 }

@@ -266,15 +266,18 @@ textarea:focus{
 }
 
 .content {
-  width: 200px;
-  display:inline
+  width: 600px;
+  display:inline-block
 }
 
 .tomatos {
-  width: 200px;
-  display:inline;
+  width: 300px;
+  display:inline-block;
 }
 
 .pomodario {
-  /*float: left;*/
+  display:inline-block;
+}
+.line {
+  display:inline-block;
 }
