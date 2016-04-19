@@ -5,6 +5,7 @@
     <title>D3 Example</title>
     <script src="/bower_components/d3/d3.min.js"></script>
     <script src="/bower_components/firebase/firebase.js"></script>
+    <script src="/bower_components/lodash/dist/lodash.min.js"></script>
   </head>
   <body>
     <script>
@@ -13,8 +14,8 @@
       var outerHeight = 250;
       var margin = { left: 90, top: 30, right: 30, bottom: 30 };
 
-      var xColumn = "name";
-      var yColumn = "population";
+      var xColumn = "date";
+      var yColumn = "count";
 
       var innerWidth  = outerWidth  - margin.left - margin.right;
       var innerHeight = outerHeight - margin.top  - margin.bottom;
@@ -47,13 +48,33 @@
       }
 
       function type(d){
-        d.population = +d.population;
+        d.count = +d.count;
         return d;
       }
 
-      function toDay(l){
+      function toDate(i) {
+        return (i-i%86400000)
       }
 
+      function mapTolist(l){
+        //to date
+        var l1 =  l.map(function(i){
+          return Object.assign({}, i, {date: toDate(i.date)})
+        })
+      
+        //count 
+        var l2 = _.countBy(l1, function(i){
+            return i.date
+        })
+      
+      
+        //to array
+        return Object.keys(l2).map(function(key){
+          //return [parseInt(key), l2[key]]
+          return {date: parseInt(key), count: l2[key]}
+        })
+      }
+            
 
       
       var url = 'https://thisisatestapp.firebaseio.com/items/test4/'
@@ -81,6 +102,10 @@
               {name: "Buenos Aires",population: 13076300},
               {name: "Mumbai",population: 12691836}
         ]
+
+        data = mapTolist(filterData)
+        console.log(data)
+
         render(data)
       })
 
