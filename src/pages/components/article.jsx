@@ -62,15 +62,15 @@ class Tomato extends Component{
 
     return (
       <div className="line">
-        <div className="line" ref="tomato">
+        <div className="cell" ref="tomato">
           {p.article.tomato_total}
           {tomatoButton}
         </div> 
-        <div className="line" ref="tomato_actual"> 
+        <div className="cell" ref="tomato_actual"> 
           {p.article.tomato_passed}
           {tomatoActualButton}
         </div> 
-        <div className="line">
+        <div className="cell">
           <button onClick={this.toglePomodario}>POMODARIO</button>
         </div>
       </div>
@@ -91,7 +91,6 @@ class Article extends Component {
 		this.refs.field.value = '';
 		e.preventDefault();
 	}
-
 
 
 
@@ -120,8 +119,13 @@ class Article extends Component {
 		return (
 			<div className="article">
         <div className="content">
-				  <span ref="content">{p.article.content}</span> {button} 
+				  <span ref="content">{p.article.content}</span> 
         </div>
+
+        <div className="cell">
+          {button} 
+        </div>
+
         <div className="tomatos">
           <Tomato 
             test={this.props.test}

@@ -265,19 +265,30 @@ textarea:focus{
   width: 100%;
 }
 
+.article {
+  display: flex;
+  border-bottom: 1px dotted #666;
+  margin: 5px;
+  padding: 5px;
+}
+
 .content {
   width: 600px;
-  display:inline-block
+  display:flex
 }
 
 .tomatos {
   width: 300px;
-  display:inline-block;
+  display:flex;
 }
 
 .pomodario {
-  display:inline-block;
+  display:flex;
 }
 .line {
-  display:inline-block;
+  display:flex;
+}
+.cell {
+  display: flex;
+  width: 100px;
 }

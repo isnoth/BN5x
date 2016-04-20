@@ -24,7 +24,6 @@ export default class Articles extends Component {
 				const article = p.articles.data[qid];
 				const articlestate = p.articles.states[qid];
 				return (
-          <li>
 					<Article
 						key={qid}
 						article={article}
@@ -38,7 +37,6 @@ export default class Articles extends Component {
             toglePomodario={p.toglePomodario.bind(this,qid)}
 						mayedit={true}
 					/>
-          </li>
 				);
 			});
 		}
