@@ -294,12 +294,14 @@ textarea:focus{
 }
 .button_plus_minus {
   height: 12px;
-  float: left
+  /*float: left*/
 }
 .button_container {
   width: 30px
 }
 .pomodario_number {
-  width: 20px
+  width: 20px;
+  margin-left: 5px;
+  margin-top: 5px
 }
 

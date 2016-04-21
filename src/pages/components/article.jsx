@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import {Col, Input, Button, ProgressBar } from "react-bootstrap"
+import {Glyphicon, Col, Input, Button, ProgressBar } from "react-bootstrap"
 import Pomodario from './pomodario';
 import C from '../../constants';
-
 
 class Tomato extends Component{
 	constructor() {
@@ -48,15 +47,23 @@ class Tomato extends Component{
 
     let tomatoButton =(
       <div className="button_container">
-        <button className="button_plus_minus" onClick={this.tomatoPlue}></button>
-        <button className="button_plus_minus" onClick={this.tomatoMinus}></button>
+        <div className="button_plus_minus" >
+          <span className="button_plus_minus glyphicon glyphicon-triangle-top" onClick={this.tomatoPlue}></span>
+        </div>
+        <div className="button_plus_minus" >
+          <span className="button_plus_minus glyphicon glyphicon-triangle-bottom" onClick={this.tomatoMinus}></span>
+        </div>
       </div>
     )
 
     let tomatoActualButton =(
       <div className="button_container">
-        <button className="button_plus_minus" onClick={this.tomatoActualPlus}></button>
-        <button className="button_plus_minus"onClick={this.tomatoActualMinus}></button>
+        <div className="button_plus_minus" >
+          <span className="glyphicon glyphicon-triangle-top" onClick={this.tomatoActualPlus}></span>
+        </div>
+        <div className="button_plus_minus" >
+          <span className="glyphicon glyphicon-triangle-bottom" onClick={this.tomatoActualMinus}></span>
+        </div>
       </div>
     )
 
@@ -75,14 +82,14 @@ class Tomato extends Component{
           {tomatoActualButton}
         </div> 
         <div className="cell">
-          <button onClick={this.toglePomodario}>POMODARIO</button>
+          <button onClick={this.toglePomodario}>
+            <span className="glyphicon glyphicon-bell"/>
+          </button>
         </div>
       </div>
     )
   }
 }
-
-
 
 
 class Article extends Component {
@@ -116,9 +123,12 @@ class Article extends Component {
 		} else if (p.state === C.SUBMITTING_ARTICLE) {
 			button = <button disabled="disabled">Submitting...</button>;
 		} else {
-			button = <span><button onClick={p.edit}>Edit</button><button onClick={p.delete}>Delete</button></span>;
+			button = 
+        <span>
+          <button onClick={p.edit}>Edit</button>
+          <button onClick={p.delete}>Delete</button>
+        </span>;
 		}
-
 
 		return (
 			<div className="article">
