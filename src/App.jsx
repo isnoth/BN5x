@@ -5,6 +5,8 @@ import store from './store';
 import actions from './actions';
 import Wrapper from './pages/wrapper';
 import Articles from './pages/articles';
+import tree from "./compoments/tree";
+
 
 export class App extends Component {
 	componentWillMount() {
@@ -17,6 +19,7 @@ export class App extends Component {
 					<Route path="/" component={Wrapper}>
 						<IndexRoute component={Articles} />
 					</Route>
+          <Route path="about" component={tree} />
 				</Router>
 			</Provider>
 		);
