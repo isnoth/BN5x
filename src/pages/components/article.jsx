@@ -47,27 +47,31 @@ class Tomato extends Component{
 		const p = this.props;
 
     let tomatoButton =(
-      <span>
-        <button onClick={this.tomatoPlue}>+</button>
-        <button onClick={this.tomatoMinus}>-</button>
-      </span>
+      <div className="button_container">
+        <button className="button_plus_minus" onClick={this.tomatoPlue}></button>
+        <button className="button_plus_minus" onClick={this.tomatoMinus}></button>
+      </div>
     )
 
     let tomatoActualButton =(
-      <span>
-        <button onClick={this.tomatoActualPlus}>+</button>
-        <button onClick={this.tomatoActualMinus}>-</button>
-      </span>
+      <div className="button_container">
+        <button className="button_plus_minus" onClick={this.tomatoActualPlus}></button>
+        <button className="button_plus_minus"onClick={this.tomatoActualMinus}></button>
+      </div>
     )
 
     return (
       <div className="line">
         <div className="cell" ref="tomato">
-          {p.article.tomato_total}
+          <div className="cell pomodario_number" >
+            {p.article.tomato_total}
+          </div>
           {tomatoButton}
         </div> 
         <div className="cell" ref="tomato_actual"> 
-          {p.article.tomato_passed}
+          <div className="cell pomodario_number" >
+            {p.article.tomato_passed}
+          </div>
           {tomatoActualButton}
         </div> 
         <div className="cell">

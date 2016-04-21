@@ -292,3 +292,14 @@ textarea:focus{
   display: flex;
   width: 100px;
 }
+.button_plus_minus {
+  height: 12px;
+  float: left
+}
+.button_container {
+  width: 30px
+}
+.pomodario_number {
+  width: 20px
+}
+
