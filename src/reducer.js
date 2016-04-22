@@ -14,5 +14,6 @@ export default combineReducers({
   firebase: firebaseReducer,
   //notification: notificationReducer,
   routing: routerReducer,
+  tree: treeReducer,
   //tasks: tasksReducer
 });

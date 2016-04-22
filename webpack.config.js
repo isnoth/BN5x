@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
 //var OpenBrowserPlugin = require('open-browser-webpack-plugin');
+const path = require('path');
 
 module.exports = {
   entry: './src/index.jsx',
@@ -12,6 +13,7 @@ module.exports = {
   },
   resolve: {
     extensions: ['', '.js', '.jsx'],
+    root: path.resolve('./src') //set root folder
   },
   module: {
     loaders:[
@@ -28,7 +30,7 @@ module.exports = {
         loader: 'babel-loader',
         exclude:/node_modules/, 
         query: {
-          presets: ['es2015', 'react']
+          presets: ['es2015', 'react', 'stage-0']
         }
       }
     ]
@@ -36,5 +38,6 @@ module.exports = {
   plugins: [
     //new CommonsChunkPlugin('init.js'),
     //new OpenBrowserPlugin({ url: 'http://localhost:8080' })
-  ]
+  ] ,
+
 }
