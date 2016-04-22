@@ -4,7 +4,8 @@ import {
   DELETE_TASK_ERROR,
   DELETE_TASK_SUCCESS,
   UPDATE_TASK_ERROR,
-  UPDATE_TASK_SUCCESS
+  UPDATE_TASK_SUCCESS,
+  GET_TASK_SUCCESS,
 } from './action-types';
 
 
@@ -86,9 +87,16 @@ export function registerListeners() {
     console.log(ref)
     console.log('registerListeners:')
 
+    /*
     ref.on('child_added', snapshot => dispatch({
       type: CREATE_TASK_SUCCESS,
       payload: recordFromSnapshot(snapshot)
+    }));
+    */
+
+    ref.on('value', snapshot => dispatch({
+      type: GET_TASK_SUCCESS,
+      payload: snapshot.val()
     }));
 
     ref.on('child_changed', snapshot => dispatch({
