@@ -305,3 +305,17 @@ textarea:focus{
   margin-top: 5px
 }
 
+
+
+
+/* for d3*/
+.axis {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}

@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 //import Wrapper from './pages/wrapper';
 //import Articles from './pages/articles';
 import Tree from "./tree/tree";
+import Stat from "./stat/stat";
 
 
 export class Root extends Component {
@@ -30,6 +31,7 @@ export class Root extends Component {
           {/*<IndexRoute component={Articles} />*/}
 					</Route>
           <Route path="tree" component={Tree} />
+          <Route path="stat" component={Stat} />
 				</Router>
 			</Provider>
 		);
