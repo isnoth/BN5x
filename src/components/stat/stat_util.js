@@ -78,6 +78,21 @@ module.exports = {
              .attr("y", function(d) { return y(d.value); })
              .attr("height", function(d) { return height - y(d.value); });
        
+
+
+         var yTextPadding = 20;
+         svg.selectAll(".bartext")
+         .data(data)
+         .enter()
+         .append("text")
+         .attr("class", "bartext")
+         .attr("text-anchor", "middle")
+         .attr("fill", "white")
+         .attr("x", function(d) { return x(d.date)+10; })
+         .attr("y", function(d) { return y(d.value)+10; })
+         .text(function(d){
+           return d.value;
+         });
        };
 
       function toDate(i) {
