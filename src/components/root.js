@@ -5,9 +5,9 @@ import { Provider } from 'react-redux';
 //import actions from './actions';
 //import Wrapper from './pages/wrapper';
 //import Articles from './pages/articles';
+import NavApp from './nav/nav';
 import Tree from "./tree/tree";
 import Stat from "./stat/stat";
-import NavApp from './nav/nav';
 
 
 class Wrap extends Component {
@@ -20,7 +20,6 @@ class Wrap extends Component {
     )
   }
 }
-
 
 
 export class Root extends Component {

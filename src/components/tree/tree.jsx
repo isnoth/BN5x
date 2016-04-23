@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes} from 'react';
 import { treeActions } from 'core/tree';
 import { connect } from 'react-redux';
 
@@ -7,10 +7,21 @@ import {Node} from "./node"
 import {Glyphicon} from "react-bootstrap"
 
 
-var TestNode = React.createClass({
+class TestNode extends React.Component {
 
-  render: function(){
+  static propTypes = {
+    update: PropTypes.func.isRequired
+  };
 
+  changeCollapse(key, collapsedState){
+    const {update} = this.props
+    console.log(this.props)
+    update(key, {collapsed: collapsedState})
+  }
+
+  render(){
+
+    const {update} = this.props
     //console.log("[Node] nodes: ", this.props.nodes)
     //console.log("[Node] id: ", this.props.id)
     //var node = new Node(this.props.nodes)
@@ -21,18 +32,20 @@ var TestNode = React.createClass({
     var collapsed = thisnode.collapsed
     var children = node.getChildren(this.props.id).map(function(children){
       return <div className="tree-node-child-list">
-        <TestNode nodes={that.props.nodes} id={children.id} />
+        <TestNode update={update} nodes={that.props.nodes} id={children.id} />
       </div>
     })
+    /*
     var changeCollapse = function(){
       //ButtonActions.modifyItem({id: that.props.id, collapsed: !thisnode.collapsed})
       console.log('modify Item')
     }
+    */
 
     return (
       <div>
-        <div onClick={changeCollapse} className="tree-node-icon-container">
-          <Glyphicon glyph={collapsed==false?"minus":"plus"}/>
+        <div onClick={this.changeCollapse.bind(this, thisnode.key, !thisnode.collapsed)} className="tree-node-icon-container">
+          <Glyphicon glyph={collapsed==false?"minus":"plus"} />
         </div>
         <textarea rows={1} className="tree-textarea" cols={60} value={thisnode.content}></textarea>
         <ul>
@@ -41,10 +54,15 @@ var TestNode = React.createClass({
       </div>
     )
   }
-})
+}
 
 
 class About extends React.Component {
+  static propTypes = {
+    registerListeners: PropTypes.func.isRequired,
+    nodeUpdate: PropTypes.func.isRequired
+  };
+
 
   componentWillMount() {
     console.log(this.props.registerListeners)
@@ -54,6 +72,12 @@ class About extends React.Component {
 
 
   render(){
+
+    const {
+      registerListeners, 
+      nodeUpdate
+    } = this.props
+
     //console.log("[Node]: ", this.props.nodes)
     var node = new Node(this.props.tree)
     console.log("About:", node)
@@ -69,7 +93,7 @@ class About extends React.Component {
       var children = node.root().children.map(function(nodeName, index){
         return (
           <ul key={index}>
-            <TestNode nodes={that.props.tree} id={nodeName}/>
+            <TestNode update={nodeUpdate} nodes={that.props.tree} id={nodeName}/>
           </ul>
         )
       })
@@ -94,9 +118,7 @@ class About extends React.Component {
 
 
 
-
-/*
-class About extends React.Component {
+/* class About extends React.Component {
 
   componentWillMount() {
     console.log(this.props.registerListeners)

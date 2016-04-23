@@ -99,6 +99,7 @@ export function registerListeners() {
       payload: snapshot.val()
     }));
 
+    /*
     ref.on('child_changed', snapshot => dispatch({
       type: UPDATE_TASK_SUCCESS,
       payload: recordFromSnapshot(snapshot)
@@ -108,7 +109,37 @@ export function registerListeners() {
       type: DELETE_TASK_SUCCESS,
       payload: recordFromSnapshot(snapshot)
     }));
+    */
   };
+}
+
+export function nodeUpdate(key, change) {
+  console.log(key, change)
+
+
+  return (dispatch, getState) => {
+    const { /*auth,*/ firebase } = getState();
+    const ref = firebase/*.child('articles');*/
+
+
+    ref.child(key).update({collapsed: change.collapsed})
+
+    /*
+    
+    .transaction(function(i){
+      console.log(i)
+      return (Object.assign({}, i, {collapsed: !i.collapsed}))
+    })
+    */
+
+
+   /*
+    dispatch({
+      type: UPDATE_TASK_SUCCESS,
+      payload: {key: key, type: "collapsed"}
+    });
+    */
+  }
 }
 
 
