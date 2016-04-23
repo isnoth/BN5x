@@ -1,5 +1,5 @@
 import React, { Component, PropTypes} from 'react';
-import { Route, Router } from 'react-router';
+import { Route, Router, IndexRoute } from 'react-router';
 import { Provider } from 'react-redux';
 //import store from './store';
 //import actions from './actions';
@@ -7,6 +7,20 @@ import { Provider } from 'react-redux';
 //import Articles from './pages/articles';
 import Tree from "./tree/tree";
 import Stat from "./stat/stat";
+import NavApp from './nav/nav';
+
+
+class Wrap extends Component {
+  render(){
+    return (
+      <div>
+        <NavApp/>
+        {this.props.children}
+      </div>
+    )
+  }
+}
+
 
 
 export class Root extends Component {
@@ -27,11 +41,11 @@ export class Root extends Component {
 		return (
 			<Provider store={store}>
 				<Router>
-					<Route path="/" component={Tree}>
-          {/*<IndexRoute component={Articles} />*/}
+					<Route path="/" component={Wrap}>
+            <IndexRoute component={Tree} />
+            <Route path="tree" component={Tree} />
+            <Route path="stat" component={Stat} />
 					</Route>
-          <Route path="tree" component={Tree} />
-          <Route path="stat" component={Stat} />
 				</Router>
 			</Provider>
 		);
