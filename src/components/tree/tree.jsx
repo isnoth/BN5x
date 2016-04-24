@@ -15,8 +15,13 @@ class TestNode extends React.Component {
 
   changeCollapse(key, collapsedState){
     const {update} = this.props
-    console.log(this.props)
-    update(key, {collapsed: collapsedState})
+    //console.log(this.props)
+    update(key, {type: "COLLAPSED", collapsed: collapsedState})
+  }
+
+  updateContent(key, value){
+    const {update} = this.props
+    update(key, {type: "VALUE", value: value})
   }
 
   render(){
@@ -42,12 +47,17 @@ class TestNode extends React.Component {
     }
     */
 
+   var changeText = function(evt){
+     console.log('changeText: ', evt.target.value)
+     this.updateContent(thisnode.key, evt.target.value)
+   }
+
     return (
       <div>
         <div onClick={this.changeCollapse.bind(this, thisnode.key, !thisnode.collapsed)} className="tree-node-icon-container">
           <Glyphicon glyph={collapsed==false?"minus":"plus"} />
         </div>
-        <textarea rows={1} className="tree-textarea" cols={60} value={thisnode.content}></textarea>
+        <textarea rows={1} className="tree-textarea" cols={60} value={thisnode.content} onChange={changeText.bind(this)}></textarea>
         <ul>
           {collapsed==false?children:null}
         </ul>

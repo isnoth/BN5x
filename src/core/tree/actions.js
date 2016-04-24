@@ -121,8 +121,27 @@ export function nodeUpdate(key, change) {
     const { /*auth,*/ firebase } = getState();
     const ref = firebase/*.child('articles');*/
 
+    switch (change.type){
+      case "VALUE":
+        ref.child(key).update({content: change.value})
+        break
 
-    ref.child(key).update({collapsed: change.collapsed})
+      
+      case "COLLAPSED":
+        ref.child(key).update({collapsed: change.collapsed})
+        break
+    }
+
+    /*
+    if (Object.keys(change).indexOf("collapsed")){
+      console.log("collapsed：", key, change)
+      ref.child(key).update({collapsed: change.collapsed})
+    }else if  (Object.keys(change).indexOf("value")){
+      console.log(key, change.value)
+      ref.child(key).update({content: change.value})
+    }
+    */
+
 
     /*
     
