@@ -5,8 +5,33 @@ import d3 from "d3"
 import _ from "lodash"
 
 
-module.exports = {
-  stat(){
+export function toDate(i) {
+  return (i-i%86400000)
+}
+
+export function mapTolist(l){
+  //to date
+  var l1 =  l.map(function(i){
+    return Object.assign({}, i, {date: toDate(i.date)})
+  })
+
+  //count 
+  var l2 = _.countBy(l1, function(i){
+      return i.date
+  })
+
+
+  //to array
+  return Object.keys(l2).map(function(key){
+    //return [parseInt(key), l2[key]]
+    return {date: parseInt(key), count: l2[key]}
+  })
+}
+
+
+
+//module.exports = {
+export function stat(){
        var margin = {top: 20, right: 20, bottom: 70, left: 40},
            width = 600 - margin.left - margin.right,
            height = 300 - margin.top - margin.bottom;
@@ -95,28 +120,7 @@ module.exports = {
          });
        };
 
-      function toDate(i) {
-        return (i-i%86400000)
-      }
 
-      function mapTolist(l){
-        //to date
-        var l1 =  l.map(function(i){
-          return Object.assign({}, i, {date: toDate(i.date)})
-        })
-      
-        //count 
-        var l2 = _.countBy(l1, function(i){
-            return i.date
-        })
-      
-      
-        //to array
-        return Object.keys(l2).map(function(key){
-          //return [parseInt(key), l2[key]]
-          return {date: parseInt(key), count: l2[key]}
-        })
-      }
             
 
       
@@ -154,5 +158,5 @@ module.exports = {
 
       //d3.csv("geonames_cities_top3.csv", type, render);
     }
-}
+//}
 
