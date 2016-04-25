@@ -88,6 +88,23 @@ const articlesActions = {
 			}
 		};
 	},
+  
+  changePomodarioType(qid, content){
+    return (dispatch, getState) =>{
+      const {articles, firebase} = getState()
+      const obj = articles.data[qid] 
+      console.log(obj)
+      console.log("changePomodarioType", qid, content)
+      var newtype = obj.type=="home"?"work":"home"
+      console.log("newtype:", newtype)
+
+      const articlesRef = firebase.pomodario.child('articles')
+      articlesRef.child(qid).transaction((article) => {
+        return Object.assign({}, article, {type: article.type=="home"?"work":"home"})
+      })
+    }
+  },
+
 
   testPlusTomato(qid, content){
     return (dispatch, getState) =>{

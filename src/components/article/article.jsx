@@ -134,6 +134,7 @@ class Article extends Component {
 		return (
 			<div className="article">
         <div className="content">
+          <span onClick={p.changePomodarioType}>{p.article.type=="home"?"[H]":"[W]"}</span>
 				  <span ref="content">{p.article.content}</span> 
         </div>
 

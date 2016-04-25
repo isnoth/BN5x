@@ -48,6 +48,7 @@ export default class Articles extends Component {
 						submit={p.submitEdit.bind(this, qid)}
 						delete={p.deleteArticle.bind(this, qid)}
             test={p.testPlusTomato.bind(this,qid)}
+            changePomodarioType={p.changePomodarioType.bind(this, qid)}
             toglePomodario={p.toglePomodario.bind(this,qid)}
 						mayedit={true}
 					/>
@@ -55,12 +56,14 @@ export default class Articles extends Component {
 			});
 		}
 		return (
-			<div className="articleslist">
-				<form onSubmit={this.newArticle}>
-					<input ref="newarticle" placeholder="write something clever!"/>
-					<button type="submit" disabled={p.articles.submittingnew}>{p.articles.submittingnew ? 'Submitting...' : 'Submit'}</button>
-				</form>
-				{p.articles.hasreceiveddata ? rows : 'Loading articles...'}
+      <div>
+			  <div className="articleslist">
+			  	{p.articles.hasreceiveddata ? rows : 'Loading articles...'}
+			  	<form onSubmit={this.newArticle}>
+			  		<input ref="newarticle" placeholder="write something clever!"/>
+			  		<button type="submit" disabled={p.articles.submittingnew}>{p.articles.submittingnew ? 'Submitting...' : 'Submit'}</button>
+			  	</form>
+			  </div>
         <PomodarioApp/>
 			</div>
 		);
@@ -83,6 +86,7 @@ const mapDispatchToProps = (dispatch) => {
 		submitEdit(qid, content) { dispatch(actions.submitArticleEdit(qid, content)); },
 		deleteArticle(qid) { dispatch(actions.deleteArticle(qid)); },
     testPlusTomato(qid, content) {dispatch(actions.testPlusTomato(qid, content))},
+    changePomodarioType(qid, content){dispatch(actions.changePomodarioType(qid, content))},
     toglePomodario(qid, content) {dispatch(pomodarioAction.toglePomodario(qid, content))}
 	};
 };
