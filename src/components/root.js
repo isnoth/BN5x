@@ -8,6 +8,8 @@ import { Provider } from 'react-redux';
 import NavApp from './nav/nav';
 import Tree from "./tree/tree";
 import Stat from "./stat/stat";
+import Pomodario from "./pomodario/pomodario";
+import Articles from "./article/articles";
 
 
 class Wrap extends Component {
@@ -44,6 +46,8 @@ export class Root extends Component {
             <IndexRoute component={Tree} />
             <Route path="tree" component={Tree} />
             <Route path="stat" component={Stat} />
+            <Route path="pomodario" component={Pomodario} />
+            <Route path="articles" component={Articles} />
 					</Route>
 				</Router>
 			</Provider>

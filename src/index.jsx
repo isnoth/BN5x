@@ -6,10 +6,14 @@ import { browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 
 import { FIREBASE_URL } from './config';
+import { POMODARIO_FIREBASE_URL } from './config';
 import configureStore from './store';
 
 const store = configureStore({
-  firebase: new Firebase(FIREBASE_URL)
+  firebase: {
+    tree:  new Firebase(FIREBASE_URL),
+    pomodario: new Firebase(POMODARIO_FIREBASE_URL)
+  }
 });
 
 const history = syncHistoryWithStore(browserHistory, store);

@@ -83,7 +83,7 @@ export function updateTask(task, changes) {
 export function registerListeners() {
   return (dispatch, getState) => {
     const { /*auth,*/ firebase } = getState();
-    const ref = firebase/*.child('articles');*/
+    const ref = firebase.tree/*.child('articles');*/
     console.log(ref)
     console.log('registerListeners:')
 
@@ -119,7 +119,7 @@ export function nodeUpdate(key, change) {
 
   return (dispatch, getState) => {
     const { /*auth,*/ firebase } = getState();
-    const ref = firebase/*.child('articles');*/
+    const ref = firebase.tree/*.child('articles');*/
 
     switch (change.type){
       case "VALUE":
