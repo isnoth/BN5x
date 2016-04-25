@@ -1,7 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import actions from "core/pomodario/actions"
+import articleActions from 'core/article/actions';
 //import actions from '../../actions';
-//import C from '../../constants';
+import C from 'core/article/action-types';
 import {
   SHOW_POMODARIO,
   HIDE_POMODARIO,
@@ -9,7 +11,10 @@ import {
   CHANGE_REF_KEY
 } from "core/pomodario/action-types"
 
+
+
 import {Col, Input, Button, ProgressBar } from "react-bootstrap"
+
 var Notify = require('notifyjs');
 
 var LaterApp = React.createClass({
@@ -189,8 +194,8 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		onTimeOut(qid) { 
       console.log('disp=>', qid)
-      //dispatch(actions.testPlusTomato(qid, {type: ACTUAL_POMODARIO_PLUS}));
-      //dispatch(actions.toglePomodarioOff(qid, "reserve"));
+      dispatch(articleActions.testPlusTomato(qid, {type: C.ACTUAL_POMODARIO_PLUS}));
+      dispatch(actions.toglePomodarioOff(qid, "reserve"));
       dispatch(actions.setPomodarioDone(qid, "reserve"));
     },
 

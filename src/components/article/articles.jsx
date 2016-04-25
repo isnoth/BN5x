@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import actions from 'core/article/actions';
+import pomodarioAction from "core/pomodario/actions"
 import Article from './article';
+import PomodarioApp from 'components/pomodario/pomodario'
 
 
 export default class Articles extends Component {
@@ -59,6 +61,7 @@ export default class Articles extends Component {
 					<button type="submit" disabled={p.articles.submittingnew}>{p.articles.submittingnew ? 'Submitting...' : 'Submit'}</button>
 				</form>
 				{p.articles.hasreceiveddata ? rows : 'Loading articles...'}
+        <PomodarioApp/>
 			</div>
 		);
 	}
@@ -80,7 +83,7 @@ const mapDispatchToProps = (dispatch) => {
 		submitEdit(qid, content) { dispatch(actions.submitArticleEdit(qid, content)); },
 		deleteArticle(qid) { dispatch(actions.deleteArticle(qid)); },
     testPlusTomato(qid, content) {dispatch(actions.testPlusTomato(qid, content))},
-    toglePomodario(qid, content) {dispatch(actions.toglePomodario(qid, content))}
+    toglePomodario(qid, content) {dispatch(pomodarioAction.toglePomodario(qid, content))}
 	};
 };
 
