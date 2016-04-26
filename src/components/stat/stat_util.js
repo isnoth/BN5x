@@ -9,6 +9,9 @@ export function toDate(i) {
   return (i-i%86400000)
 }
 
+
+
+
 export function mapTolist(l){
   //to date
   var l1 =  l.map(function(i){
@@ -29,6 +32,21 @@ export function mapTolist(l){
 }
 
 
+export function toListHome(l){
+  var l2 = l.filter(function (i){
+    return i.type == "home"
+  })
+
+  return mapTolist(l2)
+}
+
+export function toListWork(l){
+  var l2 = l.filter(function (i){
+    return i.type == "work"
+  })
+
+  return mapTolist(l2)
+}
 
 //module.exports = {
 export function stat(){
