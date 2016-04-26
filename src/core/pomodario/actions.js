@@ -13,12 +13,12 @@ const pomodarioActions = {
 
   setPomodarioDone(qid, article){
     return (dispatch, getState) => {
-      const {pomodario, firebase } = getState();
+      const {pomodario, firebase, articles } = getState();
       var pomodarioRef = firebase.pomodario.child("pomodarios")
       console.log("pomodarioRef: ", qid)
       if (pomodario.refkey != null){
         console.log("push to server: ", qid)
-        pomodarioRef.push({qid, date: (new Date()).getTime()})
+        pomodarioRef.push({qid, date: (new Date()).getTime(), type:articles.data[qid].type})
       }
     }
   },
@@ -37,7 +37,7 @@ const pomodarioActions = {
   },
 
   toglePomodario(qid, article){
-    return (dispatch) => {
+    return (dispatch, getState) => {
       //pomodarioRef.push({article})
       dispatch({type: TOGLE_POMODARIO})
       dispatch({type: CHANGE_REF_KEY, data: qid})
