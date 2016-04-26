@@ -37,6 +37,7 @@ export function toListHome(l){
     return i.type == "home"
   })
 
+
   return mapTolist(l2)
 }
 
@@ -45,52 +46,62 @@ export function toListWork(l){
     return i.type == "work"
   })
 
+  console.log(l2)
+
   return mapTolist(l2)
 }
 
 //module.exports = {
 export function stat(){
-       var margin = {top: 20, right: 20, bottom: 70, left: 40},
-           width = 600 - margin.left - margin.right,
-           height = 300 - margin.top - margin.bottom;
-       
-       // Parse the date / time
-       //var parseDate = d3.time.format("%Y-%m").parse;
-       //var parseDate = d3.time.format("%Y-%m")
-       
-       var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
-       
-       var y = d3.scale.linear().range([height, 0]);
-       
-       var xAxis = d3.svg.axis()
-           .scale(x)
-           .orient("bottom")
-           .tickFormat(d3.time.format("%m-%d"));
-       
-       var yAxis = d3.svg.axis()
-           .scale(y)
-           .orient("left")
-           .ticks(10);
-       
-       var svg = d3.select("body").append("svg")
-           .attr("width", width + margin.left + margin.right)
-           .attr("height", height + margin.top + margin.bottom)
-         .append("g")
-           .attr("transform", 
-                 "translate(" + margin.left + "," + margin.top + ")");
-       
-       function render(data){
+       function render(data1, data2){
          console.log('render')
-          
-       
-           data.forEach(function(d) {
+           var margin = {top: 20, right: 20, bottom: 70, left: 40},
+               width = 600 - margin.left - margin.right,
+               height = 300 - margin.top - margin.bottom;
+           
+           // Parse the date / time
+           //var parseDate = d3.time.format("%Y-%m").parse;
+           //var parseDate = d3.time.format("%Y-%m")
+           
+           var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+           
+           var y = d3.scale.linear().range([height, 0]);
+           
+           var xAxis = d3.svg.axis()
+               .scale(x)
+               .orient("bottom")
+               .tickFormat(d3.time.format("%m-%d"));
+           
+           var yAxis = d3.svg.axis()
+               .scale(y)
+               .orient("left")
+               .ticks(10);
+           
+           var svg = d3.select("body").append("svg")
+               .attr("width", width + margin.left + margin.right)
+               .attr("height", height + margin.top + margin.bottom)
+             .append("g")
+               .attr("transform", 
+                     "translate(" + margin.left + "," + margin.top + ")");
+           
+              
+           
+           data1.forEach(function(d) {
+               d.date = new Date(d.date)
+               d.value = +d.count;
+               return d
+           });
+           console.log(data1)
+
+           data2.forEach(function(d) {
                d.date = new Date(d.date)
                d.value = +d.count;
                return d
            });
          
-         x.domain(data.map(function(d) { return d.date; }));
-         y.domain([0, d3.max(data, function(d) { return d.value; })]);
+         x.domain(data1.map(function(d) { return d.date; }));
+         //y.domain([0, d3.max(data1, function(d) { return d.value; })]);
+         y.domain([0, 16]);
        
          svg.append("g")
              .attr("class", "x axis")
@@ -113,7 +124,7 @@ export function stat(){
              .text("Value ($)");
        
          svg.selectAll("bar")
-             .data(data)
+             .data(data1)
            .enter().append("rect")
              .style("fill", "steelblue")
              .attr("x", function(d) { return x(d.date); })
@@ -122,7 +133,7 @@ export function stat(){
              .attr("height", function(d) { return height - y(d.value); });
        
          svg.selectAll("bar")
-             .data(data)
+             .data(data2)
            .enter().append("rect")
              .style("fill", "orange")
              .attr("x", function(d) { return x(d.date) + x.rangeBand()/2; })
@@ -133,7 +144,7 @@ export function stat(){
 
          var yTextPadding = 20;
          svg.selectAll(".bartext")
-         .data(data)
+         .data(data1)
          .enter()
          .append("text")
          .attr("class", "bartext")
@@ -144,7 +155,29 @@ export function stat(){
          .text(function(d){
            return d.value;
          });
+
+       //limit lines
+       var line = svg.append("line")
+         .attr("x1",0)
+         .attr("y1", y(2))
+         .attr("x2", width)
+         .attr("y2", y(2))
+         //.attr("transform", "translate(0," + height + ")")
+         .attr("stroke","orange")
+         .attr("stroke-width",2)
+
+       //limit lines2
+       var line = svg.append("line")
+         .attr("x1",0)
+         .attr("y1", y(15))
+         .attr("x2", width)
+         .attr("y2", y(15))
+         //.attr("transform", "translate(0," + height + ")")
+         .attr("stroke","steelblue")
+         .attr("stroke-width",2)
        };
+       
+
 
 
             
@@ -170,16 +203,12 @@ export function stat(){
         console.log("filterData:", filterData)
         console.log(filterData.length)
 
-        var data = [
-              {name:"Shanghai",population: 22315474},
-              {name: "Buenos Aires",population: 13076300},
-              {name: "Mumbai",population: 12691836}
-        ]
 
-        data = mapTolist(filterData)
-        console.log(data)
+        var data1 = toListWork(filterData)
+        var data2 = toListHome(filterData)
+        console.log("data1, data2", data1, data2)
 
-        render(data)
+        render(data1, data2)
       })
 
       //d3.csv("geonames_cities_top3.csv", type, render);
