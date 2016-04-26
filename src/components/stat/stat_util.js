@@ -117,10 +117,18 @@ export function stat(){
            .enter().append("rect")
              .style("fill", "steelblue")
              .attr("x", function(d) { return x(d.date); })
-             .attr("width", x.rangeBand())
+             .attr("width", x.rangeBand()/2)
              .attr("y", function(d) { return y(d.value); })
              .attr("height", function(d) { return height - y(d.value); });
        
+         svg.selectAll("bar")
+             .data(data)
+           .enter().append("rect")
+             .style("fill", "orange")
+             .attr("x", function(d) { return x(d.date) + x.rangeBand()/2; })
+             .attr("width", x.rangeBand()/2)
+             .attr("y", function(d) { return y(d.value); })
+             .attr("height", function(d) { return height - y(d.value); });
 
 
          var yTextPadding = 20;
