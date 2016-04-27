@@ -52,8 +52,8 @@ export function toListWork(l){
 }
 
 //module.exports = {
-export function stat(){
-       function render(data1, data2){
+export function stat(e){
+       function render(e, data1, data2){
          console.log('render')
            var margin = {top: 20, right: 20, bottom: 70, left: 40},
                width = 600 - margin.left - margin.right,
@@ -77,7 +77,7 @@ export function stat(){
                .orient("left")
                .ticks(10);
            
-           var svg = d3.select("body").append("svg")
+           var svg = d3.select(e).append("svg")
                .attr("width", width + margin.left + margin.right)
                .attr("height", height + margin.top + margin.bottom)
              .append("g")
@@ -159,9 +159,9 @@ export function stat(){
        //limit lines
        var line = svg.append("line")
          .attr("x1",0)
-         .attr("y1", y(2))
+         .attr("y1", y(4))
          .attr("x2", width)
-         .attr("y2", y(2))
+         .attr("y2", y(4))
          //.attr("transform", "translate(0," + height + ")")
          .attr("stroke","orange")
          .attr("stroke-width",2)
@@ -208,7 +208,7 @@ export function stat(){
         var data2 = toListHome(filterData)
         console.log("data1, data2", data1, data2)
 
-        render(data1, data2)
+        render(e, data1, data2)
       })
 
       //d3.csv("geonames_cities_top3.csv", type, render);
