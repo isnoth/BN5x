@@ -16,9 +16,9 @@ class NavApp extends React.Component {
         <Navbar.Collapse>
           <Nav>
             <NavItem eventKey={1} href="#tree">Tree</NavItem>
-            <NavItem eventKey={2} href="#stat">Stat</NavItem>
-            <NavItem eventKey={3} href="#pomodario">Pomodario</NavItem>
-            <NavItem eventKey={4} href="#articles">Articles</NavItem>
+            <NavItem eventKey={2} href="#articles">Pomodario</NavItem>
+            <NavItem eventKey={3} href="#stat">Stat</NavItem>
+            <NavItem eventKey={4} href="#pomodario">Timer</NavItem>
             {/*
             <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
               <MenuItem eventKey={3.1}>Action</MenuItem>

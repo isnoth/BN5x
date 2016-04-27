@@ -4,6 +4,7 @@ import assert from "assert"
 import {mapTolist} from "../src/components/stat/stat_util"
 import {toListHome} from "../src/components/stat/stat_util"
 import {toListWork} from "../src/components/stat/stat_util"
+import {generateDateArray} from "../src/components/stat/stat_util"
 //import {stat} from "../src/components/stat/stat_util"
 //console.log(mapTolist)
 //console.log(stat)
@@ -98,6 +99,24 @@ describe('Array', function() {
       assert.equal(out[0][1], e1[0]['count']);
     });
 
+    it('generateDateArray() should be ok', function () {
+
+      var f = new Date(5000)
+      var t = new Date(5000+86400000*2)
+
+      var e = [0, 8640000, 86400000*2 ]
+
+      var out = generateDateArray(f, t)
+      //console.log(out)
+      console.log(new Date(e[0]))
+      console.log(new Date(e[1]))
+      console.log(new Date(e[2]))
+
+      assert.equal(out[0], e[0]);
+      assert.equal(out[1], e[1]);
+      assert.equal(out[2], e[2]);
+      //console.log(l)
+    });
 
   });
 });

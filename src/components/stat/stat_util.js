@@ -9,7 +9,17 @@ export function toDate(i) {
   return (i-i%86400000)
 }
 
-
+export function generateDateArray(f, t){
+  var base = toDate(f)
+  var l = []
+  for (var i=0; i<100; i++){
+    if ((base+i*86400000) > t){
+      return l
+    }
+    l.push(base+i*86400000 )
+  }
+  return l
+}
 
 
 export function mapTolist(l){
@@ -46,7 +56,7 @@ export function toListWork(l){
     return i.type == "work"
   })
 
-  console.log(l2)
+  //console.log(l2)
 
   return mapTolist(l2)
 }
@@ -100,6 +110,10 @@ export function stat(e){
            });
          
          x.domain(data1.map(function(d) { return d.date; }));
+         //var current = new Date()
+         //var l = generateDateArray(current-86400000*7, current)
+         //console.log(l)
+         //x.domain(l);
          //y.domain([0, d3.max(data1, function(d) { return d.value; })]);
          y.domain([0, 16]);
        
