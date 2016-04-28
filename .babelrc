@@ -4,6 +4,7 @@
   /* if you want to use babel runtime, uncomment the following line */
   // "plugins": ["transform-runtime", "transform-class-properties"],
    //"plugins": ["transform-class-properties"],
+  "plugins": ["transform-object-assign"],
 
   "env": {
     "build": {
