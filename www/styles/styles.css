@@ -336,3 +336,6 @@ textarea:focus{
    width: 300px;
    height: 300px;
 }
+#rootBody{
+  position:absolute
+}
