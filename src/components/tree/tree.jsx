@@ -98,7 +98,8 @@ class TreePanel extends React.Component {
       left: thisnode.x,
       top: thisnode.y,
       width: thisnode.width,
-      height: thisnode.height 
+      height: thisnode.height,
+      overflow: 'scroll'
     }
 
 
