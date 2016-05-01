@@ -10,6 +10,7 @@ import Tree from "./tree/tree";
 import Stat from "./stat/stat";
 import Pomodario from "./pomodario/pomodario";
 import Articles from "./article/articles";
+import TestApp from "./test";
 
 
 class Wrap extends Component {
@@ -48,6 +49,7 @@ export class Root extends Component {
             <Route path="stat" component={Stat} />
             <Route path="pomodario" component={Pomodario} />
             <Route path="articles" component={Articles} />
+            <Route path="test" component={TestApp} />
 					</Route>
 				</Router>
 			</Provider>

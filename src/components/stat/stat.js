@@ -8,6 +8,10 @@ export default class Stat extends React.Component {
     console.log(this)
     var e1 = ReactDOM.findDOMNode(this);
     stat(e1)
+
+    //console.log(mousetrap)
+
+
   }
 
   render(){

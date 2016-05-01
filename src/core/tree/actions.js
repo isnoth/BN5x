@@ -113,6 +113,7 @@ export function registerListeners() {
   };
 }
 
+
 export function nodeUpdate(key, change) {
   console.log(key, change)
 
@@ -162,10 +163,4 @@ export function nodeUpdate(key, change) {
 }
 
 
-function recordFromSnapshot(snapshot) {
-  console.log(snapshot.val())
 
-  let record = snapshot.val();
-  record.key = snapshot.key();
-  return record;
-}

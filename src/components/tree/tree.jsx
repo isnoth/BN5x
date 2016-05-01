@@ -1,10 +1,12 @@
 import React, { Component, PropTypes} from 'react';
+import ReactDOM from "react-dom"
 import { treeActions } from 'core/tree';
 import { connect } from 'react-redux';
 
 
 import {Node} from "./node"
-import {Glyphicon} from "react-bootstrap"
+import {Panel, Glyphicon} from "react-bootstrap"
+import mousetrap from "mousetrap"
 
 
 class TestNode extends React.Component {
@@ -12,6 +14,12 @@ class TestNode extends React.Component {
   static propTypes = {
     update: PropTypes.func.isRequired
   };
+
+
+  componentDidMount(){
+    Mousetrap.bind('-', function() { console.log(this.props); });
+  }
+
 
   changeCollapse(key, collapsedState){
     const {update} = this.props
@@ -54,17 +62,62 @@ class TestNode extends React.Component {
 
     return (
       <div>
-        <div onClick={this.changeCollapse.bind(this, thisnode.key, !thisnode.collapsed)} className="tree-node-icon-container">
-          <Glyphicon glyph={collapsed==false?"minus":"plus"} />
+        <div className='tree-node-wrapper'>
+          <div onClick={this.changeCollapse.bind(this, thisnode.key, !thisnode.collapsed)} className="tree-node-icon-container">
+            <Glyphicon className="tree-node-expand-button" glyph={collapsed==false?"minus":"plus"} /> 
+          </div>
+          <textarea rows={1} className="tree-textarea" cols={60} value={thisnode.content} onChange={changeText.bind(this)} refs={thisnode.key}></textarea>
         </div>
-        <textarea rows={1} className="tree-textarea" cols={60} value={thisnode.content} onChange={changeText.bind(this)}></textarea>
-        <ul>
-          {collapsed==false?children:null}
-        </ul>
+
+        {collapsed==false?children:null}
       </div>
     )
   }
 }
+
+
+
+
+
+class TreePanel extends React.Component {
+  render(){
+    const {update} = this.props
+    console.log(this.props.id)
+    var that = this
+    var node = new Node(this.props.nodes)
+    var thisnode = node.getbyName(this.props.id)
+    var collapsed = thisnode.collapsed
+    var children = node.getChildren(this.props.id).map(function(children){
+      return <div className="tree-node-child-list">
+        <TestNode update={update} nodes={that.props.nodes} id={children.id} />
+      </div>
+    })
+
+    const panelstyle={
+      position: 'absolute',
+      left: thisnode.x,
+      top: thisnode.y,
+      width: thisnode.width,
+      height: thisnode.height 
+    }
+
+
+    return (
+      <div>
+        <Panel header={thisnode.content} style={panelstyle} >
+          {children}
+        </Panel>
+      </div>
+    )
+  
+  }
+}
+
+
+
+
+
+
 
 
 class About extends React.Component {
@@ -103,7 +156,7 @@ class About extends React.Component {
       var children = node.root().children.map(function(nodeName, index){
         return (
           <ul key={index}>
-            <TestNode update={nodeUpdate} nodes={that.props.tree} id={nodeName}/>
+            <TreePanel update={nodeUpdate} nodes={that.props.tree} id={nodeName}/>
           </ul>
         )
       })
@@ -116,41 +169,9 @@ class About extends React.Component {
   }
 }
 
-//module.exports = RootNode
-//module.exports = TestNode
 
 
 
-
-
-
-
-
-
-
-/* class About extends React.Component {
-
-  componentWillMount() {
-    console.log(this.props.registerListeners)
-    this.props.registerListeners();
-  }
-
-  render(){
-
-    var nodes = function(list){
-      return list.map(function(item){
-        return <p>
-          {item.content}
-        </p>
-      })
-    }
-
-    return <div> 
-        {nodes(this.props.tree)}
-      </div>
-  }
-}
-*/
 
 
 

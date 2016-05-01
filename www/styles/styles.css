@@ -319,3 +319,20 @@ textarea:focus{
   stroke: #000;
   shape-rendering: crispEdges;
 }
+
+
+/*test*/
+#testPanel {
+   position: absolute;
+   left: 30px;
+   top: 100px;
+   width: 300px;
+   height: 300px;
+}
+#testPanel2 {
+   position: absolute;
+   left: 330px;
+   top: 100px;
+   width: 300px;
+   height: 300px;
+}
