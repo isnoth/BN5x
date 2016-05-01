@@ -161,7 +161,7 @@ class About extends React.Component {
           </ul>
         )
       })
-      return (<div>
+      return (<div id="treeBody">
                 {node.root().content}
                 {children}
               </div>

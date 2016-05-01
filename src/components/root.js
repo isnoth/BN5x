@@ -18,9 +18,7 @@ class Wrap extends Component {
     return (
       <div>
         <NavApp/>
-        <div id="rootBody">
-          {this.props.children}
-        </div>
+        {this.props.children}
       </div>
     )
   }
