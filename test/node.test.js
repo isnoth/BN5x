@@ -41,4 +41,19 @@ describe('TestNode', function () {
     expect(node.getChildren("BNx").length).to.equal(3)
     expect(node.getChildren("BNx")[2].id).to.equal('BN3')
   });
+
+  it('getParent() should return ok', function () {
+    const nodes = [
+      {id: 'BN1', content: "taobao"},
+      {id: 'BN2', content: "taobao"},
+      {id: 'BN3', content: "taobao"}, 
+      {id: "root"}, 
+      {id: 'BNx', children:["BN1","BN2",'BN3']}
+    ]
+    var node = new Node(nodes)
+    expect(node.getParent("BN1").id).to.equal('BNx')
+
+  })
+
+
 });

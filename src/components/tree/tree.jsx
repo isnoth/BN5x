@@ -132,7 +132,8 @@ class TreePanel extends React.Component {
 class About extends React.Component {
   static propTypes = {
     registerListeners: PropTypes.func.isRequired,
-    nodeUpdate: PropTypes.func.isRequired
+    nodeUpdate: PropTypes.func.isRequired,
+    nodeCreate: PropTypes.func.isRequired
   };
 
 
@@ -143,13 +144,19 @@ class About extends React.Component {
 
 
   componentDidMount() {
-    Mousetrap.bind('ctrl+up', function() { console.log("bind(-)")});
+    const {nodeCreate} = this.props
+    //var node = new Node(this.props.tree)
+    Mousetrap.bind('ctrl+enter', function() {
+      console.log("bind(ctrl+enter)")
+      nodeCreate()
+    });
   }
 
   render(){
 
     const {
       registerListeners, 
+      nodeCreate,
       nodeUpdate,
       changeFocus
     } = this.props

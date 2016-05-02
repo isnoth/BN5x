@@ -48,5 +48,40 @@ export class Node{
       }
     }
   }
+
+  //async problems?
+  getParent(idName){
+    var findParent = null
+    this._lNodes.forEach(function(node){
+      if (node.children){
+        //console.log(node)
+        node.children.forEach(function(child){
+          //console.log(child, idName)
+          if (idName == child){
+            //console.log("find")
+            findParent = node
+          }
+        })
+      }
+    })
+
+    return findParent
+  }
+
+  getUniqueId() {
+    function randomString(length, chars) {
+      var result = '';
+      for (var i = length; i > 0; --i) result += chars[Math.round(Math.random() * (chars.length - 1))];
+      return result;
+    }
+    // TODO: Replace with Firebase.ServerValue.TIMESTAMP.
+    // Add BN here to prevent the css selector error.
+    return "BN-" + new Date().getTime().toString() + "-" + randomString(5, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+  }
+
+
 }
+
+
+
 

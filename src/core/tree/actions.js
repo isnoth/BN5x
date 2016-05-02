@@ -1,3 +1,5 @@
+import {Node} from "components/tree/node"
+
 import {
   CREATE_TASK_ERROR,
   CREATE_TASK_SUCCESS,
@@ -121,7 +123,46 @@ export function changeFocus(key, change) {
       payload: key
     });
   }
+}
 
+export function nodeCreate(key, change) {
+  console.log("tree action: ","nodeCreate")
+  return (dispatch, getState) => {
+    const { tree, firebase } = getState();
+
+    var node = new Node(tree.list)
+    var newid = node.getUniqueId()
+    var newNode = {
+      collapsed:false,
+      content:"",
+      fold:false,
+      icon:0,
+      id: newid,
+    }
+    console.log(tree.currentFocus)
+    var parent = node.getParent(tree.currentFocus)
+
+    const ref = firebase.tree/*.child('articles');*/
+    ref.child(newid).set(newNode, function(error){
+      console.log(error)
+    })
+
+
+    //var children = parent.children
+    var newkey = Math.max.apply(null, Object.keys(parent.children).map(function(i){return parseInt(i)}))+1
+    parent.children.newkey = newid
+    ref.child(parent.id).update({
+      children: parent.children
+    })
+
+
+    /*
+    dispatch({
+      type: CHANGE_CURRENT_FOCUS,
+      payload: key
+    });
+    */
+  }
 }
 
 export function nodeUpdate(key, change) {

@@ -104,7 +104,7 @@ describe('Array', function() {
       var f = new Date(5000)
       var t = new Date(5000+86400000*2)
 
-      var e = [0, 8640000, 86400000*2 ]
+      var e = [0, 86400000, 86400000*2 ]
 
       var out = generateDateArray(f, t)
       //console.log(out)
