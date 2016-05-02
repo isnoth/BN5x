@@ -12,29 +12,38 @@ import mousetrap from "mousetrap"
 class TestNode extends React.Component {
 
   static propTypes = {
-    update: PropTypes.func.isRequired
+    update: PropTypes.func.isRequired,
+    changeFocus: PropTypes.func.isRequired
   };
 
 
   componentDidMount(){
-    Mousetrap.bind('-', function() { console.log(this.props); });
+    var that = this
+    console.log('inputNode:', this.refs)
+    Mousetrap.bind('-', function() { console.log('props:', that.props); });
   }
 
 
   changeCollapse(key, collapsedState){
-    const {update} = this.props
+    const {update, changeFocus} = this.props
     //console.log(this.props)
     update(key, {type: "COLLAPSED", collapsed: collapsedState})
   }
 
   updateContent(key, value){
-    const {update} = this.props
+    const {update, changeFocus} = this.props
     update(key, {type: "VALUE", value: value})
+  }
+
+  setFocus(key){
+    console.log('setFocus: ', key )
+    const {update, changeFocus} = this.props
+    changeFocus(key)
   }
 
   render(){
 
-    const {update} = this.props
+    const {update, changeFocus} = this.props
     //console.log("[Node] nodes: ", this.props.nodes)
     //console.log("[Node] id: ", this.props.id)
     //var node = new Node(this.props.nodes)
@@ -45,7 +54,7 @@ class TestNode extends React.Component {
     var collapsed = thisnode.collapsed
     var children = node.getChildren(this.props.id).map(function(children){
       return <div className="tree-node-child-list">
-        <TestNode update={update} nodes={that.props.nodes} id={children.id} />
+        <TestNode update={update} changeFocus={changeFocus} nodes={that.props.nodes} id={children.id} />
       </div>
     })
     /*
@@ -66,7 +75,7 @@ class TestNode extends React.Component {
           <div onClick={this.changeCollapse.bind(this, thisnode.key, !thisnode.collapsed)} className="tree-node-icon-container">
             <Glyphicon className="tree-node-expand-button" glyph={collapsed==false?"minus":"plus"} /> 
           </div>
-          <textarea rows={1} className="tree-textarea" cols={60} value={thisnode.content} onChange={changeText.bind(this)} refs={thisnode.key}></textarea>
+          <textarea rows={1} className="tree-textarea" cols={60} value={thisnode.content} onChange={changeText.bind(this)} ref="inputNode" onFocus={this.setFocus.bind(this, thisnode.key)}></textarea>
         </div>
 
         {collapsed==false?children:null}
@@ -81,7 +90,7 @@ class TestNode extends React.Component {
 
 class TreePanel extends React.Component {
   render(){
-    const {update} = this.props
+    const {update, changeFocus} = this.props
     console.log(this.props.id)
     var that = this
     var node = new Node(this.props.nodes)
@@ -89,13 +98,13 @@ class TreePanel extends React.Component {
     var collapsed = thisnode.collapsed
     var children = node.getChildren(this.props.id).map(function(children){
       return <div className="tree-node-child-list">
-        <TestNode update={update} nodes={that.props.nodes} id={children.id} />
+        <TestNode update={update} changeFocus={changeFocus} nodes={that.props.nodes} id={children.id} />
       </div>
     })
 
     const panelstyle={
       position: 'absolute',
-      left: thisnode.x,
+      left: thisnode.x-60,
       top: thisnode.y,
       width: thisnode.width,
       height: thisnode.height,
@@ -139,7 +148,8 @@ class About extends React.Component {
 
     const {
       registerListeners, 
-      nodeUpdate
+      nodeUpdate,
+      changeFocus
     } = this.props
 
     //console.log("[Node]: ", this.props.nodes)
@@ -157,7 +167,7 @@ class About extends React.Component {
       var children = node.root().children.map(function(nodeName, index){
         return (
           <ul key={index}>
-            <TreePanel update={nodeUpdate} nodes={that.props.tree} id={nodeName}/>
+            <TreePanel update={nodeUpdate} changeFocus={changeFocus} nodes={that.props.tree} id={nodeName}/>
           </ul>
         )
       })

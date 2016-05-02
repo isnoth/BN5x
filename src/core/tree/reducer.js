@@ -3,13 +3,15 @@ import {
   CREATE_TASK_SUCCESS,
   DELETE_TASK_SUCCESS,
   UPDATE_TASK_SUCCESS,
-  GET_TASK_SUCCESS
+  GET_TASK_SUCCESS,
+  CHANGE_CURRENT_FOCUS
 } from './action-types';
 
 export const initialState = {
   deleted: null,
   list: [],
-  previous: []
+  previous: [],
+  currentFocus: null //which node is in focus
 };
 
 export function treeReducer(state =initialState, action) {
@@ -30,6 +32,9 @@ export function treeReducer(state =initialState, action) {
         list,
         previous: []
       };
+
+    case CHANGE_CURRENT_FOCUS:
+      return Object.assign({}, state, {currentFocus: action.payload})
 
     case DELETE_TASK_SUCCESS:
       return {

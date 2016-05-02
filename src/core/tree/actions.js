@@ -6,6 +6,7 @@ import {
   UPDATE_TASK_ERROR,
   UPDATE_TASK_SUCCESS,
   GET_TASK_SUCCESS,
+  CHANGE_CURRENT_FOCUS
 } from './action-types';
 
 
@@ -113,10 +114,18 @@ export function registerListeners() {
   };
 }
 
+export function changeFocus(key, change) {
+  return (dispatch, getState) => {
+    dispatch({
+      type: CHANGE_CURRENT_FOCUS,
+      payload: key
+    });
+  }
+
+}
 
 export function nodeUpdate(key, change) {
   console.log(key, change)
-
 
   return (dispatch, getState) => {
     const { /*auth,*/ firebase } = getState();
