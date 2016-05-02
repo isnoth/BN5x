@@ -20,7 +20,6 @@ class TestNode extends React.Component {
   componentDidMount(){
     var that = this
     console.log('inputNode:', this.refs)
-    Mousetrap.bind('-', function() { console.log('props:', that.props); });
   }
 
 
@@ -75,7 +74,7 @@ class TestNode extends React.Component {
           <div onClick={this.changeCollapse.bind(this, thisnode.key, !thisnode.collapsed)} className="tree-node-icon-container">
             <Glyphicon className="tree-node-expand-button" glyph={collapsed==false?"minus":"plus"} /> 
           </div>
-          <textarea rows={1} className="tree-textarea" cols={60} value={thisnode.content} onChange={changeText.bind(this)} ref="inputNode" onFocus={this.setFocus.bind(this, thisnode.key)}></textarea>
+          <textarea rows={1} className="tree-textarea mousetrap" cols={60} value={thisnode.content} onChange={changeText.bind(this)} ref="inputNode" onFocus={this.setFocus.bind(this, thisnode.key)}></textarea>
         </div>
 
         {collapsed==false?children:null}
@@ -143,6 +142,9 @@ class About extends React.Component {
   }
 
 
+  componentDidMount() {
+    Mousetrap.bind('ctrl+up', function() { console.log("bind(-)")});
+  }
 
   render(){
 
