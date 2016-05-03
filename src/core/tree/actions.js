@@ -125,7 +125,19 @@ export function changeFocus(key, change) {
   }
 }
 
-export function nodeCreate(key, change) {
+
+export function nodeDelete(type) {
+  console.log("tree action: ","nodeDelete")
+  return (dispatch, getState) => {
+    const { tree, firebase } = getState();
+    var node = new Node(tree.list)
+    console.log("[nodeDelete()]: ", tree.currentFocus, type)
+  }
+
+}
+
+
+export function nodeCreate(type) {
   console.log("tree action: ","nodeCreate")
   return (dispatch, getState) => {
     const { tree, firebase } = getState();
@@ -139,18 +151,36 @@ export function nodeCreate(key, change) {
       icon:0,
       id: newid,
     }
-    console.log(tree.currentFocus)
-    var parent = node.getParent(tree.currentFocus)
+    console.log("[nodeCreate()]: ", tree.currentFocus, type)
 
+    //create new node
     const ref = firebase.tree/*.child('articles');*/
     ref.child(newid).set(newNode, function(error){
       console.log(error)
     })
 
 
+    //update
+    if (type == "CURRENT"){
+      var parent = node.getParent(tree.currentFocus)
+    }else{
+      var parent = node.getbyName(tree.currentFocus)
+    }
     //var children = parent.children
-    var newkey = Math.max.apply(null, Object.keys(parent.children).map(function(i){return parseInt(i)}))+1
-    parent.children.newkey = newid
+    //var newkey = Math.max.apply(null, Object.keys(parent.children).map(function(i){return parseInt(i)}))+1
+    //console.log('newkey is:', newkey)
+    if (parent.children){
+      //parent.children.push( newid)
+      var l = parent.children.splice(parent.children.indexOf(tree.currentFocus)+1)
+      console.log('debug, ', parent.children, l)
+      parent.children.push(newid)
+      parent.children = parent.children.concat(l)
+    //  console.log(parent.children)
+    }else{
+      parent.children = []
+      parent.children.push(newid)
+    }
+
     ref.child(parent.id).update({
       children: parent.children
     })

@@ -148,7 +148,12 @@ class About extends React.Component {
     //var node = new Node(this.props.tree)
     Mousetrap.bind('ctrl+enter', function() {
       console.log("bind(ctrl+enter)")
-      nodeCreate()
+      nodeCreate('CURRENT')
+    });
+
+    Mousetrap.bind('shift+enter', function() {
+      console.log("bind(ctrl+enter)")
+      nodeCreate('CHILD')
     });
   }
 

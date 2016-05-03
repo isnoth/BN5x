@@ -49,6 +49,26 @@ export class Node{
     }
   }
 
+  getAllChildren(idName){
+    var l = []
+    var that = this
+    var current = this.getbyName(idName)
+    l.push(current)
+
+    if (current.children){
+      current.children.map(function(childId){
+        //var child = that.getbyName(childId)
+        //l.push(child)
+        var lChildren = that.getAllChildren(childId)
+        l = l.concat(lChildren)
+      })
+    }
+
+    return l
+    //return [this.getbyName(idName)]
+    //return [{id: "BN1"}]
+  }
+
   //async problems?
   getParent(idName){
     var findParent = null

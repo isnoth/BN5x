@@ -55,5 +55,29 @@ describe('TestNode', function () {
 
   })
 
+  it('getAllChildren() should return ok', function () {
+    const nodes = [
+      {id: 'BN1', content: "taobao"},
+      {id: 'BN2', content: "taobao"},
+      {id: 'BN3', content: "taobao", children:["BN4"]}, 
+      {id: 'BN4', content: "taobao"},
+      {id: "root"}, 
+      {id: 'BNx', children:["BN1","BN2",'BN3']}
+    ]
+    var node = new Node(nodes)
+    expect(node.getAllChildren("BN1")[0].id).to.equal('BN1')
+
+    expect(node.getAllChildren("BN3")[0].id).to.equal('BN3')
+    expect(node.getAllChildren("BN3")[1].id).to.equal('BN4')
+
+    expect(node.getAllChildren("BNx")[0].id).to.equal('BNx')
+    expect(node.getAllChildren("BNx")[1].id).to.equal('BN1')
+    expect(node.getAllChildren("BNx")[2].id).to.equal('BN2')
+    expect(node.getAllChildren("BNx")[3].id).to.equal('BN3')
+    expect(node.getAllChildren("BNx")[4].id).to.equal('BN4')
+
+
+
+  })
 
 });
