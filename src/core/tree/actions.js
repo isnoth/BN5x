@@ -131,7 +131,31 @@ export function nodeDelete(type) {
   return (dispatch, getState) => {
     const { tree, firebase } = getState();
     var node = new Node(tree.list)
-    console.log("[nodeDelete()]: ", tree.currentFocus, type)
+    var deleteList = node.getAllChildren(tree.currentFocus)
+    console.log('deleteList:, ', deleteList)
+    const ref = firebase.tree/*.child('articles');*/
+
+    var parent = node.getParent(tree.currentFocus)
+    console.log('before: ', parent.children)
+    parent.children.splice(parent.children.indexOf(tree.currentFocus), 1)
+
+    console.log('after: ', parent.children)
+
+
+    //udpate
+    ref.child(parent.id).update({
+      children: parent.children
+    }, function(result){
+      //delete
+      deleteList.map(function(item){
+        ref.child(item.id).remove()
+      })
+    })
+
+
+    
+
+    //console.log("[nodeDelete()]: ", )
   }
 
 }

@@ -144,7 +144,7 @@ class About extends React.Component {
 
 
   componentDidMount() {
-    const {nodeCreate} = this.props
+    const {nodeCreate, nodeDelete} = this.props
     //var node = new Node(this.props.tree)
     Mousetrap.bind('ctrl+enter', function() {
       console.log("bind(ctrl+enter)")
@@ -154,6 +154,11 @@ class About extends React.Component {
     Mousetrap.bind('shift+enter', function() {
       console.log("bind(ctrl+enter)")
       nodeCreate('CHILD')
+    });
+
+    Mousetrap.bind('ctrl+del', function() {
+      console.log("bind(ctrl+delete)")
+      nodeDelete()
     });
   }
 
