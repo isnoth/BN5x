@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
+const DefinePlugin = webpack.DefinePlugin;
 //var OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const path = require('path');
 
@@ -7,9 +8,9 @@ module.exports = {
   entry: './src/index.jsx',
   devtool: process.env.WEBPACK_DEVTOOL || 'source-map',
   output: {
-    publicPath: "http://127.0.0.1:8080/www/",
-    path: './www/',
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    path: path.resolve('./www'),
+    publicPath: '/'
   },
   resolve: {
     extensions: ['', '.js', '.jsx'],
@@ -28,6 +29,9 @@ module.exports = {
     ]
   },
   plugins: [
+    new DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production')
+    }),
     //new CommonsChunkPlugin('init.js'),
     //new OpenBrowserPlugin({ url: 'http://localhost:8080' })
   ] ,

@@ -102,7 +102,6 @@ textarea:focus{
 /*    position: absolute;
     text-align : right;
     left: -20px;*/
-    float: left;
     margin-top: 2px;
     -webkit-flex: none;
           flex: none;
@@ -263,84 +262,4 @@ textarea:focus{
 
 .mosaic-tile {
   width: 100%;
-}
-
-.article {
-  display: flex;
-  border-bottom: 1px dotted #666;
-  margin: 5px;
-  padding: 5px;
-}
-
-.content {
-  width: 600px;
-  display:flex
-}
-
-.tomatos {
-  width: 300px;
-  display:flex;
-}
-
-.pomodario {
-  display:flex;
-}
-.line {
-  display:flex;
-}
-.cell {
-  display: flex;
-  width: 100px;
-}
-.button_plus_minus {
-  height: 12px;
-  /*float: left*/
-}
-.button_container {
-  width: 30px
-}
-.pomodario_number {
-  width: 20px;
-  margin-left: 5px;
-  margin-top: 5px
-}
-
-
-
-
-/* for d3*/
-.axis {
-  font: 10px sans-serif;
-}
-
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-
-/*test*/
-#testPanel {
-   position: absolute;
-   left: 30px;
-   top: 100px;
-   width: 300px;
-   height: 300px;
-}
-#testPanel2 {
-   position: absolute;
-   left: 330px;
-   top: 100px;
-   width: 300px;
-   height: 300px;
-}
-#treeBody{
-  position:absolute
-}
-.panel-body{
-  padding:0px;
-  padding-top:15px;
-  margin-left: -10px;
 }

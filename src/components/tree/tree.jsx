@@ -72,7 +72,7 @@ class TestNode extends React.Component {
       <div>
         <div className='tree-node-wrapper'>
           <div onClick={this.changeCollapse.bind(this, thisnode.key, !thisnode.collapsed)} className="tree-node-icon-container">
-            <Glyphicon className="tree-node-expand-button" glyph={collapsed==false?"minus":"plus"} /> 
+            <Glyphicon className="tree-node-expand-button" glyph={collapsed==false?"minus-sign":"plus-sign"} /> 
           </div>
           <textarea rows={1} className="tree-textarea mousetrap" cols={60} value={thisnode.content} onChange={changeText.bind(this)} ref="inputNode" onFocus={this.setFocus.bind(this, thisnode.key)}></textarea>
         </div>
