@@ -43944,10 +43944,31 @@
 	var TreePanel = function (_React$Component2) {
 	  _inherits(TreePanel, _React$Component2);
 	
-	  function TreePanel() {
+	  function TreePanel(props) {
 	    _classCallCheck(this, TreePanel);
 	
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(TreePanel).apply(this, arguments));
+	    var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(TreePanel).call(this, props));
+	
+	    var _this2$props = _this2.props;
+	    var update = _this2$props.update;
+	    var changeFocus = _this2$props.changeFocus;
+	    var id = _this2$props.id;
+	    var nodes = _this2$props.nodes;
+	
+	    console.log(id);
+	    var node = new _node.Node(_this2.props.nodes);
+	    var thisnode = node.getbyName(_this2.props.id);
+	    console.log("thisnode:", thisnode);
+	    //this.setState({px: thisnode.x, py: thisnode.y})
+	
+	    _this2.state = {
+	      drag: false,
+	      px: thisnode.x,
+	      py: thisnode.y,
+	      x: 0,
+	      y: 0
+	    };
+	    return _this2;
 	  }
 	
 	  _createClass(TreePanel, [{
@@ -43961,6 +43982,7 @@
 	      var that = this;
 	      var node = new _node.Node(this.props.nodes);
 	      var thisnode = node.getbyName(this.props.id);
+	      //this.setState({pa: thisnode.x, pb: thisnode.b})
 	      var collapsed = thisnode.collapsed;
 	      var children = node.getChildren(this.props.id).map(function (children) {
 	        return _react2.default.createElement(
@@ -43969,22 +43991,79 @@
 	          _react2.default.createElement(TestNode, { update: update, changeFocus: changeFocus, nodes: that.props.nodes, id: children.id })
 	        );
 	      });
+	      var that = this;
 	
 	      var panelstyle = {
 	        position: 'absolute',
-	        left: thisnode.x - 60,
-	        top: thisnode.y,
+	        left: that.state.px + "px",
+	        top: that.state.py + "px",
 	        width: thisnode.width,
 	        height: thisnode.height,
-	        overflow: 'scroll'
+	        overflow: 'scroll',
+	        border: '1px solid #d4d4d4'
+	      };
+	
+	      var drag = function drag(e) {
+	        e.preventDefault();
+	        //console.log(e.clientX)
+	        this.setState({ drag: true, x: e.clientX, y: e.clientY });
+	
+	        console.log(this.state);
+	      };
+	
+	      var up = function up(e) {
+	        e.preventDefault();
+	        //console.log(e.clientX)
+	        //this.setState({drag: true, x: e.clientX, y: e.clientY})
+	
+	        var _x = this.state.x - e.clientX;
+	        var _y = this.state.y - e.clientY;
+	
+	        console.log(_x, _y);
+	
+	        var that = this;
+	
+	        this.setState({ drag: false });
+	        this.setState({ px: this.state.px - _x, py: this.state.py - _y });
+	        console.log(this.state);
+	      };
+	
+	      var move = function move(e) {
+	        return;
+	        e.preventDefault();
+	        //console.log(e)
+	        //console.log(e.clientX)
+	
+	        var _x = this.state.x - e.clientX;
+	        var _y = this.state.y - e.clientY;
+	
+	        console.log(_x, _y);
+	
+	        console.log(this.state);
+	
+	        if (this.state.drag) {
+	          this.setState({ px: this.state.px - _x, py: this.state.py - _y });
+	        }
 	      };
 	
 	      return _react2.default.createElement(
 	        'div',
 	        null,
 	        _react2.default.createElement(
-	          _reactBootstrap.Panel,
-	          { header: thisnode.content, style: panelstyle },
+	          'div',
+	          { header: thisnode.content,
+	            style: panelstyle },
+	          _react2.default.createElement('div', {
+	            onMouseDown: drag.bind(this),
+	            onMouseUp: up.bind(this),
+	            onMouseMove: move.bind(this),
+	            style: {
+	              'flex-direction': 'column',
+	              'display': 'flex',
+	              'background-color': '#a0a0a0',
+	              'height': '10px'
+	            }
+	          }),
 	          children
 	        )
 	      );

@@ -88,34 +88,118 @@ class TestNode extends React.Component {
 
 
 class TreePanel extends React.Component {
+  constructor(props){
+    super(props);
+
+
+
+
+    const {update, changeFocus, id, nodes} = this.props
+    console.log(id)
+    var node = new Node(this.props.nodes)
+    var thisnode = node.getbyName(this.props.id)
+    console.log("thisnode:", thisnode)
+    //this.setState({px: thisnode.x, py: thisnode.y})
+
+    this.state =  {
+      drag: false,
+      px:thisnode.x,
+      py:thisnode.y,
+      x: 0,
+      y: 0 
+    };
+  }
+
+
   render(){
     const {update, changeFocus} = this.props
     console.log(this.props.id)
     var that = this
     var node = new Node(this.props.nodes)
     var thisnode = node.getbyName(this.props.id)
+    //this.setState({pa: thisnode.x, pb: thisnode.b})
     var collapsed = thisnode.collapsed
     var children = node.getChildren(this.props.id).map(function(children){
       return <div className="tree-node-child-list">
         <TestNode update={update} changeFocus={changeFocus} nodes={that.props.nodes} id={children.id} />
       </div>
     })
+    var that =this
 
     const panelstyle={
       position: 'absolute',
-      left: thisnode.x-60,
-      top: thisnode.y,
+      left: that.state.px +"px",
+      top: that.state.py +"px",
       width: thisnode.width,
       height: thisnode.height,
-      overflow: 'scroll'
+      overflow: 'scroll',
+      border: '1px solid #d4d4d4'
+    }
+
+    const drag=function(e){
+      e.preventDefault()
+      //console.log(e.clientX)
+      this.setState({drag: true, x: e.clientX, y: e.clientY})
+
+      console.log(this.state)
+    }
+
+    const up=function(e){
+      e.preventDefault()
+      //console.log(e.clientX)
+      //this.setState({drag: true, x: e.clientX, y: e.clientY})
+
+      var _x = this.state.x - e.clientX 
+      var _y = this.state.y - e.clientY
+
+      console.log(_x, _y)
+
+      var that = this
+
+      this.setState({drag: false })
+      this.setState({px: this.state.px- _x, py: this.state.py - _y})
+      console.log(this.state)
+
+    }
+
+
+    const move=function(e){
+      return 
+      e.preventDefault()
+      //console.log(e)
+      //console.log(e.clientX)
+
+      var _x = this.state.x - e.clientX 
+      var _y = this.state.y - e.clientY
+
+      console.log(_x, _y)
+
+      console.log(this.state)
+
+      if (this.state.drag){
+        this.setState({px: this.state.px- _x, py: this.state.py - _y})
+      }
     }
 
 
     return (
       <div>
-        <Panel header={thisnode.content} style={panelstyle} >
+        <div header={thisnode.content} 
+             style={panelstyle}>
+               <div
+                 onMouseDown={drag.bind(this)} 
+                 onMouseUp={up.bind(this)} 
+                 onMouseMove={move.bind(this)}
+                 style={{
+                   'flex-direction': 'column',
+                   'display': 'flex',
+                   'background-color': '#a0a0a0',
+                   'height': '10px',
+                 }}
+                 >
+               </div>
           {children}
-        </Panel>
+        </div>
       </div>
     )
   
