@@ -339,8 +339,11 @@ textarea:focus{
 #treeBody{
   position:absolute
 }
+
+.panel-header{
+  margin-left: 10px;
+}
 .panel-body{
   padding:0px;
-  padding-top:15px;
   margin-left: -10px;
 }

@@ -92,8 +92,6 @@ class TreePanel extends React.Component {
     super(props);
 
 
-
-
     const {update, changeFocus, id, nodes} = this.props
     console.log(id)
     var node = new Node(this.props.nodes)
@@ -102,7 +100,10 @@ class TreePanel extends React.Component {
     //this.setState({px: thisnode.x, py: thisnode.y})
 
     this.state =  {
+      key: thisnode.key,
       drag: false,
+      originx: thisnode.x,
+      originy: thisnode.y,
       px:thisnode.x,
       py:thisnode.y,
       x: 0,
@@ -126,20 +127,16 @@ class TreePanel extends React.Component {
     })
     var that =this
 
-    const panelstyle={
-      position: 'absolute',
-      left: that.state.px +"px",
-      top: that.state.py +"px",
-      width: thisnode.width,
-      height: thisnode.height,
-      overflow: 'scroll',
-      border: '1px solid #d4d4d4'
-    }
 
     const drag=function(e){
       e.preventDefault()
       //console.log(e.clientX)
-      this.setState({drag: true, x: e.clientX, y: e.clientY})
+      this.setState({drag: true, 
+                     x: e.clientX, 
+                     y: e.clientY,
+                     originx: this.state.px,
+                     originy: this.state.py,
+      })
 
       console.log(this.state)
     }
@@ -156,15 +153,19 @@ class TreePanel extends React.Component {
 
       var that = this
 
-      this.setState({drag: false })
-      this.setState({px: this.state.px- _x, py: this.state.py - _y})
+      this.setState({drag: false,
+                     originx: this.state.px,
+                     originy: this.state.py,
+      })
+      //this.setState({px: this.state.px- _x, py: this.state.py - _y})
       console.log(this.state)
+      update(this.state.key, {type: "COMMON", value:{x:this.state.px, y:this.state.py}})
 
     }
 
 
     const move=function(e){
-      return 
+      //return 
       e.preventDefault()
       //console.log(e)
       //console.log(e.clientX)
@@ -172,33 +173,46 @@ class TreePanel extends React.Component {
       var _x = this.state.x - e.clientX 
       var _y = this.state.y - e.clientY
 
-      console.log(_x, _y)
-
-      console.log(this.state)
 
       if (this.state.drag){
-        this.setState({px: this.state.px- _x, py: this.state.py - _y})
+        console.log("move:", _x, _y)
+        console.log(this.state)
+        this.setState({px: this.state.originx- _x, py: this.state.originy - _y})
       }
     }
 
+    const panelstyle={
+      position: 'absolute',
+      left: that.state.px +"px",
+      top: that.state.py +"px",
+      width: thisnode.width,
+      height: thisnode.height,
+      overflow: 'auto',
+      "overflow-x": 'hidden',
+      border: '1px solid #d4d4d4'
+    }
 
     return (
       <div>
-        <div header={thisnode.content} 
-             style={panelstyle}>
-               <div
-                 onMouseDown={drag.bind(this)} 
-                 onMouseUp={up.bind(this)} 
-                 onMouseMove={move.bind(this)}
-                 style={{
-                   'flex-direction': 'column',
-                   'display': 'flex',
-                   'background-color': '#a0a0a0',
-                   'height': '10px',
-                 }}
-                 >
-               </div>
-          {children}
+        <div header={thisnode.content} style={panelstyle}>
+           <div
+             onMouseDown={drag.bind(this)} 
+             onMouseUp={up.bind(this)} 
+             onMouseMove={move.bind(this)}
+             style={{
+               'flex-direction': 'column',
+               'display': 'flex',
+               'background-color': '#6495ED',
+               'height': '10px',
+             }}
+             >
+           </div>
+           <div>
+            <textarea rows={1} className="panel-header tree-textarea mousetrap" cols={60} value={thisnode.content} ref="inputNode"></textarea>
+            <div className="panel-body">
+              {children}
+            </div>
+          </div>
         </div>
       </div>
     )

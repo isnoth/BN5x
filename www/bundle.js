@@ -43962,7 +43962,10 @@
 	    //this.setState({px: thisnode.x, py: thisnode.y})
 	
 	    _this2.state = {
+	      key: thisnode.key,
 	      drag: false,
+	      originx: thisnode.x,
+	      originy: thisnode.y,
 	      px: thisnode.x,
 	      py: thisnode.y,
 	      x: 0,
@@ -43993,20 +43996,15 @@
 	      });
 	      var that = this;
 	
-	      var panelstyle = {
-	        position: 'absolute',
-	        left: that.state.px + "px",
-	        top: that.state.py + "px",
-	        width: thisnode.width,
-	        height: thisnode.height,
-	        overflow: 'scroll',
-	        border: '1px solid #d4d4d4'
-	      };
-	
 	      var drag = function drag(e) {
 	        e.preventDefault();
 	        //console.log(e.clientX)
-	        this.setState({ drag: true, x: e.clientX, y: e.clientY });
+	        this.setState({ drag: true,
+	          x: e.clientX,
+	          y: e.clientY,
+	          originx: this.state.px,
+	          originy: this.state.py
+	        });
 	
 	        console.log(this.state);
 	      };
@@ -44023,13 +44021,17 @@
 	
 	        var that = this;
 	
-	        this.setState({ drag: false });
-	        this.setState({ px: this.state.px - _x, py: this.state.py - _y });
+	        this.setState({ drag: false,
+	          originx: this.state.px,
+	          originy: this.state.py
+	        });
+	        //this.setState({px: this.state.px- _x, py: this.state.py - _y})
 	        console.log(this.state);
+	        update(this.state.key, { type: "COMMON", value: { x: this.state.px, y: this.state.py } });
 	      };
 	
 	      var move = function move(e) {
-	        return;
+	        //return
 	        e.preventDefault();
 	        //console.log(e)
 	        //console.log(e.clientX)
@@ -44037,13 +44039,22 @@
 	        var _x = this.state.x - e.clientX;
 	        var _y = this.state.y - e.clientY;
 	
-	        console.log(_x, _y);
-	
-	        console.log(this.state);
-	
 	        if (this.state.drag) {
-	          this.setState({ px: this.state.px - _x, py: this.state.py - _y });
+	          console.log("move:", _x, _y);
+	          console.log(this.state);
+	          this.setState({ px: this.state.originx - _x, py: this.state.originy - _y });
 	        }
+	      };
+	
+	      var panelstyle = {
+	        position: 'absolute',
+	        left: that.state.px + "px",
+	        top: that.state.py + "px",
+	        width: thisnode.width,
+	        height: thisnode.height,
+	        overflow: 'auto',
+	        "overflow-x": 'hidden',
+	        border: '1px solid #d4d4d4'
 	      };
 	
 	      return _react2.default.createElement(
@@ -44051,8 +44062,7 @@
 	        null,
 	        _react2.default.createElement(
 	          'div',
-	          { header: thisnode.content,
-	            style: panelstyle },
+	          { header: thisnode.content, style: panelstyle },
 	          _react2.default.createElement('div', {
 	            onMouseDown: drag.bind(this),
 	            onMouseUp: up.bind(this),
@@ -44060,11 +44070,20 @@
 	            style: {
 	              'flex-direction': 'column',
 	              'display': 'flex',
-	              'background-color': '#a0a0a0',
+	              'background-color': '#6495ED',
 	              'height': '10px'
 	            }
 	          }),
-	          children
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement('textarea', { rows: 1, className: 'panel-header tree-textarea mousetrap', cols: 60, value: thisnode.content, ref: 'inputNode' }),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'panel-body' },
+	              children
+	            )
+	          )
 	        )
 	      );
 	    }
@@ -44561,6 +44580,11 @@
 	      case "COLLAPSED":
 	        ref.child(key).update({ collapsed: change.collapsed });
 	        break;
+	
+	      case "COMMON":
+	        ref.child(key).update(change.value);
+	        break;
+	
 	    }
 	
 	    /*

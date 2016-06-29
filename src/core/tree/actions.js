@@ -231,10 +231,14 @@ export function nodeUpdate(key, change) {
         ref.child(key).update({content: change.value})
         break
 
-      
       case "COLLAPSED":
         ref.child(key).update({collapsed: change.collapsed})
         break
+
+      case "COMMON":
+        ref.child(key).update( change.value )
+        break
+
     }
 
     /*
