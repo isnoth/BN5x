@@ -19,7 +19,7 @@ class TestNode extends React.Component {
 
   componentDidMount(){
     var that = this
-    console.log('inputNode:', this.refs)
+    //console.log('inputNode:', this.refs)
   }
 
 
@@ -35,7 +35,7 @@ class TestNode extends React.Component {
   }
 
   setFocus(key){
-    console.log('setFocus: ', key )
+    //console.log('setFocus: ', key )
     const {update, changeFocus} = this.props
     changeFocus(key)
   }
@@ -114,7 +114,7 @@ class TreePanel extends React.Component {
 
   render(){
     const {update, changeFocus} = this.props
-    console.log(this.props.id)
+    //console.log(this.props.id)
     var that = this
     var node = new Node(this.props.nodes)
     var thisnode = node.getbyName(this.props.id)
@@ -231,7 +231,9 @@ class About extends React.Component {
   static propTypes = {
     registerListeners: PropTypes.func.isRequired,
     nodeUpdate: PropTypes.func.isRequired,
-    nodeCreate: PropTypes.func.isRequired
+    nodeCreate: PropTypes.func.isRequired,
+    nodeCut: PropTypes.func.isRequired,
+    nodePaste: PropTypes.func.isRequired,
   };
 
 
@@ -242,7 +244,7 @@ class About extends React.Component {
 
 
   componentDidMount() {
-    const {nodeCreate, nodeDelete} = this.props
+    const {nodeCreate, nodeDelete, nodeCut, nodePaste} = this.props
     //var node = new Node(this.props.tree)
     Mousetrap.bind('ctrl+enter', function() {
       console.log("bind(ctrl+enter)")
@@ -258,6 +260,17 @@ class About extends React.Component {
       console.log("bind(ctrl+delete)")
       nodeDelete()
     });
+
+    Mousetrap.bind('ctrl+x', function() {
+      console.log("bind(ctrl+x)")
+      nodeCut()
+    });
+
+    Mousetrap.bind('alt+v', function() {
+      console.log("bind(ctrl+paste)")
+      nodePaste()
+    });
+
   }
 
   render(){
@@ -271,7 +284,7 @@ class About extends React.Component {
 
     //console.log("[Node]: ", this.props.nodes)
     var node = new Node(this.props.tree)
-    console.log("About:", node)
+    //console.log("About:", node)
     var that = this
 
 

@@ -5,7 +5,7 @@ import {expect} from 'chai';
 //import TestNode from '../src/components/MyButton';
 import {Node} from "../src/components/tree/node"
 //import {getRoot} from "../src/components/MyButton"
-
+//
 describe.skip('Shallow Rendering', function () {
   it('Todo item should not have todo-done class', function () {
     const nodes = [{id: 'BN1', content: "taobao"}, {id: "root"}]
@@ -52,7 +52,6 @@ describe('TestNode', function () {
     ]
     var node = new Node(nodes)
     expect(node.getParent("BN1").id).to.equal('BNx')
-
   })
 
   it('getAllChildren() should return ok', function () {
@@ -75,9 +74,6 @@ describe('TestNode', function () {
     expect(node.getAllChildren("BNx")[2].id).to.equal('BN2')
     expect(node.getAllChildren("BNx")[3].id).to.equal('BN3')
     expect(node.getAllChildren("BNx")[4].id).to.equal('BN4')
-
-
-
   })
 
 });

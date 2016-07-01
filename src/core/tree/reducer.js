@@ -4,14 +4,16 @@ import {
   DELETE_TASK_SUCCESS,
   UPDATE_TASK_SUCCESS,
   GET_TASK_SUCCESS,
-  CHANGE_CURRENT_FOCUS
+  CHANGE_CURRENT_FOCUS,
+  CUT_NODE
 } from './action-types';
 
 export const initialState = {
   deleted: null,
   list: [],
   previous: [],
-  currentFocus: null //which node is in focus
+  currentFocus: null,//which node is in focus
+  cut: null, //which node is in cut state
 };
 
 export function treeReducer(state =initialState, action) {
@@ -54,8 +56,12 @@ export function treeReducer(state =initialState, action) {
         previous: []
       };
 
+    case CUT_NODE:
+      return Object.assign({}, state, {cut: action.payload})
+
     case GET_TASK_SUCCESS:
 
+      console.log(action.payload)
       var lists = Object.keys(action.payload).map(
         function(key){
           return Object.assign(

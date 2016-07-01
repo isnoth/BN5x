@@ -8,79 +8,10 @@ import {
   UPDATE_TASK_ERROR,
   UPDATE_TASK_SUCCESS,
   GET_TASK_SUCCESS,
-  CHANGE_CURRENT_FOCUS
+  CHANGE_CURRENT_FOCUS,
+  CUT_NODE
 } from './action-types';
 
-
-/*
-export function createTask(title) {
-  return (dispatch, getState) => {
-    //const { auth, firebase } = getState();
-
-    firebase.child(`tasks/${auth.id}`)
-      .push({completed: false, title}, error => {
-        if (error) {
-          console.error('ERROR @ createTask :', error); // eslint-disable-line no-console
-          dispatch({
-            type: CREATE_TASK_ERROR,
-            payload: error
-          });
-        }
-      });
-  };
-}
-
-
-export function deleteTask(task) {
-  return (dispatch, getState) => {
-    const { auth, firebase } = getState();
-
-    firebase.child(`tasks/${auth.id}/${task.key}`)
-      .remove(error => {
-        if (error) {
-          console.error('ERROR @ deleteTask :', error); // eslint-disable-line no-console
-          dispatch({
-            type: DELETE_TASK_ERROR,
-            payload: error
-          });
-        }
-      });
-  };
-}
-
-
-export function undeleteTask() {
-  return (dispatch, getState) => {
-    const { auth, firebase, tasks } = getState();
-    const task = tasks.deleted;
-
-    firebase.child(`tasks/${auth.id}/${task.key}`)
-      .set({completed: task.completed, title: task.title}, error => {
-        if (error) {
-          console.error('ERROR @ undeleteTask :', error); // eslint-disable-line no-console
-        }
-      });
-  };
-}
-
-
-export function updateTask(task, changes) {
-  return (dispatch, getState) => {
-    const { auth, firebase } = getState();
-
-    firebase.child(`tasks/${auth.id}/${task.key}`)
-      .update(changes, error => {
-        if (error) {
-          console.error('ERROR @ updateTask :', error); // eslint-disable-line no-console
-          dispatch({
-            type: UPDATE_TASK_ERROR,
-            payload: error
-          });
-        }
-      });
-  };
-}
-*/
 
 
 export function registerListeners() {
@@ -127,19 +58,19 @@ export function changeFocus(key, change) {
 
 
 export function nodeDelete(type) {
-  console.log("tree action: ","nodeDelete")
+  //console.log("tree action: ","nodeDelete")
   return (dispatch, getState) => {
     const { tree, firebase } = getState();
     var node = new Node(tree.list)
     var deleteList = node.getAllChildren(tree.currentFocus)
-    console.log('deleteList:, ', deleteList)
+    //console.log('deleteList:, ', deleteList)
     const ref = firebase.tree/*.child('articles');*/
 
     var parent = node.getParent(tree.currentFocus)
-    console.log('before: ', parent.children)
+    //console.log('before: ', parent.children)
     parent.children.splice(parent.children.indexOf(tree.currentFocus), 1)
 
-    console.log('after: ', parent.children)
+    //console.log('after: ', parent.children)
 
 
     //udpate
@@ -151,18 +82,13 @@ export function nodeDelete(type) {
         ref.child(item.id).remove()
       })
     })
-
-
-    
-
-    //console.log("[nodeDelete()]: ", )
   }
 
 }
 
 
 export function nodeCreate(type) {
-  console.log("tree action: ","nodeCreate")
+  //console.log("tree action: ","nodeCreate")
   return (dispatch, getState) => {
     const { tree, firebase } = getState();
 
@@ -175,12 +101,12 @@ export function nodeCreate(type) {
       icon:0,
       id: newid,
     }
-    console.log("[nodeCreate()]: ", tree.currentFocus, type)
+    //console.log("[nodeCreate()]: ", tree.currentFocus, type)
 
     //create new node
     const ref = firebase.tree/*.child('articles');*/
     ref.child(newid).set(newNode, function(error){
-      console.log(error)
+      //console.log(error)
     })
 
 
@@ -196,7 +122,7 @@ export function nodeCreate(type) {
     if (parent.children){
       //parent.children.push( newid)
       var l = parent.children.splice(parent.children.indexOf(tree.currentFocus)+1)
-      console.log('debug, ', parent.children, l)
+      //console.log('debug, ', parent.children, l)
       parent.children.push(newid)
       parent.children = parent.children.concat(l)
     //  console.log(parent.children)
@@ -220,7 +146,7 @@ export function nodeCreate(type) {
 }
 
 export function nodeUpdate(key, change) {
-  console.log(key, change)
+  //console.log(key, change)
 
   return (dispatch, getState) => {
     const { /*auth,*/ firebase } = getState();
@@ -238,37 +164,78 @@ export function nodeUpdate(key, change) {
       case "COMMON":
         ref.child(key).update( change.value )
         break
-
     }
-
-    /*
-    if (Object.keys(change).indexOf("collapsed")){
-      console.log("collapsed：", key, change)
-      ref.child(key).update({collapsed: change.collapsed})
-    }else if  (Object.keys(change).indexOf("value")){
-      console.log(key, change.value)
-      ref.child(key).update({content: change.value})
-    }
-    */
-
-
-    /*
-    
-    .transaction(function(i){
-      console.log(i)
-      return (Object.assign({}, i, {collapsed: !i.collapsed}))
-    })
-    */
-
-
-   /*
-    dispatch({
-      type: UPDATE_TASK_SUCCESS,
-      payload: {key: key, type: "collapsed"}
-    });
-    */
   }
 }
+
+export function nodeCut() {
+  //console.log("node cut")
+  return (dispatch, getState) => {
+    const { tree, firebase } = getState();
+    const ref = firebase.tree/*.child('articles');*/
+
+    dispatch({
+      type: CUT_NODE,
+      payload: tree.currentFocus,
+    });
+
+  }
+
+}
+
+export function nodePaste() {
+  return (dispatch, getState) => {
+    const { tree, firebase } = getState();
+    const ref = firebase.tree/*.child('articles');*/
+
+    console.log("cut, focut: ", tree.cut, tree.currentFocus)
+
+    //if null then return 
+    if (!tree.cut | tree.currentFocus){
+      return 
+    }
+    //if same then do nothing
+    if (tree.cut == tree.currentFocus){
+      return
+    }
+
+    var node = new Node(tree.list)
+    const newparent = node.getParent(tree.currentFocus)
+    console.log("node:", node._lNodes.map(function(i){return i.content + "_"+i.key}))
+    //console.log("newparent:", newparent, tree.currentFocus)
+
+    //cut
+    const currentparent = node.getParent(tree.cut)
+    var currentchildren = currentparent.children 
+    console.log("currentchildren before:", currentchildren)
+    currentchildren.splice(currentchildren.indexOf(tree.cut),1)
+    console.log("currentchildren after:", currentchildren)
+
+    //paste
+    let newchildren = newparent.children 
+    console.log("newchildren before:", newchildren)
+    var index = newchildren.indexOf(tree.currentFocus)+1
+    console.log("index: ", index)
+    var _index =-( newchildren.length - index)
+    console.log("_index: ", _index)
+    newchildren = [...newchildren.slice(0,index), tree.cut , ...newchildren.slice(_index)]
+    console.log("newchildren after:", newchildren)
+
+
+    if (newparent.id != currentparent.id){
+      ref.child(currentparent.id).update({
+        children: currentchildren
+      })
+    }
+
+    ref.child(newparent.id).update({
+      children: newchildren
+    })
+
+  }
+
+}
+
 
 
 

@@ -60,11 +60,11 @@
 	
 	var _reactRouter = __webpack_require__(156);
 	
-	var _reactRouterRedux = __webpack_require__(508);
+	var _reactRouterRedux = __webpack_require__(513);
 	
-	var _config = __webpack_require__(513);
+	var _config = __webpack_require__(518);
 	
-	var _store = __webpack_require__(514);
+	var _store = __webpack_require__(519);
 	
 	var _store2 = _interopRequireDefault(_store);
 	
@@ -19342,6 +19342,10 @@
 	
 	var _test2 = _interopRequireDefault(_test);
 	
+	var _tree3 = __webpack_require__(508);
+	
+	var _tree4 = _interopRequireDefault(_tree3);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -19416,7 +19420,8 @@
 	            _react2.default.createElement(_reactRouter.Route, { path: 'stat', component: _stat2.default }),
 	            _react2.default.createElement(_reactRouter.Route, { path: 'pomodario', component: _pomodario2.default }),
 	            _react2.default.createElement(_reactRouter.Route, { path: 'articles', component: _articles2.default }),
-	            _react2.default.createElement(_reactRouter.Route, { path: 'test', component: _test2.default })
+	            _react2.default.createElement(_reactRouter.Route, { path: 'test', component: _test2.default }),
+	            _react2.default.createElement(_reactRouter.Route, { path: 'tree2', component: _tree4.default })
 	          )
 	        )
 	      );
@@ -26059,6 +26064,11 @@
 	              _reactBootstrap.NavItem,
 	              { eventKey: 5, href: '#test' },
 	              'Test'
+	            ),
+	            _react2.default.createElement(
+	              _reactBootstrap.NavItem,
+	              { eventKey: 6, href: '#tree2' },
+	              'Tree2'
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -43850,7 +43860,7 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      var that = this;
-	      console.log('inputNode:', this.refs);
+	      //console.log('inputNode:', this.refs)
 	    }
 	  }, {
 	    key: 'changeCollapse',
@@ -43874,7 +43884,7 @@
 	  }, {
 	    key: 'setFocus',
 	    value: function setFocus(key) {
-	      console.log('setFocus: ', key);
+	      //console.log('setFocus: ', key )
 	      var _props3 = this.props;
 	      var update = _props3.update;
 	      var changeFocus = _props3.changeFocus;
@@ -43980,8 +43990,8 @@
 	      var _props5 = this.props;
 	      var update = _props5.update;
 	      var changeFocus = _props5.changeFocus;
+	      //console.log(this.props.id)
 	
-	      console.log(this.props.id);
 	      var that = this;
 	      var node = new _node.Node(this.props.nodes);
 	      var thisnode = node.getbyName(this.props.id);
@@ -44113,6 +44123,8 @@
 	      var _props6 = this.props;
 	      var nodeCreate = _props6.nodeCreate;
 	      var nodeDelete = _props6.nodeDelete;
+	      var nodeCut = _props6.nodeCut;
+	      var nodePaste = _props6.nodePaste;
 	      //var node = new Node(this.props.tree)
 	
 	      Mousetrap.bind('ctrl+enter', function () {
@@ -44129,6 +44141,16 @@
 	        console.log("bind(ctrl+delete)");
 	        nodeDelete();
 	      });
+	
+	      Mousetrap.bind('ctrl+x', function () {
+	        console.log("bind(ctrl+x)");
+	        nodeCut();
+	      });
+	
+	      Mousetrap.bind('alt+v', function () {
+	        console.log("bind(ctrl+paste)");
+	        nodePaste();
+	      });
 	    }
 	  }, {
 	    key: 'render',
@@ -44142,7 +44164,7 @@
 	      //console.log("[Node]: ", this.props.nodes)
 	
 	      var node = new _node.Node(this.props.tree);
-	      console.log("About:", node);
+	      //console.log("About:", node)
 	      var that = this;
 	
 	      if (node.root() == null) {
@@ -44175,7 +44197,9 @@
 	About.propTypes = {
 	  registerListeners: _react.PropTypes.func.isRequired,
 	  nodeUpdate: _react.PropTypes.func.isRequired,
-	  nodeCreate: _react.PropTypes.func.isRequired
+	  nodeCreate: _react.PropTypes.func.isRequired,
+	  nodeCut: _react.PropTypes.func.isRequired,
+	  nodePaste: _react.PropTypes.func.isRequired
 	};
 	exports.default = (0, _reactRedux.connect)(function (state) {
 	  return {
@@ -44250,9 +44274,10 @@
 	  deleted: null,
 	  list: [],
 	  previous: [],
-	  currentFocus: null //which node is in focus
-	};
+	  currentFocus: null, //which node is in focus
+	  cut: null };
 	
+	//which node is in cut state
 	function treeReducer() {
 	  var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
 	  var action = arguments[1];
@@ -44295,6 +44320,9 @@
 	        previous: []
 	      };
 	
+	    case _actionTypes.CUT_NODE:
+	      return _extends({}, state, { cut: action.payload });
+	
 	    case _actionTypes.GET_TASK_SUCCESS:
 	
 	      var lists = Object.keys(action.payload).map(function (key) {
@@ -44333,6 +44361,8 @@
 	var GET_TASK_SUCCESS = exports.GET_TASK_SUCCESS = 'GET_TASK_SUCCESS';
 	
 	var CHANGE_CURRENT_FOCUS = exports.CHANGE_CURRENT_FOCUS = 'CHANGE_CURRENT_FOCUS';
+	
+	var CUT_NODE = exports.CUT_NODE = 'CUT_NODE';
 
 /***/ },
 /* 491 */
@@ -44348,80 +44378,14 @@
 	exports.nodeDelete = nodeDelete;
 	exports.nodeCreate = nodeCreate;
 	exports.nodeUpdate = nodeUpdate;
+	exports.nodeCut = nodeCut;
+	exports.nodePaste = nodePaste;
 	
 	var _node = __webpack_require__(492);
 	
 	var _actionTypes = __webpack_require__(490);
 	
-	/*
-	export function createTask(title) {
-	  return (dispatch, getState) => {
-	    //const { auth, firebase } = getState();
-	
-	    firebase.child(`tasks/${auth.id}`)
-	      .push({completed: false, title}, error => {
-	        if (error) {
-	          console.error('ERROR @ createTask :', error); // eslint-disable-line no-console
-	          dispatch({
-	            type: CREATE_TASK_ERROR,
-	            payload: error
-	          });
-	        }
-	      });
-	  };
-	}
-	
-	
-	export function deleteTask(task) {
-	  return (dispatch, getState) => {
-	    const { auth, firebase } = getState();
-	
-	    firebase.child(`tasks/${auth.id}/${task.key}`)
-	      .remove(error => {
-	        if (error) {
-	          console.error('ERROR @ deleteTask :', error); // eslint-disable-line no-console
-	          dispatch({
-	            type: DELETE_TASK_ERROR,
-	            payload: error
-	          });
-	        }
-	      });
-	  };
-	}
-	
-	
-	export function undeleteTask() {
-	  return (dispatch, getState) => {
-	    const { auth, firebase, tasks } = getState();
-	    const task = tasks.deleted;
-	
-	    firebase.child(`tasks/${auth.id}/${task.key}`)
-	      .set({completed: task.completed, title: task.title}, error => {
-	        if (error) {
-	          console.error('ERROR @ undeleteTask :', error); // eslint-disable-line no-console
-	        }
-	      });
-	  };
-	}
-	
-	
-	export function updateTask(task, changes) {
-	  return (dispatch, getState) => {
-	    const { auth, firebase } = getState();
-	
-	    firebase.child(`tasks/${auth.id}/${task.key}`)
-	      .update(changes, error => {
-	        if (error) {
-	          console.error('ERROR @ updateTask :', error); // eslint-disable-line no-console
-	          dispatch({
-	            type: UPDATE_TASK_ERROR,
-	            payload: error
-	          });
-	        }
-	      });
-	  };
-	}
-	*/
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
 	function registerListeners() {
 	  return function (dispatch, getState) {
@@ -44470,7 +44434,7 @@
 	}
 	
 	function nodeDelete(type) {
-	  console.log("tree action: ", "nodeDelete");
+	  //console.log("tree action: ","nodeDelete")
 	  return function (dispatch, getState) {
 	    var _getState2 = getState();
 	
@@ -44479,14 +44443,14 @@
 	
 	    var node = new _node.Node(tree.list);
 	    var deleteList = node.getAllChildren(tree.currentFocus);
-	    console.log('deleteList:, ', deleteList);
+	    //console.log('deleteList:, ', deleteList)
 	    var ref = firebase.tree; /*.child('articles');*/
 	
 	    var parent = node.getParent(tree.currentFocus);
-	    console.log('before: ', parent.children);
+	    //console.log('before: ', parent.children)
 	    parent.children.splice(parent.children.indexOf(tree.currentFocus), 1);
 	
-	    console.log('after: ', parent.children);
+	    //console.log('after: ', parent.children)
 	
 	    //udpate
 	    ref.child(parent.id).update({
@@ -44497,13 +44461,11 @@
 	        ref.child(item.id).remove();
 	      });
 	    });
-	
-	    //console.log("[nodeDelete()]: ", )
 	  };
 	}
 	
 	function nodeCreate(type) {
-	  console.log("tree action: ", "nodeCreate");
+	  //console.log("tree action: ","nodeCreate")
 	  return function (dispatch, getState) {
 	    var _getState3 = getState();
 	
@@ -44520,12 +44482,12 @@
 	      icon: 0,
 	      id: newid
 	    };
-	    console.log("[nodeCreate()]: ", tree.currentFocus, type);
+	    //console.log("[nodeCreate()]: ", tree.currentFocus, type)
 	
 	    //create new node
 	    var ref = firebase.tree; /*.child('articles');*/
 	    ref.child(newid).set(newNode, function (error) {
-	      console.log(error);
+	      //console.log(error)
 	    });
 	
 	    //update
@@ -44540,7 +44502,7 @@
 	    if (parent.children) {
 	      //parent.children.push( newid)
 	      var l = parent.children.splice(parent.children.indexOf(tree.currentFocus) + 1);
-	      console.log('debug, ', parent.children, l);
+	      //console.log('debug, ', parent.children, l)
 	      parent.children.push(newid);
 	      parent.children = parent.children.concat(l);
 	      //  console.log(parent.children)
@@ -44563,7 +44525,7 @@
 	}
 	
 	function nodeUpdate(key, change) {
-	  console.log(key, change);
+	  //console.log(key, change)
 	
 	  return function (dispatch, getState) {
 	    var _getState4 = getState();
@@ -44584,33 +44546,80 @@
 	      case "COMMON":
 	        ref.child(key).update(change.value);
 	        break;
+	    }
+	  };
+	}
 	
+	function nodeCut() {
+	  //console.log("node cut")
+	  return function (dispatch, getState) {
+	    var _getState5 = getState();
+	
+	    var tree = _getState5.tree;
+	    var firebase = _getState5.firebase;
+	
+	    var ref = firebase.tree; /*.child('articles');*/
+	
+	    dispatch({
+	      type: _actionTypes.CUT_NODE,
+	      payload: tree.currentFocus
+	    });
+	  };
+	}
+	
+	function nodePaste() {
+	  return function (dispatch, getState) {
+	    var _getState6 = getState();
+	
+	    var tree = _getState6.tree;
+	    var firebase = _getState6.firebase;
+	
+	    var ref = firebase.tree; /*.child('articles');*/
+	
+	    console.log("cut, focut: ", tree.cut, tree.currentFocus);
+	
+	    //if null then return
+	    if (!tree.cut | tree.currentFocus) {
+	      return;
+	    }
+	    //if same then do nothing
+	    if (tree.cut == tree.currentFocus) {
+	      return;
 	    }
 	
-	    /*
-	    if (Object.keys(change).indexOf("collapsed")){
-	      console.log("collapsed：", key, change)
-	      ref.child(key).update({collapsed: change.collapsed})
-	    }else if  (Object.keys(change).indexOf("value")){
-	      console.log(key, change.value)
-	      ref.child(key).update({content: change.value})
+	    var node = new _node.Node(tree.list);
+	    var newparent = node.getParent(tree.currentFocus);
+	    console.log("node:", node._lNodes.map(function (i) {
+	      return i.content + "_" + i.key;
+	    }));
+	    //console.log("newparent:", newparent, tree.currentFocus)
+	
+	    //cut
+	    var currentparent = node.getParent(tree.cut);
+	    var currentchildren = currentparent.children;
+	    console.log("currentchildren before:", currentchildren);
+	    currentchildren.splice(currentchildren.indexOf(tree.cut), 1);
+	    console.log("currentchildren after:", currentchildren);
+	
+	    //paste
+	    var newchildren = newparent.children;
+	    console.log("newchildren before:", newchildren);
+	    var index = newchildren.indexOf(tree.currentFocus) + 1;
+	    console.log("index: ", index);
+	    var _index = -(newchildren.length - index);
+	    console.log("_index: ", _index);
+	    newchildren = [].concat(_toConsumableArray(newchildren.slice(0, index)), [tree.cut], _toConsumableArray(newchildren.slice(_index)));
+	    console.log("newchildren after:", newchildren);
+	
+	    if (newparent.id != currentparent.id) {
+	      ref.child(currentparent.id).update({
+	        children: currentchildren
+	      });
 	    }
-	    */
 	
-	    /*
-	    
-	    .transaction(function(i){
-	      console.log(i)
-	      return (Object.assign({}, i, {collapsed: !i.collapsed}))
-	    })
-	    */
-	
-	    /*
-	     dispatch({
-	       type: UPDATE_TASK_SUCCESS,
-	       payload: {key: key, type: "collapsed"}
-	     });
-	     */
+	    ref.child(newparent.id).update({
+	      children: newchildren
+	    });
 	  };
 	}
 
@@ -44710,21 +44719,37 @@
 	  }, {
 	    key: 'getParent',
 	    value: function getParent(idName) {
-	      var findParent = null;
-	      this._lNodes.forEach(function (node) {
-	        if (node.children) {
-	          //console.log(node)
-	          node.children.forEach(function (child) {
-	            //console.log(child, idName)
-	            if (idName == child) {
-	              //console.log("find")
-	              findParent = node;
-	            }
-	          });
-	        }
+	
+	      //console.log("getParent:", idName, this._lNodes)
+	
+	      var _lWithChildren = this._lNodes.filter(function (i) {
+	        return i.children;
 	      });
 	
-	      return findParent;
+	      //console.log("_lWithChildren:", _lWithChildren)
+	
+	      var _lfind = _lWithChildren.filter(function (i) {
+	        return i.children.indexOf(idName) >= 0;
+	      });
+	
+	      //console.log("getParent:", _lfind)
+	      return _lfind[0];
+	
+	      /*
+	      this._lNodes.forEach(function(node){
+	        if (node.children){
+	          console.log(node)
+	          node.children.forEach(function(child){
+	            console.log(child, idName)
+	            if (idName == child){
+	              console.log("find")
+	              findParent = node
+	            }
+	          })
+	        }
+	      })
+	       return findParent
+	      */
 	    }
 	  }, {
 	    key: 'getUniqueId',
@@ -72948,9 +72973,221 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(2);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(154);
+	
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+	
+	var _reactBootstrap = __webpack_require__(236);
+	
+	var _mousetrap = __webpack_require__(493);
+	
+	var _mousetrap2 = _interopRequireDefault(_mousetrap);
+	
+	var _reactRedux = __webpack_require__(213);
+	
+	var _tree = __webpack_require__(509);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Tree2 = function (_React$Component) {
+	  _inherits(Tree2, _React$Component);
+	
+	  function Tree2() {
+	    _classCallCheck(this, Tree2);
+	
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Tree2).apply(this, arguments));
+	  }
+	
+	  _createClass(Tree2, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var that = this;
+	    }
+	  }, {
+	    key: 'create',
+	    value: function create(value) {
+	      var createNode = this.props.createNode;
+	
+	      createNode(value);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var tree2 = this.props.tree2;
+	
+	      console.log(tree2);
+	
+	      var list = function list(l) {
+	        return l.map(function (item) {
+	          return _react2.default.createElement(
+	            'p',
+	            null,
+	            item
+	          );
+	        });
+	      };
+	
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        list(tree2),
+	        _react2.default.createElement(
+	          'button',
+	          { onClick: this.create.bind(this, "test") },
+	          ' create '
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Tree2;
+	}(_react2.default.Component);
+	
+	exports.default = (0, _reactRedux.connect)(function (state) {
+	  return {
+	    tree2: state.tree2
+	  };
+	}, _extends({}, _tree.tree2Actions))(Tree2);
+
+/***/ },
+/* 509 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.tree2Actions = undefined;
+	
+	var _reducer = __webpack_require__(510);
+	
+	Object.keys(_reducer).forEach(function (key) {
+	  if (key === "default") return;
+	  Object.defineProperty(exports, key, {
+	    enumerable: true,
+	    get: function get() {
+	      return _reducer[key];
+	    }
+	  });
+	});
+	
+	var _actionTypes = __webpack_require__(511);
+	
+	Object.keys(_actionTypes).forEach(function (key) {
+	  if (key === "default") return;
+	  Object.defineProperty(exports, key, {
+	    enumerable: true,
+	    get: function get() {
+	      return _actionTypes[key];
+	    }
+	  });
+	});
+	
+	var _actions = __webpack_require__(512);
+	
+	var tree2Actions = _interopRequireWildcard(_actions);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	exports.tree2Actions = tree2Actions;
+
+/***/ },
+/* 510 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.tree2Reducer = tree2Reducer;
+	
+	var _actionTypes = __webpack_require__(511);
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
+	function tree2Reducer() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var action = arguments[1];
+	
+	
+	  switch (action.type) {
+	    case _actionTypes.CREATE_NODE:
+	      return [].concat(_toConsumableArray(state), [action.payload]);
+	
+	    default:
+	      return state;
+	  }
+	}
+
+/***/ },
+/* 511 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var CREATE_NODE = exports.CREATE_NODE = 'CREATE_NODE';
+
+/***/ },
+/* 512 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.createNode = createNode;
+	
+	var _actionTypes = __webpack_require__(511);
+	
+	function createNode(value) {
+	  return function (dispatch, getState) {
+	    var _getState = getState();
+	
+	    var tree = _getState.tree;
+	    var firebase = _getState.firebase;
+	
+	    var ref = firebase.tree; /*.child('articles');*/
+	
+	    dispatch({
+	      type: _actionTypes.CREATE_NODE,
+	      payload: value
+	    });
+	  };
+	}
+
+/***/ },
+/* 513 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	exports.routerMiddleware = exports.routerActions = exports.goForward = exports.goBack = exports.go = exports.replace = exports.push = exports.CALL_HISTORY_METHOD = exports.routerReducer = exports.LOCATION_CHANGE = exports.syncHistoryWithStore = undefined;
 	
-	var _reducer = __webpack_require__(509);
+	var _reducer = __webpack_require__(514);
 	
 	Object.defineProperty(exports, 'LOCATION_CHANGE', {
 	  enumerable: true,
@@ -72965,7 +73202,7 @@
 	  }
 	});
 	
-	var _actions = __webpack_require__(510);
+	var _actions = __webpack_require__(515);
 	
 	Object.defineProperty(exports, 'CALL_HISTORY_METHOD', {
 	  enumerable: true,
@@ -73010,11 +73247,11 @@
 	  }
 	});
 	
-	var _sync = __webpack_require__(511);
+	var _sync = __webpack_require__(516);
 	
 	var _sync2 = _interopRequireDefault(_sync);
 	
-	var _middleware = __webpack_require__(512);
+	var _middleware = __webpack_require__(517);
 	
 	var _middleware2 = _interopRequireDefault(_middleware);
 	
@@ -73024,7 +73261,7 @@
 	exports.routerMiddleware = _middleware2['default'];
 
 /***/ },
-/* 509 */
+/* 514 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -73068,7 +73305,7 @@
 	}
 
 /***/ },
-/* 510 */
+/* 515 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -73110,7 +73347,7 @@
 	var routerActions = exports.routerActions = { push: push, replace: replace, go: go, goBack: goBack, goForward: goForward };
 
 /***/ },
-/* 511 */
+/* 516 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -73123,7 +73360,7 @@
 	
 	exports['default'] = syncHistoryWithStore;
 	
-	var _reducer = __webpack_require__(509);
+	var _reducer = __webpack_require__(514);
 	
 	var defaultSelectLocationState = function defaultSelectLocationState(state) {
 	  return state.routing;
@@ -73262,7 +73499,7 @@
 	}
 
 /***/ },
-/* 512 */
+/* 517 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -73272,7 +73509,7 @@
 	});
 	exports['default'] = routerMiddleware;
 	
-	var _actions = __webpack_require__(510);
+	var _actions = __webpack_require__(515);
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
@@ -73300,7 +73537,7 @@
 	}
 
 /***/ },
-/* 513 */
+/* 518 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -73313,14 +73550,14 @@
 	  exports.
 	  //'https://thisisatestapp.firebaseio.com/items/test4/'
 	  //'https://todo-react-redux.firebaseio.com';
-	  FIREBASE_URL = FIREBASE_URL = 'https://burning-torch-9051.firebaseio.com/notes/users/simplelogin:f03ad24b-e53c-4a0b-aceb-ee09655742c8/files/BN-1457183926722-SLM8n/nodes/';
+	  FIREBASE_URL = FIREBASE_URL = 'https://burning-torch-9051.firebaseio.com/notes/users/simplelogin:f03ad24b-e53c-4a0b-aceb-ee09655742c8/files/BN-1467275238028-5ePw1/nodes/';
 	} else {
 	  exports.FIREBASE_URL = FIREBASE_URL = 'https://burning-torch-9051.firebaseio.com/notes/users/simplelogin:f03ad24b-e53c-4a0b-aceb-ee09655742c8/files/BN-1457183852775-qAKrG/nodes/';
 	}exports.FIREBASE_URL = FIREBASE_URL;
 	var POMODARIO_FIREBASE_URL = exports.POMODARIO_FIREBASE_URL = 'https://thisisatestapp.firebaseio.com/items/test4/';
 
 /***/ },
-/* 514 */
+/* 519 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -73331,13 +73568,17 @@
 	
 	var _redux = __webpack_require__(219);
 	
-	var _reduxThunk = __webpack_require__(515);
+	var _reduxThunk = __webpack_require__(520);
 	
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 	
-	var _reducer = __webpack_require__(516);
+	var _reducer = __webpack_require__(521);
 	
 	var _reducer2 = _interopRequireDefault(_reducer);
+	
+	var _reduxLogger = __webpack_require__(528);
+	
+	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -73346,21 +73587,17 @@
 	
 	  var finalCreateStore = void 0;
 	
-	  /*
-	  if (process.env.NODE_ENV !== 'production') {
+	  if (false) {
 	    // configure redux-devtools-extension
 	    // @see https://github.com/zalmoxisus/redux-devtools-extension
-	    finalCreateStore = compose(
-	      applyMiddleware(thunk),
-	      window.devToolsExtension ? window.devToolsExtension() : f => f,
-	    )(createStore);
-	  }
-	  else {
-	    finalCreateStore = applyMiddleware(thunk)(createStore);
-	  }
-	  */
+	    var logger = (0, _reduxLogger2.default)();
 	
-	  finalCreateStore = (0, _redux.applyMiddleware)(_reduxThunk2.default)(_redux.createStore);
+	    finalCreateStore = (0, _redux.compose)((0, _redux.applyMiddleware)(_reduxThunk2.default), window.devToolsExtension ? window.devToolsExtension() : function (f) {
+	      return f;
+	    })(_redux.createStore);
+	  } else {
+	    finalCreateStore = (0, _redux.applyMiddleware)(_reduxThunk2.default)(_redux.createStore);
+	  }
 	
 	  var store = finalCreateStore(_reducer2.default, initialState);
 	
@@ -73374,7 +73611,7 @@
 	};
 
 /***/ },
-/* 515 */
+/* 520 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -73397,7 +73634,7 @@
 	}
 
 /***/ },
-/* 516 */
+/* 521 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -73408,21 +73645,21 @@
 	
 	var _redux = __webpack_require__(219);
 	
-	var _reactRouterRedux = __webpack_require__(508);
+	var _reactRouterRedux = __webpack_require__(513);
 	
-	var _firebase = __webpack_require__(517);
+	var _firebase = __webpack_require__(522);
 	
 	var _tree = __webpack_require__(488);
 	
-	var _pomodario = __webpack_require__(519);
+	var _tree2 = __webpack_require__(509);
 	
-	var _article = __webpack_require__(521);
+	var _pomodario = __webpack_require__(524);
+	
+	var _article = __webpack_require__(526);
 	
 	//import { notificationReducer } from 'core/notification';
 	//import { tasksReducer } from 'core/tasks';
 	
-	// Reducers
-	//import { authReducer } from 'core/auth';
 	exports.default = (0, _redux.combineReducers)({
 	  //auth: authReducer,
 	  firebase: _firebase.firebaseReducer,
@@ -73430,11 +73667,15 @@
 	  routing: _reactRouterRedux.routerReducer,
 	  tree: _tree.treeReducer,
 	  pomodario: _pomodario.pomodarioReducer,
-	  articles: _article.articleReducer
+	  articles: _article.articleReducer,
+	  tree2: _tree2.tree2Reducer
 	});
+	
+	// Reducers
+	//import { authReducer } from 'core/auth';
 
 /***/ },
-/* 517 */
+/* 522 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -73443,7 +73684,7 @@
 	  value: true
 	});
 	
-	var _reducer = __webpack_require__(518);
+	var _reducer = __webpack_require__(523);
 	
 	Object.keys(_reducer).forEach(function (key) {
 	  if (key === "default") return;
@@ -73456,7 +73697,7 @@
 	});
 
 /***/ },
-/* 518 */
+/* 523 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -73472,7 +73713,7 @@
 	}
 
 /***/ },
-/* 519 */
+/* 524 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -73482,7 +73723,7 @@
 	});
 	exports.pomodarioActions = undefined;
 	
-	var _reducer = __webpack_require__(520);
+	var _reducer = __webpack_require__(525);
 	
 	Object.keys(_reducer).forEach(function (key) {
 	  if (key === "default") return;
@@ -73515,7 +73756,7 @@
 	exports.pomodarioActions = pomodarioActions;
 
 /***/ },
-/* 520 */
+/* 525 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -73534,7 +73775,7 @@
 	  var currentstate = arguments.length <= 0 || arguments[0] === undefined ? { toggle: true, refkey: null } : arguments[0];
 	  var action = arguments[1];
 	
-	  console.log('[pomodario action]: ', action);
+	  //console.log('[pomodario action]: ', action)
 	
 	  switch (action.type) {
 	    case _actionTypes.SHOW_POMODARIO:
@@ -73552,7 +73793,7 @@
 	}
 
 /***/ },
-/* 521 */
+/* 526 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -73562,7 +73803,7 @@
 	});
 	exports.articleActions = undefined;
 	
-	var _reducer = __webpack_require__(522);
+	var _reducer = __webpack_require__(527);
 	
 	Object.keys(_reducer).forEach(function (key) {
 	  if (key === "default") return;
@@ -73595,7 +73836,7 @@
 	exports.articleActions = articleActions;
 
 /***/ },
-/* 522 */
+/* 527 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -73663,6 +73904,239 @@
 				return currentstate;
 		}
 	};
+
+/***/ },
+/* 528 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
+	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	
+	var repeat = function repeat(str, times) {
+	  return new Array(times + 1).join(str);
+	};
+	var pad = function pad(num, maxLength) {
+	  return repeat("0", maxLength - num.toString().length) + num;
+	};
+	var formatTime = function formatTime(time) {
+	  return "@ " + pad(time.getHours(), 2) + ":" + pad(time.getMinutes(), 2) + ":" + pad(time.getSeconds(), 2) + "." + pad(time.getMilliseconds(), 3);
+	};
+	
+	// Use the new performance api to get better precision if available
+	var timer = typeof performance !== "undefined" && typeof performance.now === "function" ? performance : Date;
+	
+	/**
+	 * parse the level option of createLogger
+	 *
+	 * @property {string | function | object} level - console[level]
+	 * @property {object} action
+	 * @property {array} payload
+	 * @property {string} type
+	 */
+	
+	function getLogLevel(level, action, payload, type) {
+	  switch (typeof level === "undefined" ? "undefined" : _typeof(level)) {
+	    case "object":
+	      return typeof level[type] === "function" ? level[type].apply(level, _toConsumableArray(payload)) : level[type];
+	    case "function":
+	      return level(action);
+	    default:
+	      return level;
+	  }
+	}
+	
+	/**
+	 * Creates logger with followed options
+	 *
+	 * @namespace
+	 * @property {object} options - options for logger
+	 * @property {string | function | object} options.level - console[level]
+	 * @property {boolean} options.duration - print duration of each action?
+	 * @property {boolean} options.timestamp - print timestamp with each action?
+	 * @property {object} options.colors - custom colors
+	 * @property {object} options.logger - implementation of the `console` API
+	 * @property {boolean} options.logErrors - should errors in action execution be caught, logged, and re-thrown?
+	 * @property {boolean} options.collapsed - is group collapsed?
+	 * @property {boolean} options.predicate - condition which resolves logger behavior
+	 * @property {function} options.stateTransformer - transform state before print
+	 * @property {function} options.actionTransformer - transform action before print
+	 * @property {function} options.errorTransformer - transform error before print
+	 */
+	
+	function createLogger() {
+	  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	  var _options$level = options.level;
+	  var level = _options$level === undefined ? "log" : _options$level;
+	  var _options$logger = options.logger;
+	  var logger = _options$logger === undefined ? console : _options$logger;
+	  var _options$logErrors = options.logErrors;
+	  var logErrors = _options$logErrors === undefined ? true : _options$logErrors;
+	  var collapsed = options.collapsed;
+	  var predicate = options.predicate;
+	  var _options$duration = options.duration;
+	  var duration = _options$duration === undefined ? false : _options$duration;
+	  var _options$timestamp = options.timestamp;
+	  var timestamp = _options$timestamp === undefined ? true : _options$timestamp;
+	  var transformer = options.transformer;
+	  var _options$stateTransfo = options.stateTransformer;
+	  var // deprecated
+	  stateTransformer = _options$stateTransfo === undefined ? function (state) {
+	    return state;
+	  } : _options$stateTransfo;
+	  var _options$actionTransf = options.actionTransformer;
+	  var actionTransformer = _options$actionTransf === undefined ? function (actn) {
+	    return actn;
+	  } : _options$actionTransf;
+	  var _options$errorTransfo = options.errorTransformer;
+	  var errorTransformer = _options$errorTransfo === undefined ? function (error) {
+	    return error;
+	  } : _options$errorTransfo;
+	  var _options$colors = options.colors;
+	  var colors = _options$colors === undefined ? {
+	    title: function title() {
+	      return "#000000";
+	    },
+	    prevState: function prevState() {
+	      return "#9E9E9E";
+	    },
+	    action: function action() {
+	      return "#03A9F4";
+	    },
+	    nextState: function nextState() {
+	      return "#4CAF50";
+	    },
+	    error: function error() {
+	      return "#F20404";
+	    }
+	  } : _options$colors;
+	
+	  // exit if console undefined
+	
+	  if (typeof logger === "undefined") {
+	    return function () {
+	      return function (next) {
+	        return function (action) {
+	          return next(action);
+	        };
+	      };
+	    };
+	  }
+	
+	  if (transformer) {
+	    console.error("Option 'transformer' is deprecated, use stateTransformer instead");
+	  }
+	
+	  var logBuffer = [];
+	  function printBuffer() {
+	    logBuffer.forEach(function (logEntry, key) {
+	      var started = logEntry.started;
+	      var startedTime = logEntry.startedTime;
+	      var action = logEntry.action;
+	      var prevState = logEntry.prevState;
+	      var error = logEntry.error;
+	      var took = logEntry.took;
+	      var nextState = logEntry.nextState;
+	
+	      var nextEntry = logBuffer[key + 1];
+	      if (nextEntry) {
+	        nextState = nextEntry.prevState;
+	        took = nextEntry.started - started;
+	      }
+	      // message
+	      var formattedAction = actionTransformer(action);
+	      var isCollapsed = typeof collapsed === "function" ? collapsed(function () {
+	        return nextState;
+	      }, action) : collapsed;
+	
+	      var formattedTime = formatTime(startedTime);
+	      var titleCSS = colors.title ? "color: " + colors.title(formattedAction) + ";" : null;
+	      var title = "action " + (timestamp ? formattedTime : "") + " " + formattedAction.type + " " + (duration ? "(in " + took.toFixed(2) + " ms)" : "");
+	
+	      // render
+	      try {
+	        if (isCollapsed) {
+	          if (colors.title) logger.groupCollapsed("%c " + title, titleCSS);else logger.groupCollapsed(title);
+	        } else {
+	          if (colors.title) logger.group("%c " + title, titleCSS);else logger.group(title);
+	        }
+	      } catch (e) {
+	        logger.log(title);
+	      }
+	
+	      var prevStateLevel = getLogLevel(level, formattedAction, [prevState], "prevState");
+	      var actionLevel = getLogLevel(level, formattedAction, [formattedAction], "action");
+	      var errorLevel = getLogLevel(level, formattedAction, [error, prevState], "error");
+	      var nextStateLevel = getLogLevel(level, formattedAction, [nextState], "nextState");
+	
+	      if (prevStateLevel) {
+	        if (colors.prevState) logger[prevStateLevel]("%c prev state", "color: " + colors.prevState(prevState) + "; font-weight: bold", prevState);else logger[prevStateLevel]("prev state", prevState);
+	      }
+	
+	      if (actionLevel) {
+	        if (colors.action) logger[actionLevel]("%c action", "color: " + colors.action(formattedAction) + "; font-weight: bold", formattedAction);else logger[actionLevel]("action", formattedAction);
+	      }
+	
+	      if (error && errorLevel) {
+	        if (colors.error) logger[errorLevel]("%c error", "color: " + colors.error(error, prevState) + "; font-weight: bold", error);else logger[errorLevel]("error", error);
+	      }
+	
+	      if (nextStateLevel) {
+	        if (colors.nextState) logger[nextStateLevel]("%c next state", "color: " + colors.nextState(nextState) + "; font-weight: bold", nextState);else logger[nextStateLevel]("next state", nextState);
+	      }
+	
+	      try {
+	        logger.groupEnd();
+	      } catch (e) {
+	        logger.log("—— log end ——");
+	      }
+	    });
+	    logBuffer.length = 0;
+	  }
+	
+	  return function (_ref) {
+	    var getState = _ref.getState;
+	    return function (next) {
+	      return function (action) {
+	        // exit early if predicate function returns false
+	        if (typeof predicate === "function" && !predicate(getState, action)) {
+	          return next(action);
+	        }
+	
+	        var logEntry = {};
+	        logBuffer.push(logEntry);
+	
+	        logEntry.started = timer.now();
+	        logEntry.startedTime = new Date();
+	        logEntry.prevState = stateTransformer(getState());
+	        logEntry.action = action;
+	
+	        var returnedValue = undefined;
+	        if (logErrors) {
+	          try {
+	            returnedValue = next(action);
+	          } catch (e) {
+	            logEntry.error = errorTransformer(e);
+	          }
+	        } else {
+	          returnedValue = next(action);
+	        }
+	
+	        logEntry.took = timer.now() - logEntry.started;
+	        logEntry.nextState = stateTransformer(getState());
+	
+	        printBuffer();
+	
+	        if (logEntry.error) throw logEntry.error;
+	        return returnedValue;
+	      };
+	    };
+	  };
+	}
+	
+	module.exports = createLogger;
 
 /***/ }
 /******/ ]);

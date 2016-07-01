@@ -11,3 +11,5 @@ export const GET_TASK_SUCCESS = 'GET_TASK_SUCCESS';
 
 export const CHANGE_CURRENT_FOCUS = 'CHANGE_CURRENT_FOCUS';
 
+export const CUT_NODE = 'CUT_NODE';
+

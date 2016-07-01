@@ -71,14 +71,31 @@ export class Node{
 
   //async problems?
   getParent(idName){
-    var findParent = null
+
+    //console.log("getParent:", idName, this._lNodes)
+
+    var _lWithChildren = this._lNodes.filter(function(i){
+      return i.children
+    })
+
+    //console.log("_lWithChildren:", _lWithChildren)
+
+    var _lfind = _lWithChildren.filter(function(i){
+      return (i.children.indexOf(idName) >=0)
+    })
+
+    //console.log("getParent:", _lfind)
+    return _lfind[0]
+
+
+    /*
     this._lNodes.forEach(function(node){
       if (node.children){
-        //console.log(node)
+        console.log(node)
         node.children.forEach(function(child){
-          //console.log(child, idName)
+          console.log(child, idName)
           if (idName == child){
-            //console.log("find")
+            console.log("find")
             findParent = node
           }
         })
@@ -86,6 +103,32 @@ export class Node{
     })
 
     return findParent
+    */
+  }
+
+  print(buf, level, idName, cb){
+
+    return new Promise(function(resolve, reject){
+      var that = this
+      //console.log(buf, level, idName)
+      var thisnode = this.getbyName(idName)
+      //console.log(thisnode)
+
+      buf += thisnode.id +"\n"
+      //console.log(thisnode.children)
+
+      if (thisnode.children){
+        var promiseArray = thisnode.children.map(function(i){
+            return that.print(buf, level+1, i)
+        })
+
+
+        Promise.all(promiseArray).then(function(value)(
+          resolve(buf)
+        ))
+      }
+    })
+
   }
 
   getUniqueId() {
@@ -98,6 +141,7 @@ export class Node{
     // Add BN here to prevent the css selector error.
     return "BN-" + new Date().getTime().toString() + "-" + randomString(5, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
   }
+
 
 
 }

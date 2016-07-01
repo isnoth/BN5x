@@ -6,7 +6,7 @@ CHANGE_REF_KEY
 } from "./action-types"
 
 export function pomodarioReducer(currentstate={toggle: true, refkey:null}, action) {
-  console.log('[pomodario action]: ', action)
+  //console.log('[pomodario action]: ', action)
 
   switch (action.type){
     case SHOW_POMODARIO:
