@@ -1,4 +1,5 @@
 import {Node} from "components/tree/node"
+import {getVal, toList, paste} from "components/tree/firebaseUtil"
 
 import {
   CREATE_TASK_ERROR,
@@ -188,49 +189,17 @@ export function nodePaste() {
     const { tree, firebase } = getState();
     const ref = firebase.tree/*.child('articles');*/
 
-    console.log("cut, focut: ", tree.cut, tree.currentFocus)
+    return paste(tree.cut, tree.currentFocus, tree.list, ref)
+    .then(function(result){
 
-    //if null then return 
-    if (!tree.cut | tree.currentFocus){
-      return 
-    }
-    //if same then do nothing
-    if (tree.cut == tree.currentFocus){
-      return
-    }
+      dispatch({
+        type: CHANGE_CURRENT_FOCUS,
+        payload: tree.currentFocus,
+      });
 
-    var node = new Node(tree.list)
-    const newparent = node.getParent(tree.currentFocus)
-    console.log("node:", node._lNodes.map(function(i){return i.content + "_"+i.key}))
-    //console.log("newparent:", newparent, tree.currentFocus)
-
-    //cut
-    const currentparent = node.getParent(tree.cut)
-    var currentchildren = currentparent.children 
-    console.log("currentchildren before:", currentchildren)
-    currentchildren.splice(currentchildren.indexOf(tree.cut),1)
-    console.log("currentchildren after:", currentchildren)
-
-    //paste
-    let newchildren = newparent.children 
-    console.log("newchildren before:", newchildren)
-    var index = newchildren.indexOf(tree.currentFocus)+1
-    console.log("index: ", index)
-    var _index =-( newchildren.length - index)
-    console.log("_index: ", _index)
-    newchildren = [...newchildren.slice(0,index), tree.cut , ...newchildren.slice(_index)]
-    console.log("newchildren after:", newchildren)
-
-
-    if (newparent.id != currentparent.id){
-      ref.child(currentparent.id).update({
-        children: currentchildren
-      })
-    }
-
-    ref.child(newparent.id).update({
-      children: newchildren
     })
+
+
 
   }
 

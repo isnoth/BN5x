@@ -106,27 +106,35 @@ export class Node{
     */
   }
 
-  print(buf, level, idName, cb){
+  print(buf, level, idName){
+    var that = this
+    //console.log(buf)
 
     return new Promise(function(resolve, reject){
-      var that = this
       //console.log(buf, level, idName)
-      var thisnode = this.getbyName(idName)
+      //console.log(that)
+      var thisnode = that.getbyName(idName)
       //console.log(thisnode)
 
       buf += thisnode.id +"\n"
+      console.log('new buf: ', buf, '---')
       //console.log(thisnode.children)
 
       if (thisnode.children){
+        //console.log("with children")
         var promiseArray = thisnode.children.map(function(i){
             return that.print(buf, level+1, i)
         })
 
-
-        Promise.all(promiseArray).then(function(value)(
+        Promise.all(promiseArray)
+        .then(function(value){
           resolve(buf)
-        ))
+        })
+      }else{
+        //console.log("without children")
+        resolve(buf)
       }
+
     })
 
   }
