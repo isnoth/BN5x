@@ -116,13 +116,15 @@ describe('firebase', function () {
         console.log("paste done")
         var node = new Node(lists)
         //[ "BN-1467360370407-L0hMd", "BN-1467360372436-5R6yU", "BN-1467360373476-QuDqW" 
+        node.getbyName("BN-1467360367809-CvK5N").children.length.should.equal(4)
         node.getbyName("BN-1467360367809-CvK5N").children[0].should.equal('BN-1467360370407-L0hMd')
         node.getbyName("BN-1467360367809-CvK5N").children[1].should.equal('BN-1467360372436-5R6yU')
         node.getbyName("BN-1467360367809-CvK5N").children[2].should.equal('BN-1467360373476-QuDqW')
         node.getbyName("BN-1467360367809-CvK5N").children[3].should.equal('BN-1467360383936-iftwC')// new
-
+        
 
         //[ "BN-1467360379909-UuGN6", "BN-1467360382162-Gzeoj", "BN-1467360383936-iftwC" 
+        node.getbyName("BN-1467360378328-5FynJ").children.length.should.equal(2)
         node.getbyName("BN-1467360378328-5FynJ").children[0].should.equal('BN-1467360379909-UuGN6')
         node.getbyName("BN-1467360378328-5FynJ").children[1].should.equal('BN-1467360382162-Gzeoj')
 

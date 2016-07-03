@@ -54,6 +54,7 @@ export function paste(cid, nid, list, ref){
     console.log("_index: ", _index)
 
 
+    //newchildren = [...newchildren.slice(0,index), cid, ...newchildren.slice(_index)]
     if ((index == newchildren.length) || (newchildren.length == 1)){
       newchildren = [...newchildren, cid]
     }else{
