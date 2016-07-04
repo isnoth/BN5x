@@ -1,5 +1,5 @@
 import {Node} from "components/tree/node"
-import {getVal, toList, paste} from "components/tree/firebaseUtil"
+import {getVal, toList, paste, create, createNeighbourNode, createChildNode} from "components/tree/firebaseUtil"
 
 import {
   CREATE_TASK_ERROR,
@@ -84,16 +84,17 @@ export function nodeDelete(type) {
       })
     })
   }
-
 }
 
 
-export function nodeCreate(type) {
+export function nodeCreateNeighbour(type) {
   //console.log("tree action: ","nodeCreate")
   return (dispatch, getState) => {
     const { tree, firebase } = getState();
 
+    const ref = firebase.tree/*.child('articles');*/
     var node = new Node(tree.list)
+
     var newid = node.getUniqueId()
     var newNode = {
       collapsed:false,
@@ -102,40 +103,7 @@ export function nodeCreate(type) {
       icon:0,
       id: newid,
     }
-    //console.log("[nodeCreate()]: ", tree.currentFocus, type)
-
-    //create new node
-    const ref = firebase.tree/*.child('articles');*/
-    ref.child(newid).set(newNode, function(error){
-      //console.log(error)
-    })
-
-
-    //update
-    if (type == "CURRENT"){
-      var parent = node.getParent(tree.currentFocus)
-    }else{
-      var parent = node.getbyName(tree.currentFocus)
-    }
-    //var children = parent.children
-    //var newkey = Math.max.apply(null, Object.keys(parent.children).map(function(i){return parseInt(i)}))+1
-    //console.log('newkey is:', newkey)
-    if (parent.children){
-      //parent.children.push( newid)
-      var l = parent.children.splice(parent.children.indexOf(tree.currentFocus)+1)
-      //console.log('debug, ', parent.children, l)
-      parent.children.push(newid)
-      parent.children = parent.children.concat(l)
-    //  console.log(parent.children)
-    }else{
-      parent.children = []
-      parent.children.push(newid)
-    }
-
-    ref.child(parent.id).update({
-      children: parent.children
-    })
-
+    createNeighbourNode(tree.currentFocus, tree.list, ref, newNode )
 
     /*
     dispatch({
@@ -145,6 +113,54 @@ export function nodeCreate(type) {
     */
   }
 }
+
+export function nodeCreateChild() {
+  //console.log("tree action: ","nodeCreate")
+  return (dispatch, getState) => {
+    const { tree, firebase } = getState();
+
+    const ref = firebase.tree/*.child('articles');*/
+    var node = new Node(tree.list)
+
+    var newid = node.getUniqueId()
+    var newNode = {
+      collapsed:false,
+      content:"",
+      fold:false,
+      icon:0,
+      id: newid,
+    }
+    createChildNode(tree.currentFocus, tree.list, ref, newNode )
+  }
+}
+
+
+export function createPanel() {
+  //console.log("tree action: ","nodeCreate")
+  return (dispatch, getState) => {
+    const { tree, firebase } = getState();
+
+    const ref = firebase.tree/*.child('articles');*/
+    var node = new Node(tree.list)
+
+    var newid = node.getUniqueId()
+    var newNode = {
+      collapsed: false,
+      content: "",
+      fold: false,
+      height: 247,
+      icon: 0,
+      id: newid,
+      width: 400,
+      x: 30,
+      y: 30
+    }
+    createChildNode("root", tree.list, ref, newNode )
+  }
+}
+
+
+
 
 export function nodeUpdate(key, change) {
   //console.log(key, change)

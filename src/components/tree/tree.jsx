@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import {Node} from "./node"
 import {Panel, Glyphicon} from "react-bootstrap"
 import mousetrap from "mousetrap"
+var ResizableAndMovable =require('react-resizable-and-movable')
 
 
 class TestNode extends React.Component {
@@ -97,19 +98,30 @@ class TreePanel extends React.Component {
     var node = new Node(this.props.nodes)
     var thisnode = node.getbyName(this.props.id)
     console.log("thisnode:", thisnode)
-    //this.setState({px: thisnode.x, py: thisnode.y})
 
-    this.state =  {
-      key: thisnode.key,
-      drag: false,
-      originx: thisnode.x,
-      originy: thisnode.y,
-      px:thisnode.x,
-      py:thisnode.y,
-      x: 0,
-      y: 0 
-    };
   }
+
+  handleResize(e){
+    console.log("handleResize")
+    console.log( window.innerWidth)
+  }
+
+  componentDidMount(){
+    window.addEventListener('DOMAttrModified', this.handleResize);
+  }
+
+  setFocus (key){
+    //console.log('setFocus: ', key )
+    const {update, changeFocus} = this.props
+    changeFocus(key)
+  }
+
+  updateContent(key, value){
+    const {update, changeFocus} = this.props
+    update(key, {type: "VALUE", value: value})
+  }
+
+
 
 
   render(){
@@ -120,6 +132,7 @@ class TreePanel extends React.Component {
     var thisnode = node.getbyName(this.props.id)
     //this.setState({pa: thisnode.x, pb: thisnode.b})
     var collapsed = thisnode.collapsed
+
     var children = node.getChildren(this.props.id).map(function(children){
       return <div className="tree-node-child-list">
         <TestNode update={update} changeFocus={changeFocus} nodes={that.props.nodes} id={children.id} />
@@ -127,94 +140,53 @@ class TreePanel extends React.Component {
     })
     var that =this
 
-
-    const drag=function(e){
-      e.preventDefault()
-      //console.log(e.clientX)
-      this.setState({drag: true, 
-                     x: e.clientX, 
-                     y: e.clientY,
-                     originx: this.state.px,
-                     originy: this.state.py,
-      })
-
-      console.log(this.state)
-    }
-
-    const up=function(e){
-      e.preventDefault()
-      //console.log(e.clientX)
-      //this.setState({drag: true, x: e.clientX, y: e.clientY})
-
-      var _x = this.state.x - e.clientX 
-      var _y = this.state.y - e.clientY
-
-      console.log(_x, _y)
-
-      var that = this
-
-      this.setState({drag: false,
-                     originx: this.state.px,
-                     originy: this.state.py,
-      })
-      //this.setState({px: this.state.px- _x, py: this.state.py - _y})
-      console.log(this.state)
-      update(this.state.key, {type: "COMMON", value:{x:this.state.px, y:this.state.py}})
-
+    var changeText = function(evt){
+      console.log('changeText: ', evt.target.value)
+      this.updateContent(thisnode.key, evt.target.value)
     }
 
 
-    const move=function(e){
-      //return 
-      e.preventDefault()
-      //console.log(e)
-      //console.log(e.clientX)
-
-      var _x = this.state.x - e.clientX 
-      var _y = this.state.y - e.clientY
-
-
-      if (this.state.drag){
-        console.log("move:", _x, _y)
-        console.log(this.state)
-        this.setState({px: this.state.originx- _x, py: this.state.originy - _y})
-      }
-    }
-
-    const panelstyle={
-      position: 'absolute',
-      left: that.state.px +"px",
-      top: that.state.py +"px",
-      width: thisnode.width,
-      height: thisnode.height,
-      overflow: 'auto',
-      "overflow-x": 'hidden',
-      border: '1px solid #d4d4d4'
-    }
 
     return (
-      <div>
-        <div header={thisnode.content} style={panelstyle}>
-           <div
-             onMouseDown={drag.bind(this)} 
-             onMouseUp={up.bind(this)} 
-             onMouseMove={move.bind(this)}
-             style={{
-               'flex-direction': 'column',
-               'display': 'flex',
-               'background-color': '#6495ED',
-               'height': '10px',
-             }}
-             >
-           </div>
-           <div>
-            <textarea rows={1} className="panel-header tree-textarea mousetrap" cols={60} value={thisnode.content} ref="inputNode"></textarea>
-            <div className="panel-body">
-              {children}
-            </div>
-          </div>
+
+
+      <ResizableAndMovable
+          x={thisnode.x}
+          y={thisnode.y}
+          width={thisnode.width}
+          height={thisnode.height}
+          style={{
+            border: '1px solid #d4d4d4',
+            overflow: "auto",
+            "overflow-x":"hidden"
+          }}
+          onResize={function(direction,  styleSize, clientSize, delta){
+            update(thisnode.key, {type: "COMMON", value:{width:clientSize.width, height:clientSize.height}})
+          }}
+          onDrag={function(event, ui){
+            update(thisnode.key, {type: "COMMON", value:{x:ui.position.left, y:ui.position.top}})
+          }}
+
+      >
+        <div className="head"
+           style={{
+             'flex-direction': 'column',
+             'display': 'flex',
+             'background-color': '#6495ED',
+             'height': '10px',
+            }}
+        >
         </div>
-      </div>
+        <textarea rows={1} 
+          className="tree-textarea mousetrap" 
+          cols={60} 
+          value={thisnode.content} 
+          onChange={changeText.bind(this)} 
+          onFocus={this.setFocus.bind(this, thisnode.key)}>
+        </textarea>
+        {children}
+      </ResizableAndMovable>
+
     )
   
   }
@@ -244,16 +216,16 @@ class About extends React.Component {
 
 
   componentDidMount() {
-    const {nodeCreate, nodeDelete, nodeCut, nodePaste} = this.props
+    const {nodeCreateNeighbour, nodeCreateChild, nodeDelete, nodeCut, nodePaste} = this.props
     //var node = new Node(this.props.tree)
     Mousetrap.bind('ctrl+enter', function() {
       console.log("bind(ctrl+enter)")
-      nodeCreate('CURRENT')
+      nodeCreateNeighbour()
     });
 
     Mousetrap.bind('shift+enter', function() {
       console.log("bind(ctrl+enter)")
-      nodeCreate('CHILD')
+      nodeCreateChild()
     });
 
     Mousetrap.bind('ctrl+del', function() {
@@ -279,7 +251,8 @@ class About extends React.Component {
       registerListeners, 
       nodeCreate,
       nodeUpdate,
-      changeFocus
+      changeFocus,
+      createPanel
     } = this.props
 
     //console.log("[Node]: ", this.props.nodes)
@@ -302,6 +275,7 @@ class About extends React.Component {
         )
       })
       return (<div id="treeBody">
+                <button onClick={createPanel.bind(this)}> create panel </button>
                 {node.root().content}
                 {children}
               </div>
