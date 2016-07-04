@@ -24,8 +24,7 @@ if (process.env.NODE_ENV !== 'production') {
       tree: Firebase.initializeApp({ databaseURL: FIREBASE_URL,
                                      apiKey: "AIzaSyC0EMSYTI4wQWQGjM93LT3nO5mGvzo-8eo",
                                      authDomain: "project-4888672709010520163.firebaseapp.com",
-                                     authDomain: "burning-torch-9051.firebaseapp.com",
-                                   }).database().ref().child('/notes/users/simplelogin:f03ad24b-e53c-4a0b-aceb-ee09655742c8/files/BN-1467360362714-UkqoP/nodes/') ,
+                                   }).database().ref().child('/notes/users/simplelogin:f03ad24b-e53c-4a0b-aceb-ee09655742c8/files/') ,
   
       //pomodario: new Firebase(POMODARIO_FIREBASE_URL)
     }

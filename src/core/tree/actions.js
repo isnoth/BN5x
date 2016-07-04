@@ -221,6 +221,21 @@ export function nodePaste() {
 
 }
 
+export function login(pra) {
+  return (dispatch, getState) => {
+    const { tree, firebase } = getState();
+    const ref = firebase.tree/*.child('articles');*/
+
+    ref.authWithPassword(pra, function(err,data){
+      if(!err ){
+        console.log("auth success!");
+      } else {
+        console.log("auth failed,msg:",err);
+      }
+    })
+  }
+
+}
 
 
 

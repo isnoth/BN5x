@@ -33,7 +33,7 @@ class NavApp extends React.Component {
             */}
           </Nav>
           <Nav pullRight>
-            <NavItem eventKey={1} href="#">Link Right</NavItem>
+            <NavItem eventKey={1} href="#login">login</NavItem>
             <NavItem eventKey={2} href="#">Link Right</NavItem>
           </Nav>
         </Navbar.Collapse>

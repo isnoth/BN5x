@@ -15,6 +15,7 @@ import Tree2 from "./tree2";
 import MyFirstGrid from "./tree2";
 
 import Test2 from "./test2";
+import Login from "./login";
 
 
 class Wrap extends Component {
@@ -57,6 +58,7 @@ export class Root extends Component {
             <Route path="test2" component={Test2} />
             <Route path="tree2" component={Tree2} />
             <Route path="resize" component={MyFirstGrid} />
+            <Route path="login" component={Login} />
 					</Route>
 				</Router>
 			</Provider>

@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 
-var componentWidthMixin = require('react-component-width-mixin');
 var ResizableAndMovable =require('react-resizable-and-movable')
 
 

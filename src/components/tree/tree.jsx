@@ -203,7 +203,8 @@ class About extends React.Component {
   static propTypes = {
     registerListeners: PropTypes.func.isRequired,
     nodeUpdate: PropTypes.func.isRequired,
-    nodeCreate: PropTypes.func.isRequired,
+    nodeCreateNeighbour: PropTypes.func.isRequired,
+    nodeCreateChild: PropTypes.func.isRequired,
     nodeCut: PropTypes.func.isRequired,
     nodePaste: PropTypes.func.isRequired,
   };
@@ -249,7 +250,8 @@ class About extends React.Component {
 
     const {
       registerListeners, 
-      nodeCreate,
+      nodeCreateChild,
+      nodeCreateNeighbour,
       nodeUpdate,
       changeFocus,
       createPanel
