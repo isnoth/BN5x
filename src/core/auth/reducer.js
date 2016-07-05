@@ -8,6 +8,7 @@ import {
 export const initialState = {
   authenticated: false,
   uid: '',
+  userRef: null,
 };
 
 export function authReducer(state = initialState, action) {

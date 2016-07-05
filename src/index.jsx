@@ -15,7 +15,8 @@ var store
 if (process.env.NODE_ENV !== 'production') {
   store = configureStore({
     firebase: {
-      tree: new Wilddog('https://bn5.wilddogio.com/notes/users/simplelogin:f03ad24b-e53c-4a0b-aceb-ee09655742c8/files/BN-1467360362714-UkqoP/nodes/')
+      tree: new Wilddog('https://bn5.wilddogio.com/')
+      //notes/users/simplelogin:f03ad24b-e53c-4a0b-aceb-ee09655742c8/files/BN-1467360362714-UkqoP/nodes/')
     }
   });
 }else{

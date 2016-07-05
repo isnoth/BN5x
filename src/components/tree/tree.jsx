@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 
 import {Node} from "./node"
-import {Panel, Glyphicon} from "react-bootstrap"
+import {Button, ButtonGroup, DropdownButton, MenuItem, Panel, Glyphicon} from "react-bootstrap"
 import mousetrap from "mousetrap"
 var ResizableAndMovable =require('react-resizable-and-movable')
 
@@ -268,7 +268,20 @@ class About extends React.Component {
         )
       })
       return (<div id="treeBody">
-                <button onClick={createPanel.bind(this)}> create panel </button>
+
+                <div>
+                  <ButtonGroup>
+                    <DropdownButton title="Dropdown" id="bg-nested-dropdown">
+                      <MenuItem eventKey="1">Dropdown link</MenuItem>
+                      <MenuItem eventKey="2">Dropdown link</MenuItem>
+                    </DropdownButton>
+                  </ButtonGroup>
+                </div>
+
+                <div>
+                  <button onClick={createPanel.bind(this)}> create panel </button>
+                </div>
+
                 {node.root().content}
                 {children}
               </div>

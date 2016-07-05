@@ -17,8 +17,12 @@ import {
 
 export function registerListeners() {
   return (dispatch, getState) => {
-    const { /*auth,*/ firebase } = getState();
-    const ref = firebase.tree/*.child('articles');*/
+    const { auth, firebase } = getState();
+    console.log(auth.userRef)
+    let childRef = auth.userRef+"/nodes/"
+    console.log(childRef)
+
+    let ref = firebase.tree.child(childRef)
     //console.log(ref)
     //console.log('registerListeners:')
 

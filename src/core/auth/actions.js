@@ -9,17 +9,19 @@ import { uiActions } from 'core/ui';
 export function registerAuthListener(){
   return (dispatch, getState) => {
     const { auth, firebase } = getState();
-    const ref = firebase.tree
+
+    const ref = firebase.tree/*.child('articles');*/
+
     ref.onAuth(function(authData){
       if(authData){
-        console.log('in auth', authData.uid)
+        console.log('in auth', authData)
         dispatch({
           type: SIGN_IN_SUCCESS,
         })
 
         dispatch({
           type: UPDATE_PROFILE,
-          payload: authData
+          payload: Object.assign({}, authData, {userRef: "/notes/users/"+authData.uid})
         })
 
       }else{
@@ -66,36 +68,4 @@ export function login(pra) {
 
 }
 
-
-
-/*
-export function login(data) {
-
-  return (dispatch, getState) => {
-    const url = BASE_URL + "auth/loginAjax"
-    console.log(url)
-
-    $.post(url, {uid: data.name, password: data.passwd},
-      function(data, result){
-        console.log('ajax data: ', data, result)
-
-        //dispatch( pubsubActions.notify({ level:"success", message: "login success"}))
-
-        dispatch({
-          type: SIGN_IN_SUCCESS,
-          //payload: {key: key}
-        })
-
-      }
-    )
-  }
-
-  return (dispatch, getState) => {
-    dispatch({
-      type: SIGN_IN_SUCCESS,
-    })
-  }
-
-}
-*/
 
