@@ -26,7 +26,7 @@ class NavApp extends React.Component {
             <NavItem eventKey={3} href="#stat">Stat</NavItem>
             <NavItem eventKey={4} href="#pomodario">Timer</NavItem>
             <NavItem eventKey={5} href="#test2">Test</NavItem>
-            <NavItem eventKey={6} href="#tree2">Tree2</NavItem>
+            <NavItem eventKey={6} href="#files">Files</NavItem>
             <NavItem eventKey={6} href="#resize">Tree2</NavItem>
             {/*
             <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">

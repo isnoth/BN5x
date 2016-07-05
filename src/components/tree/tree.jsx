@@ -17,16 +17,8 @@ class TestNode extends React.Component {
     changeFocus: PropTypes.func.isRequired
   };
 
-
-  componentDidMount(){
-    var that = this
-    //console.log('inputNode:', this.refs)
-  }
-
-
   changeCollapse(key, collapsedState){
     const {update, changeFocus} = this.props
-    //console.log(this.props)
     update(key, {type: "COLLAPSED", collapsed: collapsedState})
   }
 
@@ -36,7 +28,6 @@ class TestNode extends React.Component {
   }
 
   setFocus(key){
-    //console.log('setFocus: ', key )
     const {update, changeFocus} = this.props
     changeFocus(key)
   }
@@ -44,10 +35,6 @@ class TestNode extends React.Component {
   render(){
 
     const {update, changeFocus} = this.props
-    //console.log("[Node] nodes: ", this.props.nodes)
-    //console.log("[Node] id: ", this.props.id)
-    //var node = new Node(this.props.nodes)
-    //console.log(node)
     var that = this
     var node = new Node(this.props.nodes)
     var thisnode = node.getbyName(this.props.id)
@@ -57,15 +44,8 @@ class TestNode extends React.Component {
         <TestNode update={update} changeFocus={changeFocus} nodes={that.props.nodes} id={children.id} />
       </div>
     })
-    /*
-    var changeCollapse = function(){
-      //ButtonActions.modifyItem({id: that.props.id, collapsed: !thisnode.collapsed})
-      console.log('modify Item')
-    }
-    */
 
    var changeText = function(evt){
-     //console.log('changeText: ', evt.target.value)
      this.updateContent(thisnode.key, evt.target.value)
    }
 
@@ -75,23 +55,23 @@ class TestNode extends React.Component {
           <div onClick={this.changeCollapse.bind(this, thisnode.key, !thisnode.collapsed)} className="tree-node-icon-container">
             <Glyphicon className="tree-node-expand-button" glyph={collapsed==false?"minus-sign":"plus-sign"} /> 
           </div>
-          <textarea rows={1} className="tree-textarea mousetrap" cols={60} value={thisnode.content} onChange={changeText.bind(this)} ref="inputNode" onFocus={this.setFocus.bind(this, thisnode.key)}></textarea>
+          <textarea rows={1} 
+            className="tree-textarea mousetrap" 
+            cols={60} 
+            value={thisnode.content} 
+            onChange={changeText.bind(this)} 
+            ref="inputNode" 
+            onFocus={this.setFocus.bind(this, thisnode.key)}></textarea>
         </div>
-
         {collapsed==false?children:null}
       </div>
     )
   }
 }
 
-
-
-
-
 class TreePanel extends React.Component {
   constructor(props){
     super(props);
-
 
     const {update, changeFocus, id, nodes} = this.props
     //console.log(id)
@@ -190,7 +170,7 @@ class TreePanel extends React.Component {
 
 
 
-class About extends React.Component {
+class Flat extends React.Component {
   static propTypes = {
     registerListeners: PropTypes.func.isRequired,
     nodeUpdate: PropTypes.func.isRequired,
@@ -263,12 +243,15 @@ class About extends React.Component {
       var children = node.root().children.map(function(nodeName, index){
         return (
           <ul key={index}>
-            <TreePanel update={nodeUpdate} changeFocus={changeFocus} nodes={that.props.tree} id={nodeName}/>
+            <TreePanel 
+              update={nodeUpdate} 
+              changeFocus={changeFocus} 
+              nodes={that.props.tree} 
+              id={nodeName}/>
           </ul>
         )
       })
       return (<div id="treeBody">
-
                 <div>
                   <ButtonGroup>
                     <DropdownButton title="Dropdown" id="bg-nested-dropdown">
@@ -281,8 +264,6 @@ class About extends React.Component {
                 <div>
                   <button onClick={createPanel.bind(this)}> create panel </button>
                 </div>
-
-                {node.root().content}
                 {children}
               </div>
              )
@@ -295,9 +276,7 @@ class About extends React.Component {
 
 
 
-
-
 export default connect(state => ({
   //notification: state.notification,
   tree: state.tree.list
-}), Object.assign({}, treeActions ))(About);
+}), Object.assign({}, treeActions ))(Flat);

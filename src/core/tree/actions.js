@@ -19,7 +19,7 @@ export function registerListeners() {
   return (dispatch, getState) => {
     const { auth, firebase } = getState();
     console.log(auth.userRef)
-    let childRef = auth.userRef+"/nodes/"
+    let childRef = auth.userRef+"/files/"
     console.log(childRef)
 
     let ref = firebase.tree.child(childRef)

@@ -1,0 +1,2 @@
+export const GET_FILES_SUCCESS= 'GET_FILES_SUCCESS';
+

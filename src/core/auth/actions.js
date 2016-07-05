@@ -21,7 +21,7 @@ export function registerAuthListener(){
 
         dispatch({
           type: UPDATE_PROFILE,
-          payload: Object.assign({}, authData, {userRef: "/notes/users/"+authData.uid})
+          payload: Object.assign({}, authData, {userRef: "/notes/users/"+authData.uid+'/'})
         })
 
       }else{
