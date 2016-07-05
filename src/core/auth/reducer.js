@@ -14,7 +14,7 @@ export function authReducer(state = initialState, action) {
 
   switch (action.type) {
     case SIGN_IN_SUCCESS:
-      return {authenticated: true}
+      return Object.assign({}, state, {authenticated: true})
 
     case SIGN_OUT_SUCCESS:
       return {authenticated: false}

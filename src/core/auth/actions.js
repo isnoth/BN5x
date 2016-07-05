@@ -16,6 +16,7 @@ export function registerAuthListener(){
         dispatch({
           type: SIGN_IN_SUCCESS,
         })
+
         dispatch({
           type: UPDATE_PROFILE,
           payload: authData

@@ -7,8 +7,9 @@ import { connect } from 'react-redux';
 
 class LoginModal extends React.Component {
 
-  getInitialState() {
-    return {
+  constructor(props){
+    super(props);
+    this.state = {
       email: '',
       password: ''
     };

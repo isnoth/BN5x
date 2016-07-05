@@ -38,14 +38,18 @@ class NavApp extends React.Component {
             </NavDropdown>
             */}
           </Nav>
-          <Nav pullRight>
+          <LoginModal/>
             {auth.authenticated?(
-              <NavItem eventKey={1} onClick={logout.bind(this)}>logout</NavItem>
+              <Nav pullRight>
+                <NavDropdown eventKey={3} title={auth.uid} id="basic-nav-dropdown">
+                  <MenuItem eventKey={3.3} onClick={logout.bind(this)}>Log out</MenuItem>
+                </NavDropdown>
+              </Nav>
             ):(
-              <NavItem eventKey={1} onClick={openLoginModal.bind(this)}>login</NavItem>
+              <Nav pullRight>
+                <NavItem eventKey={1} onClick={openLoginModal.bind(this)}>login</NavItem>
+              </Nav>
             )}
-            <LoginModal/>
-          </Nav>
         </Navbar.Collapse>
       </Navbar>
     );
