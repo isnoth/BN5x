@@ -1,10 +1,16 @@
 
+import { connect } from 'react-redux'; 
 import React, { Component } from 'react';
 import {Navbar, NavItem, Nav, NavDropdown, MenuItem } from 'react-bootstrap'
+import LoginModal from "components/auth/login"
+import { authActions } from 'core/auth';
+import { uiActions } from 'core/ui';
 
 class NavApp extends React.Component {
 
   render(){
+    const {auth, login, logout , openLoginModal} = this.props
+
     const navbarInstance = (
       <Navbar inverse>
         <Navbar.Header>
@@ -33,8 +39,12 @@ class NavApp extends React.Component {
             */}
           </Nav>
           <Nav pullRight>
-            <NavItem eventKey={1} href="#login">login</NavItem>
-            <NavItem eventKey={2} href="#">Link Right</NavItem>
+            {auth.authenticated?(
+              <NavItem eventKey={1} onClick={logout.bind(this)}>logout</NavItem>
+            ):(
+              <NavItem eventKey={1} onClick={openLoginModal.bind(this)}>login</NavItem>
+            )}
+            <LoginModal/>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
@@ -45,4 +55,6 @@ class NavApp extends React.Component {
   }
 }
 
-export default NavApp 
+export default connect((state, ownProps) => ({
+  auth: state.auth,
+}), Object.assign({}, authActions, uiActions ))(NavApp);

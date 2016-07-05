@@ -19,8 +19,8 @@ export function registerListeners() {
   return (dispatch, getState) => {
     const { /*auth,*/ firebase } = getState();
     const ref = firebase.tree/*.child('articles');*/
-    console.log(ref)
-    console.log('registerListeners:')
+    //console.log(ref)
+    //console.log('registerListeners:')
 
     /*
     ref.on('child_added', snapshot => dispatch({

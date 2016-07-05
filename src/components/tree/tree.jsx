@@ -65,7 +65,7 @@ class TestNode extends React.Component {
     */
 
    var changeText = function(evt){
-     console.log('changeText: ', evt.target.value)
+     //console.log('changeText: ', evt.target.value)
      this.updateContent(thisnode.key, evt.target.value)
    }
 
@@ -94,20 +94,11 @@ class TreePanel extends React.Component {
 
 
     const {update, changeFocus, id, nodes} = this.props
-    console.log(id)
+    //console.log(id)
     var node = new Node(this.props.nodes)
     var thisnode = node.getbyName(this.props.id)
-    console.log("thisnode:", thisnode)
+    //console.log("thisnode:", thisnode)
 
-  }
-
-  handleResize(e){
-    console.log("handleResize")
-    console.log( window.innerWidth)
-  }
-
-  componentDidMount(){
-    window.addEventListener('DOMAttrModified', this.handleResize);
   }
 
   setFocus (key){
@@ -141,7 +132,7 @@ class TreePanel extends React.Component {
     var that =this
 
     var changeText = function(evt){
-      console.log('changeText: ', evt.target.value)
+      //console.log('changeText: ', evt.target.value)
       this.updateContent(thisnode.key, evt.target.value)
     }
 
@@ -211,7 +202,7 @@ class About extends React.Component {
 
 
   componentWillMount() {
-    console.log(this.props.registerListeners)
+    //console.log(this.props.registerListeners)
     this.props.registerListeners();
   }
 
@@ -220,27 +211,27 @@ class About extends React.Component {
     const {nodeCreateNeighbour, nodeCreateChild, nodeDelete, nodeCut, nodePaste} = this.props
     //var node = new Node(this.props.tree)
     Mousetrap.bind('ctrl+enter', function() {
-      console.log("bind(ctrl+enter)")
+      //console.log("bind(ctrl+enter)")
       nodeCreateNeighbour()
     });
 
     Mousetrap.bind('shift+enter', function() {
-      console.log("bind(ctrl+enter)")
+      //console.log("bind(ctrl+enter)")
       nodeCreateChild()
     });
 
     Mousetrap.bind('ctrl+del', function() {
-      console.log("bind(ctrl+delete)")
+      //console.log("bind(ctrl+delete)")
       nodeDelete()
     });
 
     Mousetrap.bind('ctrl+x', function() {
-      console.log("bind(ctrl+x)")
+      //console.log("bind(ctrl+x)")
       nodeCut()
     });
 
     Mousetrap.bind('alt+v', function() {
-      console.log("bind(ctrl+paste)")
+      //console.log("bind(ctrl+paste)")
       nodePaste()
     });
 

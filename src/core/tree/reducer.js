@@ -61,7 +61,7 @@ export function treeReducer(state =initialState, action) {
 
     case GET_TASK_SUCCESS:
 
-      console.log(action.payload)
+      //console.log(action.payload)
       var lists = Object.keys(action.payload).map(
         function(key){
           return Object.assign(
