@@ -13,7 +13,7 @@ import configureStore from './store';
 
 const store = configureStore({
   firebase: {
-    tree: new Wilddog('https://bn5.wilddogio.com/')
+    tree: new Wilddog(FIREBASE_URL)
   }
 });
 
