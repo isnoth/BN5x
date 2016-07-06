@@ -19,5 +19,14 @@ export function getFiles() {
   }
 }
 
+export function pushToTab(fileId){
+  return (dispatch, getState) => {
+    dispatch({
+      type: PUSH_TO_TAB,
+      payload: fileId
+    })
+  }
+}
+
 
 

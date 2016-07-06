@@ -5,16 +5,17 @@ import {SplitButton, Navbar, NavItem, Nav, NavDropdown, MenuItem } from 'react-b
 import LoginModal from "components/auth/login"
 import { authActions } from 'core/auth';
 import { uiActions } from 'core/ui';
+import { filesActions } from 'core/files';
 
 class NavApp extends React.Component {
 
   render(){
-    const {auth, login, logout , openLoginModal} = this.props
+    const {auth, login, logout , openLoginModal, pushToTab} = this.props
     let title = auth.uid?auth.uid:'loading'
 
     const {files} = this.props
     const l_files = files.idList.map(function(i, index){
-      return <MenuItem key={index} eventKey={index} href={"#/files/"+i+"/"}>{i}</MenuItem>
+      return <MenuItem key={index} eventKey={index} onClick={pushToTab.bind(this, i)}href={"#/files/"+i+"/"}>{i}</MenuItem>
     })
 
 
@@ -63,4 +64,4 @@ class NavApp extends React.Component {
 export default connect((state, ownProps) => ({
   auth: state.auth,
   files: state.files
-}), Object.assign({}, authActions, uiActions ))(NavApp);
+}), Object.assign({}, authActions, uiActions, filesActions ))(NavApp);

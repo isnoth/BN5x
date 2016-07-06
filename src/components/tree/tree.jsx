@@ -264,11 +264,8 @@ class Flat extends React.Component {
         )
       })
       return (
-        <Col md={1}>
-          <button onClick={createPanel.bind(this)}> create panel </button>
-          <div id="treeBody" md={1}>
-            {children}
-          </div>
+        <Col md={12}>
+          {children}
         </Col>
       )
     }

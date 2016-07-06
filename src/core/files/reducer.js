@@ -20,7 +20,7 @@ export function filesReducer(state = initialState, action) {
       return state
 
     case PUSH_TO_TAB:
-      return state
+      return Object.assign({}, state, {tabList: [...state.tabList, action.payload]})
 
     case POP_TO_TAB:
       return state

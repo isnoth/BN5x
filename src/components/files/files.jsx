@@ -19,9 +19,12 @@ class Files extends React.Component {
     return (
       <div>
         <Col md={12}>
-          <Button>tab1 </Button>
-          <Button>tab2 </Button>
-          <Button>tab3 </Button>
+          {
+            files.tabList.map(function(file){
+              return <Button href={"#/files/"+file+'/'}> {file} </Button>
+            })
+          }
+
         </Col>
         {this.props.children}
       </div>
