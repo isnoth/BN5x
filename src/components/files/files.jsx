@@ -16,15 +16,18 @@ class Files extends React.Component {
       return <MenuItem key={index} eventKey={index} href={"#/files/"+i+"/"}>{i}</MenuItem>
     })
 
+    /* maybe later
+    const tabs = (
+      files.tabList.map(function(file){
+        return <div href={"#/files/"+file+'/'}> {file} </div>
+      })
+    )
+    */
+
     return (
       <div>
-        <Col md={12}>
-          {
-            files.tabList.map(function(file){
-              return <Button href={"#/files/"+file+'/'}> {file} </Button>
-            })
-          }
-
+        <Col>
+          {/* tabs */}
         </Col>
         {this.props.children}
       </div>
