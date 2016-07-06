@@ -2,7 +2,7 @@ import React, { Component, PropTypes} from 'react';
 import ReactDOM from "react-dom"
 import { filesActions } from 'core/files';
 import { connect } from 'react-redux';
-import {Button, ButtonGroup, DropdownButton, MenuItem, Panel, Glyphicon} from "react-bootstrap"
+import {Tabs,Tab,  Col, Button, ButtonGroup, DropdownButton, MenuItem, Panel, Glyphicon} from "react-bootstrap"
 
 
 class Files extends React.Component {
@@ -18,14 +18,12 @@ class Files extends React.Component {
 
     return (
       <div>
-
-        <ButtonGroup>
-          <DropdownButton title="Dropdown" id="bg-nested-dropdown">
-          {l_files}
-          </DropdownButton>
-        </ButtonGroup>
+        <Col md={12}>
+          <Button>tab1 </Button>
+          <Button>tab2 </Button>
+          <Button>tab3 </Button>
+        </Col>
         {this.props.children}
-
       </div>
     )
   }

@@ -1,3 +1,5 @@
 export const GET_FILES_SUCCESS= 'GET_FILES_SUCCESS';
 export const GET_FILES_CONTENT_SUCCESS= 'GET_FILES_CONTENT_SUCCESS';
+export const PUSH_TO_TAB= 'PUSH_TO_TAB';
+export const POP_TO_TAB= 'POP_TO_TAB';
 

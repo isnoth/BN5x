@@ -1,5 +1,7 @@
 import {
-  GET_FILES_SUCCESS
+  GET_FILES_SUCCESS,
+  PUSH_TO_TAB,
+  POP_TO_TAB
 } from './action-types';
 
 export function getFiles() {
@@ -16,5 +18,6 @@ export function getFiles() {
     })
   }
 }
+
 
 

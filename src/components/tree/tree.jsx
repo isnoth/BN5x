@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 
 import {Node} from "./node"
-import {Button, ButtonGroup, DropdownButton, MenuItem, Panel, Glyphicon} from "react-bootstrap"
+import {Col, Button, ButtonGroup, DropdownButton, MenuItem, Panel, Glyphicon} from "react-bootstrap"
 import mousetrap from "mousetrap"
 var ResizableAndMovable =require('react-resizable-and-movable')
 
@@ -164,15 +164,8 @@ class TreePanel extends React.Component {
 }
 
 
-
-
-
-
-
-
 class Flat extends React.Component {
   static propTypes = {
-    registerListeners: PropTypes.func.isRequired,
     nodeUpdate: PropTypes.func.isRequired,
     nodeCreateNeighbour: PropTypes.func.isRequired,
     nodeCreateChild: PropTypes.func.isRequired,
@@ -180,94 +173,6 @@ class Flat extends React.Component {
     nodePaste: PropTypes.func.isRequired,
   };
 
-
-  componentWillMount() {
-    //console.log(this.props.registerListeners)
-    const {params} = this.props
-    console.log(params.id)
-    this.props.registerListeners(params.id);
-  }
-
-
-  componentDidMount() {
-    const {nodeCreateNeighbour, nodeCreateChild, nodeDelete, nodeCut, nodePaste} = this.props
-    //var node = new Node(this.props.tree)
-    Mousetrap.bind('ctrl+enter', function() {
-      //console.log("bind(ctrl+enter)")
-      nodeCreateNeighbour()
-    });
-
-    Mousetrap.bind('shift+enter', function() {
-      //console.log("bind(ctrl+enter)")
-      nodeCreateChild()
-    });
-
-    Mousetrap.bind('ctrl+del', function() {
-      //console.log("bind(ctrl+delete)")
-      nodeDelete()
-    });
-
-    Mousetrap.bind('ctrl+x', function() {
-      //console.log("bind(ctrl+x)")
-      nodeCut()
-    });
-
-    Mousetrap.bind('alt+v', function() {
-      //console.log("bind(ctrl+paste)")
-      nodePaste()
-    });
-
-  }
-
-  render(){
-
-    const {
-      registerListeners, 
-      nodeCreateChild,
-      nodeCreateNeighbour,
-      nodeUpdate,
-      changeFocus,
-      createPanel
-    } = this.props
-
-    //console.log("[Node]: ", this.props.nodes)
-    var node = new Node(this.props.tree)
-    //console.log("About:", node)
-    var that = this
-
-
-    if (node.root() == null){
-      return (<div>
-                loading...
-              </div>
-             )
-    }else{
-      var children = node.root().children.map(function(nodeName, index){
-        return (
-          <ul key={index}>
-            <TreePanel 
-              update={nodeUpdate} 
-              changeFocus={changeFocus} 
-              nodes={that.props.tree} 
-              id={nodeName}/>
-          </ul>
-        )
-      })
-      return (<div id="treeBody">
-                <div>
-                  <button onClick={createPanel.bind(this)}> create panel </button>
-                </div>
-                {children}
-              </div>
-             )
-    }
-  }
-}
-
-
-
-
-class Test extends React.Component {
 
   registerListeners(oldFileId, newFileId, startRegisterListeners){
     if (oldFileId!= newFileId){
@@ -359,12 +264,12 @@ class Test extends React.Component {
         )
       })
       return (
-        <div id="treeBody">
-          <div>
-            <button onClick={createPanel.bind(this)}> create panel </button>
+        <Col md={1}>
+          <button onClick={createPanel.bind(this)}> create panel </button>
+          <div id="treeBody" md={1}>
+            {children}
           </div>
-          {children}
-        </div>
+        </Col>
       )
     }
 
@@ -378,4 +283,4 @@ export default connect(state => ({
   //notification: state.notification,
   //tree: state.tree.list
   files: state.files2,
-}), Object.assign({}, treeActions ))(Test);
+}), Object.assign({}, treeActions ))(Flat);
