@@ -1,0 +1,23 @@
+{
+  "name": "www",
+  "authors": [
+    "isnoth <isnothe@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "d3": "^3.5.16",
+    "firebase": "^2.4.2",
+    "lodash": "~4.11.1"
+  }
+}
