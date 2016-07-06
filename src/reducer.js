@@ -5,6 +5,7 @@ import { routerReducer } from 'react-router-redux';
 import { authReducer } from 'core/auth';
 import { firebaseReducer } from './core/firebase';
 import { treeReducer } from './core/tree';
+import { files2Reducer } from './core/tree'
 import { tree2Reducer } from './core/tree2';
 import { pomodarioReducer } from './core/pomodario';
 import { articleReducer } from './core/article';
@@ -20,7 +21,8 @@ export default combineReducers({
   uiState: uiReducer,
   //notification: notificationReducer,
   routing: routerReducer,
-  tree: treeReducer,
+  //tree: treeReducer,
+  files2: files2Reducer,
   pomodario: pomodarioReducer,
   articles: articleReducer,
   tree2: tree2Reducer,

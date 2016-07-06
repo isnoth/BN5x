@@ -12,8 +12,8 @@ class Files extends React.Component {
   }
   render(){
     const {files} = this.props
-    const l_files = files.list.map(function(i, index){
-      return <MenuItem key={index} eventKey={index}>{i}</MenuItem>
+    const l_files = files.idList.map(function(i, index){
+      return <MenuItem key={index} eventKey={index} href={"#/files/"+i+"/"}>{i}</MenuItem>
     })
 
     return (
@@ -24,13 +24,14 @@ class Files extends React.Component {
           {l_files}
           </DropdownButton>
         </ButtonGroup>
-
+        {this.props.children}
 
       </div>
     )
   }
 
 }
+
 
 export default connect(state => ({
   auth: state.auth,

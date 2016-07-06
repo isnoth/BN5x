@@ -5,16 +5,20 @@ import {
   UPDATE_TASK_SUCCESS,
   GET_TASK_SUCCESS,
   CHANGE_CURRENT_FOCUS,
-  CUT_NODE
+  CUT_NODE,
+  START_LISTENING,
 } from './action-types';
 
 export const initialState = {
   deleted: null,
   list: [],
   previous: [],
-  currentFocus: null,//which node is in focus
-  cut: null, //which node is in cut state
 };
+
+
+
+
+
 
 export function treeReducer(state =initialState, action) {
 
@@ -35,8 +39,6 @@ export function treeReducer(state =initialState, action) {
         previous: []
       };
 
-    case CHANGE_CURRENT_FOCUS:
-      return Object.assign({}, state, {currentFocus: action.payload})
 
     case DELETE_TASK_SUCCESS:
       return {
@@ -56,17 +58,17 @@ export function treeReducer(state =initialState, action) {
         previous: []
       };
 
-    case CUT_NODE:
-      return Object.assign({}, state, {cut: action.payload})
 
     case GET_TASK_SUCCESS:
 
       //console.log(action.payload)
-      var lists = Object.keys(action.payload).map(
+      let value = action.payload.value
+
+      var lists = Object.keys(value).map(
         function(key){
           return Object.assign(
             {}, 
-            action.payload[key],
+            value[key],
             {key: key}
           )
         }
@@ -83,3 +85,32 @@ export function treeReducer(state =initialState, action) {
       return state;
   }
 }
+
+
+export const filesInitalState = {
+  key: null,
+  ref: null,
+  currentFocus: null,//which node is in focus
+  cut: null, //which node is in cut state
+} 
+
+export function files2Reducer(state = filesInitalState, action) {
+  switch (action.type) {
+
+    case GET_TASK_SUCCESS:
+      return Object.assign({}, state, {[action.payload.id]: treeReducer(initialState, action)})
+
+    case START_LISTENING:
+      return Object.assign({}, state, {key:action.payload.key, ref:action.payload.ref})
+
+    case CHANGE_CURRENT_FOCUS:
+      return Object.assign({}, state, {currentFocus: action.payload})
+
+    case CUT_NODE:
+      return Object.assign({}, state, {cut: action.payload})
+
+    default:
+      return state;
+  }
+}
+

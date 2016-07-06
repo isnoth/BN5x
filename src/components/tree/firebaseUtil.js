@@ -83,7 +83,6 @@ export function createNeighbourNode(cid, list, ref, content){
 export function paste(cid, nid, list, ref){
   return new Promise((resolve, reject)=>{
   
-    //console.log('---')
     //console.log("list: " ,list)
     var node = new Node(list)
     //console.log('--1')

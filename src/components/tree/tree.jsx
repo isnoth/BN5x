@@ -183,7 +183,9 @@ class Flat extends React.Component {
 
   componentWillMount() {
     //console.log(this.props.registerListeners)
-    this.props.registerListeners();
+    const {params} = this.props
+    console.log(params.id)
+    this.props.registerListeners(params.id);
   }
 
 
@@ -253,15 +255,6 @@ class Flat extends React.Component {
       })
       return (<div id="treeBody">
                 <div>
-                  <ButtonGroup>
-                    <DropdownButton title="Dropdown" id="bg-nested-dropdown">
-                      <MenuItem eventKey="1">Dropdown link</MenuItem>
-                      <MenuItem eventKey="2">Dropdown link</MenuItem>
-                    </DropdownButton>
-                  </ButtonGroup>
-                </div>
-
-                <div>
                   <button onClick={createPanel.bind(this)}> create panel </button>
                 </div>
                 {children}
@@ -274,9 +267,115 @@ class Flat extends React.Component {
 
 
 
+class Test extends React.Component {
+
+  registerListeners(oldFileId, newFileId, startRegisterListeners){
+    if (oldFileId!= newFileId){
+      startRegisterListeners(newFileId);
+    }else{
+      console.log('match!')
+    }
+  }
+
+  componentDidMount() {
+    const {params, files, startRegisterListeners} = this.props
+    this.registerListeners(files.key,  params.id, startRegisterListeners)
+
+    //key bindings
+    const {nodeCreateNeighbour, nodeCreateChild, nodeDelete, nodeCut, nodePaste} = this.props
+    //var node = new Node(this.props.tree)
+    Mousetrap.bind('ctrl+enter', function() {
+      //console.log("bind(ctrl+enter)")
+      nodeCreateNeighbour()
+    });
+
+    Mousetrap.bind('shift+enter', function() {
+      //console.log("bind(ctrl+enter)")
+      nodeCreateChild()
+    });
+
+    Mousetrap.bind('ctrl+del', function() {
+      //console.log("bind(ctrl+delete)")
+      nodeDelete()
+    });
+
+    Mousetrap.bind('ctrl+x', function() {
+      //console.log("bind(ctrl+x)")
+      nodeCut()
+    });
+
+    Mousetrap.bind('alt+v', function() {
+      //console.log("bind(ctrl+paste)")
+      nodePaste()
+    });
+
+
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const {params, files, startRegisterListeners} = nextProps
+    this.registerListeners(files.key ,params.id, startRegisterListeners)
+  }
+
+  render(){
+    const {files, params} = this.props
+
+    const{
+      nodeCreateChild,
+      nodeCreateNeighbour,
+      nodeUpdate,
+      changeFocus,
+      createPanel
+    }= this.props
+
+
+
+    console.log('list:', files[params.id])
+    if(files[params.id]){
+      console.log(files[params.id].list.length )
+    }
+    if ((!files[params.id]) || (files[params.id].list.length<=0) ){
+      console.log("in")
+      return (<div>
+                loading...
+              </div>
+             )
+    }else{
+
+      console.log('list:', files[params.id].list)
+
+      let node = new Node(files[params.id].list)
+      var that = this
+
+      var children = node.root().children.map(function(nodeName, index){
+        return (
+          <ul key={index}>
+            <TreePanel 
+              update={nodeUpdate} 
+              changeFocus={changeFocus} 
+              nodes={files[params.id].list} 
+              id={nodeName}/>
+          </ul>
+        )
+      })
+      return (
+        <div id="treeBody">
+          <div>
+            <button onClick={createPanel.bind(this)}> create panel </button>
+          </div>
+          {children}
+        </div>
+      )
+    }
+
+
+  }
+}
+
 
 
 export default connect(state => ({
   //notification: state.notification,
-  tree: state.tree.list
-}), Object.assign({}, treeActions ))(Flat);
+  //tree: state.tree.list
+  files: state.files2,
+}), Object.assign({}, treeActions ))(Test);

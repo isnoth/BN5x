@@ -6,14 +6,15 @@ import { Provider } from 'react-redux';
 //import Wrapper from './pages/wrapper';
 //import Articles from './pages/articles';
 import NavApp from './nav/nav';
-import Tree from "./tree/tree";
+import Flat from "./tree/tree";
 import Stat from "./stat/stat";
 import Pomodario from "./pomodario/pomodario";
 import Articles from "./article/articles";
 import TestApp from "./test";
 import Tree2 from "./tree2";
 import MyFirstGrid from "./tree2";
-import Files from "./files";
+import Files from "./files/files";
+import Desciption from "./files/description";
 
 import Test2 from "./test2";
 import Login from "./login";
@@ -50,8 +51,7 @@ export class Root extends Component {
 			<Provider store={store}>
 				<Router>
 					<Route path="/" component={Wrap}>
-            <IndexRoute component={Tree} />
-            <Route path="tree" component={Tree} />
+            <IndexRoute component={Files} />
             <Route path="stat" component={Stat} />
             <Route path="pomodario" component={Pomodario} />
             <Route path="articles" component={Articles} />
@@ -60,7 +60,9 @@ export class Root extends Component {
             <Route path="tree2" component={Tree2} />
             <Route path="resize" component={MyFirstGrid} />
             <Route path="login" component={Login} />
-            <Route path="files" component={Files} />
+            <Route path="files" component={Files} >
+              <Route path="/files/:id" component={Flat} />
+            </Route>
 					</Route>
 				</Router>
 			</Provider>

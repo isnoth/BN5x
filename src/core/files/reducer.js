@@ -1,16 +1,20 @@
 import {
-  GET_FILES_SUCCESS
+  GET_FILES_SUCCESS,
+  GET_FILES_CONTENT_SUCCESS
 } from './action-types';
 
 export const initialState = {
-  list: [],
+  idList: [],
 };
 
 export function filesReducer(state = initialState, action) {
 
   switch (action.type) {
     case GET_FILES_SUCCESS:
-      return {list: [...action.payload]}
+      return {idList: [...action.payload]}
+
+    case GET_FILES_CONTENT_SUCCESS:
+      return state
 
     default:
       return state

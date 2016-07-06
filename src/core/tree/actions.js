@@ -10,50 +10,55 @@ import {
   UPDATE_TASK_SUCCESS,
   GET_TASK_SUCCESS,
   CHANGE_CURRENT_FOCUS,
-  CUT_NODE
+  CUT_NODE,
+  START_LISTENING,
 } from './action-types';
 
-
-
-export function registerListeners() {
+export function stopRegisterListeners(key, ref) {
   return (dispatch, getState) => {
-    const { auth, firebase } = getState();
+    console.log('listern off: ',key )
+    ref.off()
+  }
+}
+
+export function startRegisterListeners(fileId) {
+  return (dispatch, getState) => {
+    const { files2, auth, firebase } = getState();
     console.log(auth.userRef)
-    let childRef = auth.userRef+"/files/"
+    let childRef = auth.userRef+"/files/"+fileId+'/nodes/'
+
     console.log(childRef)
 
     let ref = firebase.tree.child(childRef)
-    //console.log(ref)
-    //console.log('registerListeners:')
 
-    /*
-    ref.on('child_added', snapshot => dispatch({
-      type: CREATE_TASK_SUCCESS,
-      payload: recordFromSnapshot(snapshot)
-    }));
-    */
 
-    ref.on('value', snapshot => dispatch({
-      type: GET_TASK_SUCCESS,
-      payload: snapshot.val()
-    }));
+    if(files2.ref){
+      const oldRef = files2.ref
+      const oldKey = files2.key
+      dispatch(stopRegisterListeners(oldKey, oldRef))
+    }
 
-    /*
-    ref.on('child_changed', snapshot => dispatch({
-      type: UPDATE_TASK_SUCCESS,
-      payload: recordFromSnapshot(snapshot)
-    }));
+    dispatch({
+      type: START_LISTENING,
+      payload:{key: fileId, ref: ref}
+    })
 
-    ref.on('child_removed', snapshot => dispatch({
-      type: DELETE_TASK_SUCCESS,
-      payload: recordFromSnapshot(snapshot)
-    }));
-    */
+    console.log("listen on :",fileId )
+    ref.on('value', snapshot => (
+      dispatch({
+        type: GET_TASK_SUCCESS,
+        payload: {id: fileId, value: snapshot.val()}
+      }))
+    );
   };
 }
 
+
+
+
 export function changeFocus(key, change) {
   return (dispatch, getState) => {
+    console.log('changeFocus:', key)
     dispatch({
       type: CHANGE_CURRENT_FOCUS,
       payload: key
@@ -65,18 +70,17 @@ export function changeFocus(key, change) {
 export function nodeDelete(type) {
   //console.log("tree action: ","nodeDelete")
   return (dispatch, getState) => {
-    const { tree, firebase } = getState();
-    var node = new Node(tree.list)
-    var deleteList = node.getAllChildren(tree.currentFocus)
-    //console.log('deleteList:, ', deleteList)
-    const ref = firebase.tree/*.child('articles');*/
+    const { files2, firebase } = getState();
+    let list = files2[files2.key].list
+    let node = new Node(list)
+    var deleteList = node.getAllChildren(files2.currentFocus)
+    const ref = files2.ref
 
-    var parent = node.getParent(tree.currentFocus)
+    let parent = node.getParent(files2.currentFocus)
     //console.log('before: ', parent.children)
-    parent.children.splice(parent.children.indexOf(tree.currentFocus), 1)
+    parent.children.splice(parent.children.indexOf(files2.currentFocus), 1)
 
     //console.log('after: ', parent.children)
-
 
     //udpate
     ref.child(parent.id).update({
@@ -94,10 +98,11 @@ export function nodeDelete(type) {
 export function nodeCreateNeighbour(type) {
   //console.log("tree action: ","nodeCreate")
   return (dispatch, getState) => {
-    const { tree, firebase } = getState();
+    const { files2, firebase } = getState();
+    let list = files2[files2.key].list
 
-    const ref = firebase.tree/*.child('articles');*/
-    var node = new Node(tree.list)
+    const ref = files2.ref
+    let node = new Node(files2[files2.key].list)
 
     var newid = node.getUniqueId()
     var newNode = {
@@ -107,7 +112,8 @@ export function nodeCreateNeighbour(type) {
       icon:0,
       id: newid,
     }
-    createNeighbourNode(tree.currentFocus, tree.list, ref, newNode )
+    console.log('nodeCreateNeighbour:', files2.currentFocus, list, ref, newNode)
+    createNeighbourNode(files2.currentFocus, list, ref, newNode )
 
     /*
     dispatch({
@@ -121,10 +127,11 @@ export function nodeCreateNeighbour(type) {
 export function nodeCreateChild() {
   //console.log("tree action: ","nodeCreate")
   return (dispatch, getState) => {
-    const { tree, firebase } = getState();
+    const { files2, firebase } = getState();
+    const ref = files2.ref
+    let list = files2[files2.key].list
 
-    const ref = firebase.tree/*.child('articles');*/
-    var node = new Node(tree.list)
+    var node = new Node(list)
 
     var newid = node.getUniqueId()
     var newNode = {
@@ -134,32 +141,7 @@ export function nodeCreateChild() {
       icon:0,
       id: newid,
     }
-    createChildNode(tree.currentFocus, tree.list, ref, newNode )
-  }
-}
-
-
-export function createPanel() {
-  //console.log("tree action: ","nodeCreate")
-  return (dispatch, getState) => {
-    const { tree, firebase } = getState();
-
-    const ref = firebase.tree/*.child('articles');*/
-    var node = new Node(tree.list)
-
-    var newid = node.getUniqueId()
-    var newNode = {
-      collapsed: false,
-      content: "",
-      fold: false,
-      height: 247,
-      icon: 0,
-      id: newid,
-      width: 400,
-      x: 30,
-      y: 30
-    }
-    createChildNode("root", tree.list, ref, newNode )
+    createChildNode(files2.currentFocus, list, ref, newNode )
   }
 }
 
@@ -170,8 +152,8 @@ export function nodeUpdate(key, change) {
   //console.log(key, change)
 
   return (dispatch, getState) => {
-    const { /*auth,*/ firebase } = getState();
-    const ref = firebase.tree/*.child('articles');*/
+    const { files2} = getState();
+    const ref = files2.ref
 
     switch (change.type){
       case "VALUE":
@@ -192,12 +174,12 @@ export function nodeUpdate(key, change) {
 export function nodeCut() {
   //console.log("node cut")
   return (dispatch, getState) => {
-    const { tree, firebase } = getState();
-    const ref = firebase.tree/*.child('articles');*/
+    const { files2, firebase } = getState();
+    const ref = files2.ref
 
     dispatch({
       type: CUT_NODE,
-      payload: tree.currentFocus,
+      payload: files2.currentFocus,
     });
 
   }
@@ -206,40 +188,43 @@ export function nodeCut() {
 
 export function nodePaste() {
   return (dispatch, getState) => {
-    const { tree, firebase } = getState();
-    const ref = firebase.tree/*.child('articles');*/
+    const { files2 } = getState();
+    const ref = files2.ref
+    let list = files2[files2.key].list
 
-    return paste(tree.cut, tree.currentFocus, tree.list, ref)
+    return paste(files2.cut, files2.currentFocus, list, ref)
     .then(function(result){
 
       dispatch({
         type: CHANGE_CURRENT_FOCUS,
-        payload: tree.currentFocus,
+        payload: files2.currentFocus,
       });
 
     })
 
-
-
   }
-
 }
 
-export function login(pra) {
+export function createPanel() {
+  //console.log("tree action: ","nodeCreate")
   return (dispatch, getState) => {
-    const { tree, firebase } = getState();
-    const ref = firebase.tree/*.child('articles');*/
+    const { files2 } = getState();
+    const ref = files2.ref
+    let list = files2[files2.key].list
+    let node = new Node(list)
 
-    ref.authWithPassword(pra, function(err,data){
-      if(!err ){
-        console.log("auth success!");
-      } else {
-        console.log("auth failed,msg:",err);
-      }
-    })
+    var newid = node.getUniqueId()
+    var newNode = {
+      collapsed: false,
+      content: "",
+      fold: false,
+      height: 247,
+      icon: 0,
+      id: newid,
+      width: 400,
+      x: 30,
+      y: 30
+    }
+    createChildNode("root", list, ref, newNode )
   }
-
 }
-
-
-
