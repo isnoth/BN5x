@@ -10,6 +10,7 @@ class NavApp extends React.Component {
 
   render(){
     const {auth, login, logout , openLoginModal} = this.props
+    let title = auth.uid?auth.uid:'loading'
 
     const navbarInstance = (
       <Navbar inverse>
@@ -28,26 +29,17 @@ class NavApp extends React.Component {
             <NavItem eventKey={5} href="#test2">Test</NavItem>
             <NavItem eventKey={6} href="#files">Files</NavItem>
             <NavItem eventKey={6} href="#resize">Tree2</NavItem>
-            {/*
-            <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
-              <MenuItem eventKey={3.1}>Action</MenuItem>
-              <MenuItem eventKey={3.2}>Another action</MenuItem>
-              <MenuItem eventKey={3.3}>Something else here</MenuItem>
-              <MenuItem divider />
-              <MenuItem eventKey={3.3}>Separated link</MenuItem>
-            </NavDropdown>
-            */}
           </Nav>
           <LoginModal/>
             {auth.authenticated?(
               <Nav pullRight>
-                <NavDropdown eventKey={3} title={auth.uid} id="basic-nav-dropdown">
-                  <MenuItem eventKey={3.3} onClick={logout.bind(this)}>Log out</MenuItem>
+                <NavDropdown eventKey={7} title={title} id="basic-nav-dropdown">
+                  <MenuItem eventKey={7.1} onClick={logout.bind(this)}>Log out</MenuItem>
                 </NavDropdown>
               </Nav>
             ):(
               <Nav pullRight>
-                <NavItem eventKey={1} onClick={openLoginModal.bind(this)}>login</NavItem>
+                <NavItem eventKey={8} onClick={openLoginModal.bind(this)}>login</NavItem>
               </Nav>
             )}
         </Navbar.Collapse>
