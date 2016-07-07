@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 
 import {Node} from "./node"
-import {Col, Button, ButtonGroup, DropdownButton, MenuItem, Panel, Glyphicon} from "react-bootstrap"
+import {OverlayTrigger, Tooltip, Col, Button, ButtonGroup, DropdownButton, MenuItem, Panel, Glyphicon} from "react-bootstrap"
 import mousetrap from "mousetrap"
 var ResizableAndMovable =require('react-resizable-and-movable')
 
@@ -124,12 +124,14 @@ class TreePanel extends React.Component {
       <ResizableAndMovable
           x={thisnode.x}
           y={thisnode.y}
+          zIndex={10}
           width={thisnode.width}
           height={thisnode.height}
           style={{
             border: '1px solid #d4d4d4',
             overflow: "auto",
-            "overflow-x":"hidden"
+            "overflow-x":"hidden",
+            "background-color":"#ffffff"
           }}
           onResize={function(direction,  styleSize, clientSize, delta){
             update(thisnode.key, {type: "COMMON", value:{width:clientSize.width, height:clientSize.height}})
@@ -266,7 +268,20 @@ class Flat extends React.Component {
       return (
         <Col md={12}>
           {children}
-        </Col>
+
+          <div className="flat-sidebar">
+            <OverlayTrigger placement="right" overlay={
+              <Tooltip id="tooltip"> create new panel</Tooltip>
+            }>
+              <Glyphicon onClick={createPanel.bind(this)}glyph="plus"/> 
+            </OverlayTrigger>
+            <Glyphicon glyph="heart"/> 
+            <Glyphicon glyph="remove"/> 
+            <Glyphicon glyph="ok"/> 
+
+          </div>
+
+          </Col>
       )
     }
 

@@ -3,6 +3,7 @@ import {
   GET_FILES_CONTENT_SUCCESS,
   PUSH_TO_TAB,
   POP_TO_TAB,
+  GET_FILE_META_SUCCESS,
 } from './action-types';
 
 export const initialState = {
@@ -24,6 +25,9 @@ export function filesReducer(state = initialState, action) {
 
     case POP_TO_TAB:
       return state
+
+    case GET_FILE_META_SUCCESS:
+      return Object.assign({}, state, {[action.payload.id]: action.payload})
 
     default:
       return state

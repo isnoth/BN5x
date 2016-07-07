@@ -18,8 +18,6 @@ export const initialState = {
 
 
 
-
-
 export function treeReducer(state =initialState, action) {
 
   switch (action.type) {
