@@ -13,8 +13,8 @@ const pomodarioActions = {
 
   setPomodarioDone(qid, article){
     return (dispatch, getState) => {
-      const {pomodario, firebase, articles } = getState();
-      var pomodarioRef = firebase.pomodario.child("pomodarios")
+      const {pomodario, auth, articles } = getState();
+      var pomodarioRef = auth.userRef.child("pomodarios")
       console.log("pomodarioRef: ", qid)
       if (pomodario.refkey != null){
         console.log("push to server: ", qid)

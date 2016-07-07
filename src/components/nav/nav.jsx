@@ -16,12 +16,14 @@ class NavApp extends React.Component {
     const {files} = this.props
     const l_files = files.idList.map(function(i, index){
       const fileName = files[i]==null?i:files[i].name
-      //return <MenuItem key={index} eventKey={index} onClick={pushToTab.bind(this, i)}href={"#/files/"+i+"/"}>{fileName}</MenuItem>
+      return <MenuItem key={index} eventKey={index} onClick={pushToTab.bind(this, i)}href={"#/files/"+i+"/"}>{fileName}</MenuItem>
+      /*
       return <SplitButton href={"#/files/"+i+"/"} title={fileName} key={i} id={`split-button-basic-${i}`}>
         <MenuItem eventKey="1">Create panel</MenuItem>
         <MenuItem divider />
         <MenuItem eventKey="2">Delete</MenuItem>
       </SplitButton>
+      */
 
     })
 

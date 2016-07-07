@@ -49,3 +49,11 @@ export function getFileMeta(fileId) {
     })
   }
 }
+
+export function createFile(){
+  return (dispatch, getState) => {
+  }
+}
+
+
+

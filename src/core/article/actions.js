@@ -8,8 +8,8 @@ const articlesActions = {
 	// then receive all articles again as soon as anyone changes anything.
 	startListeningToArticles() {
 		return (dispatch, getState) => {
-      const { /*auth,*/ firebase } = getState();
-      const articlesRef = firebase.pomodario.child('articles')
+      const { auth, firebase } = getState();
+      const articlesRef = firebase.tree.child(auth.userRef+"articles/")
 
 			articlesRef.on('value', (snapshot) => {
 				dispatch({ type: C.RECEIVE_ARTICLES_DATA, data: snapshot.val() });
@@ -24,8 +24,8 @@ const articlesActions = {
 	},
 	deleteArticle(qid) {
 		return (dispatch, getState) => {
-      const { /*auth,*/ firebase } = getState();
-      const articlesRef = firebase.pomodario.child('articles')
+      const { auth, firebase } = getState();
+      const articlesRef = firebase.tree.child(auth.userRef+"articles/")
 
 			dispatch({ type: C.SUBMIT_ARTICLE_EDIT, qid });
 			articlesRef.child(qid).remove((error) => {
@@ -41,8 +41,8 @@ const articlesActions = {
 	submitArticleEdit(qid, content) {
 		return (dispatch, getState) => {
 			//const state = getState();
-      const { /*auth,*/ firebase } = getState();
-      const articlesRef = firebase.pomodario.child('articles')
+      const { auth, firebase } = getState();
+      const articlesRef = firebase.tree.child(auth.userRef+"articles/")
 			const username = 'test username'
 			const uid = '12345'
 			const error = false;
@@ -65,8 +65,8 @@ const articlesActions = {
 	submitNewArticle(content) {
 		return (dispatch, getState) => {
 			//const state = getState();
-      const { /*auth,*/ firebase } = getState();
-      const articlesRef = firebase.pomodario.child('articles')
+      const { auth, firebase } = getState();
+      const articlesRef = firebase.tree.child(auth.userRef+"articles/")
 			const username = 'test username'
 			const uid = '12345'
 			const error = false;
@@ -91,14 +91,14 @@ const articlesActions = {
   
   changePomodarioType(qid, content){
     return (dispatch, getState) =>{
-      const {articles, firebase} = getState()
+      const {auth, articles, firebase} = getState()
       const obj = articles.data[qid] 
       console.log(obj)
       console.log("changePomodarioType", qid, content)
       var newtype = obj.type=="home"?"work":"home"
       console.log("newtype:", newtype)
 
-      const articlesRef = firebase.pomodario.child('articles')
+      const articlesRef = firebase.tree.child(auth.userRef+"articles/")
       articlesRef.child(qid).transaction((article) => {
         return Object.assign({}, article, {type: article.type=="home"?"work":"home"})
       })
@@ -109,8 +109,8 @@ const articlesActions = {
   testPlusTomato(qid, content){
     return (dispatch, getState) =>{
 
-      const { /*auth,*/ firebase } = getState();
-      const articlesRef = firebase.pomodario.child('articles')
+      const { auth, firebase } = getState();
+      const articlesRef = firebase.tree.child(auth.userRef+"articles/")
 
       console.log("content:", content)
       switch(content.type){
