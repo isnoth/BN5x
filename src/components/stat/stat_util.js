@@ -62,7 +62,7 @@ export function toListWork(l){
 }
 
 //module.exports = {
-export function stat(e){
+export function stat(e, ref){
        function render(e, data1, data2){
          console.log('render')
            var margin = {top: 20, right: 20, bottom: 70, left: 40},
@@ -192,14 +192,9 @@ export function stat(e){
        };
        
 
-
-
-            
-
-      
-      var url = 'https://thisisatestapp.firebaseio.com/items/test4/'
-      var ref = new Firebase(url).child('pomodarios'); 
-      ref.on("value", function(snapshoot){
+      //var url = 'https://thisisatestapp.firebaseio.com/items/test4/'
+      //var ref = new Firebase(url).child('pomodarios'); 
+      ref.once("value", function(snapshoot){
         console.log(snapshoot.val())
         var data = snapshoot.val()
 

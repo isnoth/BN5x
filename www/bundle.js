@@ -47754,6 +47754,7 @@
 	exports.getFiles = getFiles;
 	exports.pushToTab = pushToTab;
 	exports.getFileMeta = getFileMeta;
+	exports.createFile = createFile;
 	
 	var _actionTypes = __webpack_require__(574);
 	
@@ -47806,6 +47807,10 @@
 	      });
 	    });
 	  };
+	}
+	
+	function createFile() {
+	  return function (dispatch, getState) {};
 	}
 
 /***/ },
@@ -54202,6 +54207,8 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
+	var _reactRedux = __webpack_require__(219);
+	
 	var _stat_util = __webpack_require__(593);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -54225,8 +54232,14 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      console.log(this);
+	
+	      var _props = this.props;
+	      var auth = _props.auth;
+	      var firebase = _props.firebase;
+	
 	      var e1 = _reactDom2.default.findDOMNode(this);
-	      (0, _stat_util.stat)(e1);
+	      var pomodarioRef = firebase.tree.child(auth.userRef + "pomodarios/");
+	      (0, _stat_util.stat)(e1, pomodarioRef);
 	
 	      //console.log(mousetrap)
 	    }
@@ -54241,6 +54254,12 @@
 	}(_react2.default.Component);
 	
 	exports.default = Stat;
+	exports.default = (0, _reactRedux.connect)(function (state) {
+	  return {
+	    auth: state.auth,
+	    firebase: state.firebase
+	  };
+	}, {})(Stat);
 
 /***/ },
 /* 593 */
@@ -54328,7 +54347,7 @@
 	}
 	
 	//module.exports = {
-	function stat(e) {
+	function stat(e, ref) {
 	  function render(e, data1, data2) {
 	    console.log('render');
 	    var margin = { top: 20, right: 20, bottom: 70, left: 40 },
@@ -54412,9 +54431,9 @@
 	    .attr("stroke", "steelblue").attr("stroke-width", 2);
 	  };
 	
-	  var url = 'https://thisisatestapp.firebaseio.com/items/test4/';
-	  var ref = new _firebase2.default(url).child('pomodarios');
-	  ref.on("value", function (snapshoot) {
+	  //var url = 'https://thisisatestapp.firebaseio.com/items/test4/'
+	  //var ref = new Firebase(url).child('pomodarios');
+	  ref.once("value", function (snapshoot) {
 	    console.log(snapshoot.val());
 	    var data = snapshoot.val();
 	
@@ -80682,11 +80701,12 @@
 	    return function (dispatch, getState) {
 	      var _getState = getState();
 	
-	      var pomodario = _getState.pomodario;
 	      var firebase = _getState.firebase;
+	      var pomodario = _getState.pomodario;
+	      var auth = _getState.auth;
 	      var articles = _getState.articles;
 	
-	      var pomodarioRef = firebase.pomodario.child("pomodarios");
+	      var pomodarioRef = firebase.tree.child(auth.userRef + "pomodarios/");
 	      console.log("pomodarioRef: ", qid);
 	      if (pomodario.refkey != null) {
 	        console.log("push to server: ", qid);
@@ -80760,9 +80780,10 @@
 			return function (dispatch, getState) {
 				var _getState = getState();
 	
+				var auth = _getState.auth;
 				var firebase = _getState.firebase;
 	
-				var articlesRef = firebase.pomodario.child('articles');
+				var articlesRef = firebase.tree.child(auth.userRef + "articles/");
 	
 				articlesRef.on('value', function (snapshot) {
 					dispatch({ type: _actionTypes2.default.RECEIVE_ARTICLES_DATA, data: snapshot.val() });
@@ -80779,9 +80800,10 @@
 			return function (dispatch, getState) {
 				var _getState2 = getState();
 	
+				var auth = _getState2.auth;
 				var firebase = _getState2.firebase;
 	
-				var articlesRef = firebase.pomodario.child('articles');
+				var articlesRef = firebase.tree.child(auth.userRef + "articles/");
 	
 				dispatch({ type: _actionTypes2.default.SUBMIT_ARTICLE_EDIT, qid: qid });
 				articlesRef.child(qid).remove(function (error) {
@@ -80800,9 +80822,10 @@
 	
 				var _getState3 = getState();
 	
+				var auth = _getState3.auth;
 				var firebase = _getState3.firebase;
 	
-				var articlesRef = firebase.pomodario.child('articles');
+				var articlesRef = firebase.tree.child(auth.userRef + "articles/");
 				var username = 'test username';
 				var uid = '12345';
 				var error = false;
@@ -80827,9 +80850,10 @@
 	
 				var _getState4 = getState();
 	
+				var auth = _getState4.auth;
 				var firebase = _getState4.firebase;
 	
-				var articlesRef = firebase.pomodario.child('articles');
+				var articlesRef = firebase.tree.child(auth.userRef + "articles/");
 				var username = 'test username';
 				var uid = '12345';
 				var error = false;
@@ -80855,6 +80879,7 @@
 			return function (dispatch, getState) {
 				var _getState5 = getState();
 	
+				var auth = _getState5.auth;
 				var articles = _getState5.articles;
 				var firebase = _getState5.firebase;
 	
@@ -80864,7 +80889,7 @@
 				var newtype = obj.type == "home" ? "work" : "home";
 				console.log("newtype:", newtype);
 	
-				var articlesRef = firebase.pomodario.child('articles');
+				var articlesRef = firebase.tree.child(auth.userRef + "articles/");
 				articlesRef.child(qid).transaction(function (article) {
 					return _extends({}, article, { type: article.type == "home" ? "work" : "home" });
 				});
@@ -80874,9 +80899,10 @@
 			return function (dispatch, getState) {
 				var _getState6 = getState();
 	
+				var auth = _getState6.auth;
 				var firebase = _getState6.firebase;
 	
-				var articlesRef = firebase.pomodario.child('articles');
+				var articlesRef = firebase.tree.child(auth.userRef + "articles/");
 	
 				console.log("content:", content);
 				switch (content.type) {
