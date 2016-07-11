@@ -1,5 +1,5 @@
-import {Node} from "components/tree/node"
-import {getVal, toList, paste, create, createNeighbourNode, createChildNode} from "components/tree/firebaseUtil"
+import {Node} from "utils/node"
+import {getVal, toList, paste, create, createNeighbourNode, createChildNode} from "utils/firebaseUtil"
 
 import {
   CREATE_TASK_ERROR,

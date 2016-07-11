@@ -5,10 +5,14 @@ import {
   GET_FILE_META_SUCCESS
 } from './action-types';
 
+import {Node} from "utils/node"
+import {getVal, toList, paste, create, createNeighbourNode, createChildNode} from "utils/firebaseUtil"
+
+
 export function getFiles() {
   return (dispatch, getState) => {
     const { files, auth, firebase} = getState();
-    console.log(auth.userRef)
+    //console.log(auth.userRef)
     const ref = firebase.tree.child(auth.userRef+'directories/nodes/')
     ref.once('value', function(snap){
       //console.log(snap.val())
@@ -52,6 +56,56 @@ export function getFileMeta(fileId) {
 
 export function createFile(){
   return (dispatch, getState) => {
+    const { files, auth, firebase} = getState();
+    const dirRef = firebase.tree.child(auth.userRef+'directories/nodes/')
+    const fileRef = firebase.tree.child(auth.userRef+'files/') 
+    const newNodeid = (new Node()).getUniqueId()
+
+
+
+    const newFile = {meta: {
+       create_time: new Date(),
+       id: newNodeid,
+       name: "new",
+       type: 'flat' },
+     nodes:{
+       root:{
+         children:["first_node", ],
+         id: "root",
+         width: 20000,
+       },
+       first_node:{
+         content: "",
+         fold: false,
+         height: 100,
+         width: 100,
+         x:100,
+         y:100,
+         zindex: 100,
+         id: "first_node",
+         collapsed: false
+       }
+    }}
+
+    dirRef.child(newNodeid).set({id: newNodeid}, function(error){
+      if (error){
+        console.log(error)
+      }else{
+
+        fileRef.child(newNodeid).set(newFile, function(error){
+          if (error){
+            console.log(error)
+          }else{
+            dispatch(getFiles())
+          }
+        })
+
+      }
+    })
+
+    //file node
+    //file meta
+
   }
 }
 

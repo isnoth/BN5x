@@ -4,6 +4,7 @@ import actions from 'core/article/actions';
 import pomodarioAction from "core/pomodario/actions"
 import Article from './article';
 import PomodarioApp from 'components/pomodario/pomodario'
+import {Col, Panel, ListGroupItem, ListGroup} from "react-bootstrap"
 
 
 export default class Articles extends Component {
@@ -38,34 +39,40 @@ export default class Articles extends Component {
 				const article = p.articles.data[qid];
 				const articlestate = p.articles.states[qid];
 				return (
-					<Article
-						key={qid}
-						article={article}
-						qid={qid}
-						state={articlestate}
-						edit={p.startEdit.bind(this, qid)}
-						cancel={p.cancelEdit.bind(this, qid)}
-						submit={p.submitEdit.bind(this, qid)}
-						delete={p.deleteArticle.bind(this, qid)}
-            test={p.testPlusTomato.bind(this,qid)}
-            changePomodarioType={p.changePomodarioType.bind(this, qid)}
-            toglePomodario={p.toglePomodario.bind(this,qid)}
-						mayedit={true}
-					/>
+          <ListGroupItem>
+					  <Article
+					  	key={qid}
+					  	article={article}
+					  	qid={qid}
+					  	state={articlestate}
+					  	edit={p.startEdit.bind(this, qid)}
+					  	cancel={p.cancelEdit.bind(this, qid)}
+					  	submit={p.submitEdit.bind(this, qid)}
+					  	delete={p.deleteArticle.bind(this, qid)}
+              test={p.testPlusTomato.bind(this,qid)}
+              changePomodarioType={p.changePomodarioType.bind(this, qid)}
+              toglePomodario={p.toglePomodario.bind(this,qid)}
+					  	mayedit={true}
+					  />
+          </ListGroupItem>
 				);
 			});
 		}
 		return (
-      <div>
-			  <div className="articleslist">
-			  	{p.articles.hasreceiveddata ? rows : 'Loading articles...'}
-			  	<form onSubmit={this.newArticle}>
-			  		<input ref="newarticle" placeholder="write something clever!"/>
-			  		<button type="submit" disabled={p.articles.submittingnew}>{p.articles.submittingnew ? 'Submitting...' : 'Submit'}</button>
-			  	</form>
-			  </div>
+      <Col md={8} mdOffset={2}>
+        <Col md={12} >
+        <ListGroup>
+			  {p.articles.hasreceiveddata ? rows : 'Loading articles...'}
+        </ListGroup>
+        </Col >
+        <Col md={12}>
+			  	  <form onSubmit={this.newArticle}>
+			  	  	<input ref="newarticle" placeholder="write something clever!"/>
+			  	  	<button type="submit" disabled={p.articles.submittingnew}>{p.articles.submittingnew ? 'Submitting...' : 'Submit'}</button>
+			  	  </form>
+        </Col>
         <PomodarioApp/>
-			</div>
+			</Col>
 		);
 	}
 }

@@ -4,7 +4,7 @@ import { treeActions } from 'core/tree';
 import { connect } from 'react-redux';
 
 
-import {Node} from "./node"
+import {Node} from "utils/node"
 import {OverlayTrigger, Tooltip, Col, Button, ButtonGroup, DropdownButton, MenuItem, Panel, Glyphicon} from "react-bootstrap"
 import mousetrap from "mousetrap"
 var ResizableAndMovable =require('react-resizable-and-movable')

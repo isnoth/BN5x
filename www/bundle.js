@@ -19625,7 +19625,7 @@
 	
 	var _nav2 = _interopRequireDefault(_nav);
 	
-	var _tree = __webpack_require__(576);
+	var _tree = __webpack_require__(578);
 	
 	var _tree2 = _interopRequireDefault(_tree);
 	
@@ -26772,6 +26772,7 @@
 	      var logout = _props.logout;
 	      var openLoginModal = _props.openLoginModal;
 	      var pushToTab = _props.pushToTab;
+	      var createFile = _props.createFile;
 	
 	      var title = auth.uid ? auth.uid : 'loading';
 	
@@ -26823,7 +26824,7 @@
 	              _react2.default.createElement(_reactBootstrap.MenuItem, { divider: true }),
 	              _react2.default.createElement(
 	                _reactBootstrap.MenuItem,
-	                { eventKey: 1.3, href: '#' },
+	                { eventKey: 1.3, onClick: createFile.bind(this) },
 	                'New File'
 	              )
 	            ),
@@ -47746,7 +47747,7 @@
 /* 575 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -47758,6 +47759,10 @@
 	
 	var _actionTypes = __webpack_require__(574);
 	
+	var _node = __webpack_require__(576);
+	
+	var _firebaseUtil = __webpack_require__(577);
+	
 	function getFiles() {
 	  return function (dispatch, getState) {
 	    var _getState = getState();
@@ -47765,8 +47770,8 @@
 	    var files = _getState.files;
 	    var auth = _getState.auth;
 	    var firebase = _getState.firebase;
+	    //console.log(auth.userRef)
 	
-	    console.log(auth.userRef);
 	    var ref = firebase.tree.child(auth.userRef + 'directories/nodes/');
 	    ref.once('value', function (snap) {
 	      //console.log(snap.val())
@@ -47810,11 +47815,382 @@
 	}
 	
 	function createFile() {
-	  return function (dispatch, getState) {};
+	  return function (dispatch, getState) {
+	    var _getState3 = getState();
+	
+	    var files = _getState3.files;
+	    var auth = _getState3.auth;
+	    var firebase = _getState3.firebase;
+	
+	    var dirRef = firebase.tree.child(auth.userRef + 'directories/nodes/');
+	    var fileRef = firebase.tree.child(auth.userRef + 'files/');
+	    var newNodeid = new _node.Node().getUniqueId();
+	
+	    var newFile = { meta: {
+	        create_time: new Date(),
+	        id: newNodeid,
+	        name: "new",
+	        type: 'flat' },
+	      nodes: {
+	        root: {
+	          children: ["first_node"],
+	          id: "root",
+	          width: 20000
+	        },
+	        first_node: {
+	          content: "",
+	          fold: false,
+	          height: 100,
+	          width: 100,
+	          x: 100,
+	          y: 100,
+	          zindex: 100,
+	          id: "first_node",
+	          collapsed: false
+	        }
+	      } };
+	
+	    dirRef.child(newNodeid).set({ id: newNodeid }, function (error) {
+	      if (error) {
+	        console.log(error);
+	      } else {
+	
+	        fileRef.child(newNodeid).set(newFile, function (error) {
+	          if (error) {
+	            console.log(error);
+	          } else {
+	            dispatch(getFiles());
+	          }
+	        });
+	      }
+	    });
+	
+	    //file node
+	    //file meta
+	  };
 	}
 
 /***/ },
 /* 576 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Node = exports.Node = function () {
+	  function Node(lNodes) {
+	    _classCallCheck(this, Node);
+	
+	    this._lNodes = lNodes;
+	  }
+	
+	  _createClass(Node, [{
+	    key: 'root',
+	    value: function root() {
+	      //console.log(this._lNodes)
+	      var root = this._lNodes.filter(function (itm) {
+	        return itm.id == 'root';
+	      });
+	      //console.log(root)
+	      if (root.length == 0) {
+	        return null;
+	      } else {
+	        return root[0];
+	      }
+	    }
+	  }, {
+	    key: 'getbyName',
+	    value: function getbyName(idName) {
+	
+	      var fnd = this._lNodes.filter(function (itm) {
+	        return itm.id == idName;
+	      });
+	      //console.log(root)
+	      if (fnd.length == 0) {
+	        return null;
+	      } else {
+	        return fnd[0];
+	      }
+	    }
+	  }, {
+	    key: 'getChildren',
+	    value: function getChildren(idName) {
+	
+	      var that = this;
+	      if (!this.getbyName(idName)) {
+	        return [];
+	      } else {
+	        var l = [];
+	        if (this.getbyName(idName).children == null) {
+	          return [];
+	        } else {
+	          this.getbyName(idName).children.map(function (cid) {
+	            //console.log(cid)
+	            l.push(that.getbyName(cid));
+	          });
+	          return l;
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'getAllChildren',
+	    value: function getAllChildren(idName) {
+	      var l = [];
+	      var that = this;
+	      var current = this.getbyName(idName);
+	      l.push(current);
+	
+	      if (current.children) {
+	        current.children.map(function (childId) {
+	          //var child = that.getbyName(childId)
+	          //l.push(child)
+	          var lChildren = that.getAllChildren(childId);
+	          l = l.concat(lChildren);
+	        });
+	      }
+	
+	      return l;
+	      //return [this.getbyName(idName)]
+	      //return [{id: "BN1"}]
+	    }
+	
+	    //async problems?
+	
+	  }, {
+	    key: 'getParent',
+	    value: function getParent(idName) {
+	
+	      //console.log("getParent:", idName, this._lNodes)
+	
+	      var _lWithChildren = this._lNodes.filter(function (i) {
+	        return i.children;
+	      });
+	
+	      //console.log("_lWithChildren:", _lWithChildren)
+	
+	      var _lfind = _lWithChildren.filter(function (i) {
+	        return i.children.indexOf(idName) >= 0;
+	      });
+	
+	      //console.log("getParent:", _lfind)
+	      return _lfind[0];
+	
+	      /*
+	      this._lNodes.forEach(function(node){
+	        if (node.children){
+	          console.log(node)
+	          node.children.forEach(function(child){
+	            console.log(child, idName)
+	            if (idName == child){
+	              console.log("find")
+	              findParent = node
+	            }
+	          })
+	        }
+	      })
+	       return findParent
+	      */
+	    }
+	  }, {
+	    key: 'print',
+	    value: function print(buf, level, idName) {
+	      var that = this;
+	      //console.log(buf)
+	
+	      return new Promise(function (resolve, reject) {
+	        //console.log(buf, level, idName)
+	        //console.log(that)
+	        var thisnode = that.getbyName(idName);
+	        //console.log(thisnode)
+	
+	        buf += thisnode.id + "\n";
+	        console.log('new buf: ', buf, '---');
+	        //console.log(thisnode.children)
+	
+	        if (thisnode.children) {
+	          //console.log("with children")
+	          var promiseArray = thisnode.children.map(function (i) {
+	            return that.print(buf, level + 1, i);
+	          });
+	
+	          Promise.all(promiseArray).then(function (value) {
+	            resolve(buf);
+	          });
+	        } else {
+	          //console.log("without children")
+	          resolve(buf);
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'getUniqueId',
+	    value: function getUniqueId() {
+	      function randomString(length, chars) {
+	        var result = '';
+	        for (var i = length; i > 0; --i) {
+	          result += chars[Math.round(Math.random() * (chars.length - 1))];
+	        }return result;
+	      }
+	      // TODO: Replace with Firebase.ServerValue.TIMESTAMP.
+	      // Add BN here to prevent the css selector error.
+	      return "BN-" + new Date().getTime().toString() + "-" + randomString(5, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+	    }
+	  }]);
+
+	  return Node;
+	}();
+
+/***/ },
+/* 577 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	exports.getVal = getVal;
+	exports.toList = toList;
+	exports.create = create;
+	exports.createChildNode = createChildNode;
+	exports.createNeighbourNode = createNeighbourNode;
+	exports.paste = paste;
+	
+	var _node = __webpack_require__(576);
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
+	function getVal(ref, cb) {
+	  return new Promise(function (resolve, reject) {
+	    ref.once("value", function (snap) {
+	      resolve(snap.val());
+	    });
+	  });
+	}
+	
+	function toList(value) {
+	  return new Promise(function (resolve, reject) {
+	    resolve(Object.keys(value).map(function (key) {
+	      return _extends({}, value[key], { key: key });
+	    }));
+	  });
+	}
+	
+	//create twice may have problems
+	function create(cid, list, ref, content, type) {
+	  return new Promise(function (resolve, reject) {
+	    var node = new _node.Node(list);
+	
+	    //create new node
+	    var newid = content.id;
+	    ref.child(newid).set(content, function (error) {
+	      if (error) {
+	        reject(error);
+	      }
+	
+	      //update
+	      if (type == "CURRENT") {
+	        var parent = node.getParent(cid);
+	      } else {
+	        var parent = node.getbyName(cid);
+	      }
+	      //var children = parent.children
+	      //var newkey = Math.max.apply(null, Object.keys(parent.children).map(function(i){return parseInt(i)}))+1
+	      //console.log('newkey is:', newkey)
+	      if (parent.children) {
+	        //parent.children.push( newid)
+	        var l = parent.children.splice(parent.children.indexOf(cid) + 1); //refractory !!!
+	        //console.log('debug, ', parent.children, l)
+	        parent.children.push(newid);
+	        parent.children = parent.children.concat(l);
+	        //console.log(parent.children)
+	      } else {
+	        parent.children = [];
+	        parent.children.push(newid);
+	      }
+	
+	      ref.child(parent.id).update({
+	        children: parent.children
+	      }, function () {
+	        resolve();
+	      });
+	    });
+	  });
+	}
+	
+	function createChildNode(cid, list, ref, content) {
+	  return create(cid, list, ref, content, "CHILD");
+	}
+	
+	function createNeighbourNode(cid, list, ref, content) {
+	  return create(cid, list, ref, content, "CURRENT");
+	}
+	
+	function paste(cid, nid, list, ref) {
+	  return new Promise(function (resolve, reject) {
+	
+	    //console.log("list: " ,list)
+	    var node = new _node.Node(list);
+	    //console.log('--1')
+	    //console.log(node._lNodes)
+	    var newparent = node.getParent(nid);
+	    //console.log('--2')
+	    //console.log("node:", node._lNodes.map(function(i){return i.content + "_"+i.key}))
+	    //console.log("newparent:", newparent, tree.currentFocus)
+	
+	    //cut
+	    var currentparent = node.getParent(cid);
+	    var currentchildren = currentparent.children;
+	    console.log("currentchildren before:", currentchildren);
+	    currentchildren.splice(currentchildren.indexOf(cid), 1);
+	    console.log("currentchildren after:", currentchildren);
+	
+	    //paste
+	    var newchildren = newparent.children;
+	    console.log("newchildren before:", newchildren);
+	    var index = newchildren.indexOf(nid) + 1;
+	    console.log("index: ", index);
+	    var _index = -(newchildren.length - index);
+	    console.log("_index: ", _index);
+	
+	    //newchildren = [...newchildren.slice(0,index), cid, ...newchildren.slice(_index)]
+	    if (index == newchildren.length || newchildren.length == 1) {
+	      newchildren = [].concat(_toConsumableArray(newchildren), [cid]);
+	    } else {
+	      newchildren = [].concat(_toConsumableArray(newchildren.slice(0, index)), [cid], _toConsumableArray(newchildren.slice(_index)));
+	    }
+	
+	    console.log("newchildren after:", newchildren);
+	
+	    if (newparent.id != currentparent.id) {
+	      ref.child(currentparent.id).update({
+	        children: currentchildren
+	      });
+	    }
+	
+	    ref.child(newparent.id).update({
+	      children: newchildren
+	    }, function () {
+	      //console.log("update")
+	      resolve();
+	    });
+	
+	    //resolve()
+	  });
+	}
+
+/***/ },
+/* 578 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47835,11 +48211,11 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _tree = __webpack_require__(577);
+	var _tree = __webpack_require__(579);
 	
 	var _reactRedux = __webpack_require__(219);
 	
-	var _node = __webpack_require__(581);
+	var _node = __webpack_require__(576);
 	
 	var _reactBootstrap = __webpack_require__(240);
 	
@@ -48219,7 +48595,7 @@
 	}, _extends({}, _tree.treeActions))(Flat);
 
 /***/ },
-/* 577 */
+/* 579 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48229,7 +48605,7 @@
 	});
 	exports.treeActions = undefined;
 	
-	var _reducer = __webpack_require__(578);
+	var _reducer = __webpack_require__(580);
 	
 	Object.keys(_reducer).forEach(function (key) {
 	  if (key === "default") return;
@@ -48241,7 +48617,7 @@
 	  });
 	});
 	
-	var _actionTypes = __webpack_require__(579);
+	var _actionTypes = __webpack_require__(581);
 	
 	Object.keys(_actionTypes).forEach(function (key) {
 	  if (key === "default") return;
@@ -48253,7 +48629,7 @@
 	  });
 	});
 	
-	var _actions = __webpack_require__(580);
+	var _actions = __webpack_require__(582);
 	
 	var treeActions = _interopRequireWildcard(_actions);
 	
@@ -48262,7 +48638,7 @@
 	exports.treeActions = treeActions;
 
 /***/ },
-/* 578 */
+/* 580 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48279,7 +48655,7 @@
 	exports.treeReducer = treeReducer;
 	exports.files2Reducer = files2Reducer;
 	
-	var _actionTypes = __webpack_require__(579);
+	var _actionTypes = __webpack_require__(581);
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
@@ -48396,7 +48772,7 @@
 	}
 
 /***/ },
-/* 579 */
+/* 581 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -48421,7 +48797,7 @@
 	var START_LISTENING = exports.START_LISTENING = 'START_LISTENING';
 
 /***/ },
-/* 580 */
+/* 582 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -48440,11 +48816,11 @@
 	exports.nodePaste = nodePaste;
 	exports.createPanel = createPanel;
 	
-	var _node = __webpack_require__(581);
+	var _node = __webpack_require__(576);
 	
-	var _firebaseUtil = __webpack_require__(582);
+	var _firebaseUtil = __webpack_require__(577);
 	
-	var _actionTypes = __webpack_require__(579);
+	var _actionTypes = __webpack_require__(581);
 	
 	function stopRegisterListeners(key, ref) {
 	  return function (dispatch, getState) {
@@ -48675,325 +49051,6 @@
 	    };
 	    (0, _firebaseUtil.createChildNode)("root", list, ref, newNode);
 	  };
-	}
-
-/***/ },
-/* 581 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var Node = exports.Node = function () {
-	  function Node(lNodes) {
-	    _classCallCheck(this, Node);
-	
-	    this._lNodes = lNodes;
-	  }
-	
-	  _createClass(Node, [{
-	    key: 'root',
-	    value: function root() {
-	      //console.log(this._lNodes)
-	      var root = this._lNodes.filter(function (itm) {
-	        return itm.id == 'root';
-	      });
-	      //console.log(root)
-	      if (root.length == 0) {
-	        return null;
-	      } else {
-	        return root[0];
-	      }
-	    }
-	  }, {
-	    key: 'getbyName',
-	    value: function getbyName(idName) {
-	
-	      var fnd = this._lNodes.filter(function (itm) {
-	        return itm.id == idName;
-	      });
-	      //console.log(root)
-	      if (fnd.length == 0) {
-	        return null;
-	      } else {
-	        return fnd[0];
-	      }
-	    }
-	  }, {
-	    key: 'getChildren',
-	    value: function getChildren(idName) {
-	
-	      var that = this;
-	      if (!this.getbyName(idName)) {
-	        return [];
-	      } else {
-	        var l = [];
-	        if (this.getbyName(idName).children == null) {
-	          return [];
-	        } else {
-	          this.getbyName(idName).children.map(function (cid) {
-	            //console.log(cid)
-	            l.push(that.getbyName(cid));
-	          });
-	          return l;
-	        }
-	      }
-	    }
-	  }, {
-	    key: 'getAllChildren',
-	    value: function getAllChildren(idName) {
-	      var l = [];
-	      var that = this;
-	      var current = this.getbyName(idName);
-	      l.push(current);
-	
-	      if (current.children) {
-	        current.children.map(function (childId) {
-	          //var child = that.getbyName(childId)
-	          //l.push(child)
-	          var lChildren = that.getAllChildren(childId);
-	          l = l.concat(lChildren);
-	        });
-	      }
-	
-	      return l;
-	      //return [this.getbyName(idName)]
-	      //return [{id: "BN1"}]
-	    }
-	
-	    //async problems?
-	
-	  }, {
-	    key: 'getParent',
-	    value: function getParent(idName) {
-	
-	      //console.log("getParent:", idName, this._lNodes)
-	
-	      var _lWithChildren = this._lNodes.filter(function (i) {
-	        return i.children;
-	      });
-	
-	      //console.log("_lWithChildren:", _lWithChildren)
-	
-	      var _lfind = _lWithChildren.filter(function (i) {
-	        return i.children.indexOf(idName) >= 0;
-	      });
-	
-	      //console.log("getParent:", _lfind)
-	      return _lfind[0];
-	
-	      /*
-	      this._lNodes.forEach(function(node){
-	        if (node.children){
-	          console.log(node)
-	          node.children.forEach(function(child){
-	            console.log(child, idName)
-	            if (idName == child){
-	              console.log("find")
-	              findParent = node
-	            }
-	          })
-	        }
-	      })
-	       return findParent
-	      */
-	    }
-	  }, {
-	    key: 'print',
-	    value: function print(buf, level, idName) {
-	      var that = this;
-	      //console.log(buf)
-	
-	      return new Promise(function (resolve, reject) {
-	        //console.log(buf, level, idName)
-	        //console.log(that)
-	        var thisnode = that.getbyName(idName);
-	        //console.log(thisnode)
-	
-	        buf += thisnode.id + "\n";
-	        console.log('new buf: ', buf, '---');
-	        //console.log(thisnode.children)
-	
-	        if (thisnode.children) {
-	          //console.log("with children")
-	          var promiseArray = thisnode.children.map(function (i) {
-	            return that.print(buf, level + 1, i);
-	          });
-	
-	          Promise.all(promiseArray).then(function (value) {
-	            resolve(buf);
-	          });
-	        } else {
-	          //console.log("without children")
-	          resolve(buf);
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'getUniqueId',
-	    value: function getUniqueId() {
-	      function randomString(length, chars) {
-	        var result = '';
-	        for (var i = length; i > 0; --i) {
-	          result += chars[Math.round(Math.random() * (chars.length - 1))];
-	        }return result;
-	      }
-	      // TODO: Replace with Firebase.ServerValue.TIMESTAMP.
-	      // Add BN here to prevent the css selector error.
-	      return "BN-" + new Date().getTime().toString() + "-" + randomString(5, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
-	    }
-	  }]);
-
-	  return Node;
-	}();
-
-/***/ },
-/* 582 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	exports.getVal = getVal;
-	exports.toList = toList;
-	exports.create = create;
-	exports.createChildNode = createChildNode;
-	exports.createNeighbourNode = createNeighbourNode;
-	exports.paste = paste;
-	
-	var _node = __webpack_require__(581);
-	
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-	
-	function getVal(ref, cb) {
-	  return new Promise(function (resolve, reject) {
-	    ref.once("value", function (snap) {
-	      resolve(snap.val());
-	    });
-	  });
-	}
-	
-	function toList(value) {
-	  return new Promise(function (resolve, reject) {
-	    resolve(Object.keys(value).map(function (key) {
-	      return _extends({}, value[key], { key: key });
-	    }));
-	  });
-	}
-	
-	//create twice may have problems
-	function create(cid, list, ref, content, type) {
-	  return new Promise(function (resolve, reject) {
-	    var node = new _node.Node(list);
-	
-	    //create new node
-	    var newid = content.id;
-	    ref.child(newid).set(content, function (error) {
-	      if (error) {
-	        reject(error);
-	      }
-	
-	      //update
-	      if (type == "CURRENT") {
-	        var parent = node.getParent(cid);
-	      } else {
-	        var parent = node.getbyName(cid);
-	      }
-	      //var children = parent.children
-	      //var newkey = Math.max.apply(null, Object.keys(parent.children).map(function(i){return parseInt(i)}))+1
-	      //console.log('newkey is:', newkey)
-	      if (parent.children) {
-	        //parent.children.push( newid)
-	        var l = parent.children.splice(parent.children.indexOf(cid) + 1); //refractory !!!
-	        //console.log('debug, ', parent.children, l)
-	        parent.children.push(newid);
-	        parent.children = parent.children.concat(l);
-	        //console.log(parent.children)
-	      } else {
-	        parent.children = [];
-	        parent.children.push(newid);
-	      }
-	
-	      ref.child(parent.id).update({
-	        children: parent.children
-	      }, function () {
-	        resolve();
-	      });
-	    });
-	  });
-	}
-	
-	function createChildNode(cid, list, ref, content) {
-	  return create(cid, list, ref, content, "CHILD");
-	}
-	
-	function createNeighbourNode(cid, list, ref, content) {
-	  return create(cid, list, ref, content, "CURRENT");
-	}
-	
-	function paste(cid, nid, list, ref) {
-	  return new Promise(function (resolve, reject) {
-	
-	    //console.log("list: " ,list)
-	    var node = new _node.Node(list);
-	    //console.log('--1')
-	    //console.log(node._lNodes)
-	    var newparent = node.getParent(nid);
-	    //console.log('--2')
-	    //console.log("node:", node._lNodes.map(function(i){return i.content + "_"+i.key}))
-	    //console.log("newparent:", newparent, tree.currentFocus)
-	
-	    //cut
-	    var currentparent = node.getParent(cid);
-	    var currentchildren = currentparent.children;
-	    console.log("currentchildren before:", currentchildren);
-	    currentchildren.splice(currentchildren.indexOf(cid), 1);
-	    console.log("currentchildren after:", currentchildren);
-	
-	    //paste
-	    var newchildren = newparent.children;
-	    console.log("newchildren before:", newchildren);
-	    var index = newchildren.indexOf(nid) + 1;
-	    console.log("index: ", index);
-	    var _index = -(newchildren.length - index);
-	    console.log("_index: ", _index);
-	
-	    //newchildren = [...newchildren.slice(0,index), cid, ...newchildren.slice(_index)]
-	    if (index == newchildren.length || newchildren.length == 1) {
-	      newchildren = [].concat(_toConsumableArray(newchildren), [cid]);
-	    } else {
-	      newchildren = [].concat(_toConsumableArray(newchildren.slice(0, index)), [cid], _toConsumableArray(newchildren.slice(_index)));
-	    }
-	
-	    console.log("newchildren after:", newchildren);
-	
-	    if (newparent.id != currentparent.id) {
-	      ref.child(currentparent.id).update({
-	        children: currentchildren
-	      });
-	    }
-	
-	    ref.child(newparent.id).update({
-	      children: newchildren
-	    }, function () {
-	      //console.log("update")
-	      resolve();
-	    });
-	
-	    //resolve()
-	  });
 	}
 
 /***/ },
@@ -81242,6 +81299,8 @@
 	
 	var _pomodario2 = _interopRequireDefault(_pomodario);
 	
+	var _reactBootstrap = __webpack_require__(240);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -81293,29 +81352,41 @@
 					rows = Object.keys(p.articles.data).map(function (qid) {
 						var article = p.articles.data[qid];
 						var articlestate = p.articles.states[qid];
-						return _react2.default.createElement(_article2.default, {
-							key: qid,
-							article: article,
-							qid: qid,
-							state: articlestate,
-							edit: p.startEdit.bind(_this2, qid),
-							cancel: p.cancelEdit.bind(_this2, qid),
-							submit: p.submitEdit.bind(_this2, qid),
-							'delete': p.deleteArticle.bind(_this2, qid),
-							test: p.testPlusTomato.bind(_this2, qid),
-							changePomodarioType: p.changePomodarioType.bind(_this2, qid),
-							toglePomodario: p.toglePomodario.bind(_this2, qid),
-							mayedit: true
-						});
+						return _react2.default.createElement(
+							_reactBootstrap.ListGroupItem,
+							null,
+							_react2.default.createElement(_article2.default, {
+								key: qid,
+								article: article,
+								qid: qid,
+								state: articlestate,
+								edit: p.startEdit.bind(_this2, qid),
+								cancel: p.cancelEdit.bind(_this2, qid),
+								submit: p.submitEdit.bind(_this2, qid),
+								'delete': p.deleteArticle.bind(_this2, qid),
+								test: p.testPlusTomato.bind(_this2, qid),
+								changePomodarioType: p.changePomodarioType.bind(_this2, qid),
+								toglePomodario: p.toglePomodario.bind(_this2, qid),
+								mayedit: true
+							})
+						);
 					});
 				}
 				return _react2.default.createElement(
-					'div',
-					null,
+					_reactBootstrap.Col,
+					{ md: 8, mdOffset: 2 },
 					_react2.default.createElement(
-						'div',
-						{ className: 'articleslist' },
-						p.articles.hasreceiveddata ? rows : 'Loading articles...',
+						_reactBootstrap.Col,
+						{ md: 12 },
+						_react2.default.createElement(
+							_reactBootstrap.ListGroup,
+							null,
+							p.articles.hasreceiveddata ? rows : 'Loading articles...'
+						)
+					),
+					_react2.default.createElement(
+						_reactBootstrap.Col,
+						{ md: 12 },
 						_react2.default.createElement(
 							'form',
 							{ onSubmit: this.newArticle },
@@ -81603,36 +81674,60 @@
 	        );
 	      }
 	
+	      /*
+	      return (
+	      <div className="article">
+	          <div className="content">
+	            <span onClick={p.changePomodarioType}>{p.article.type=="home"?"[H]":"[W]"}</span>
+	        <span ref="content">{p.article.content}</span> 
+	          </div>
+	           <div className="cell">
+	            {button} 
+	          </div>
+	           <div className="tomatos">
+	            <Tomato 
+	              test={this.props.test}
+	              toglePomodario = {this.props.toglePomodario}
+	              article={p.article}
+	            />
+	          </div>
+	      </div>
+	      );
+	      */
 	      return _react2.default.createElement(
-	        'div',
-	        { className: 'article' },
+	        _reactBootstrap.Row,
+	        null,
 	        _react2.default.createElement(
-	          'div',
-	          { className: 'content' },
+	          _reactBootstrap.Col,
+	          { md: 12 },
 	          _react2.default.createElement(
-	            'span',
-	            { onClick: p.changePomodarioType },
-	            p.article.type == "home" ? "[H]" : "[W]"
+	            _reactBootstrap.Col,
+	            { md: 6 },
+	            _react2.default.createElement(
+	              'span',
+	              { onClick: p.changePomodarioType },
+	              p.article.type == "home" ? "[H]" : "[W]"
+	            ),
+	            _react2.default.createElement(
+	              'span',
+	              { ref: 'content' },
+	              p.article.content
+	            )
 	          ),
 	          _react2.default.createElement(
-	            'span',
-	            { ref: 'content' },
-	            p.article.content
+	            _reactBootstrap.Col,
+	            { md: 2 },
+	            button
+	          ),
+	          _react2.default.createElement(
+	            _reactBootstrap.Col,
+	            { md: 2 },
+	            _react2.default.createElement(Tomato, {
+	              test: this.props.test,
+	              toglePomodario: this.props.toglePomodario,
+	              article: p.article
+	            })
 	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'cell' },
-	          button
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'tomatos' },
-	          _react2.default.createElement(Tomato, {
-	            test: this.props.test,
-	            toglePomodario: this.props.toglePomodario,
-	            article: p.article
-	          })
 	        )
 	      );
 	    }
@@ -82196,7 +82291,7 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _tree = __webpack_require__(577);
+	var _tree = __webpack_require__(579);
 	
 	var _reactRedux = __webpack_require__(219);
 	
@@ -82766,7 +82861,7 @@
 	
 	var _firebase = __webpack_require__(623);
 	
-	var _tree = __webpack_require__(577);
+	var _tree = __webpack_require__(579);
 	
 	var _tree2 = __webpack_require__(606);
 	

@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import {Glyphicon, Col, Input, Button, ProgressBar } from "react-bootstrap"
+import {Glyphicon, Col,Row, Input, Button, ProgressBar } from "react-bootstrap"
 import Pomodario from 'components/pomodario/pomodario';
 import C from 'core/article/action-types';
 
@@ -131,6 +131,7 @@ class Article extends Component {
         </span>;
 		}
 
+    /*
 		return (
 			<div className="article">
         <div className="content">
@@ -151,6 +152,28 @@ class Article extends Component {
         </div>
 			</div>
 		);
+    */
+   return (
+     <Row>
+     <Col md={12} >
+       <Col md={6}>
+          <span onClick={p.changePomodarioType}>{p.article.type=="home"?"[H]":"[W]"}</span>
+		    	<span ref="content">{p.article.content}</span> 
+       </Col>
+
+       <Col md={2}>
+            {button} 
+       </Col>
+       <Col md={2}>
+          <Tomato 
+            test={this.props.test}
+            toglePomodario = {this.props.toglePomodario}
+            article={p.article}
+          />
+       </Col>
+     </Col>
+     </Row>
+   )
 	}
 }
 

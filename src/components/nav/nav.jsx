@@ -10,7 +10,7 @@ import { filesActions } from 'core/files';
 class NavApp extends React.Component {
 
   render(){
-    const {auth, login, logout , openLoginModal, pushToTab} = this.props
+    const {auth, login, logout , openLoginModal, pushToTab, createFile} = this.props
     let title = auth.uid?auth.uid:'loading'
 
     const {files} = this.props
@@ -41,7 +41,7 @@ class NavApp extends React.Component {
             <NavDropdown eventKey={1} title="Files">
               {l_files}
               <MenuItem divider />
-              <MenuItem eventKey={1.3} href="#" >New File</MenuItem>
+              <MenuItem eventKey={1.3} onClick={createFile.bind(this)}>New File</MenuItem>
             </NavDropdown>
             <NavItem eventKey={2} href="#articles">Pomodario</NavItem>
             <NavItem eventKey={3} href="#stat">Stat</NavItem>
