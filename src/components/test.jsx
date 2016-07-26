@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import {Panel} from "react-bootstrap"
 import mousetrap from "mousetrap"
 
+import { BarChart } from 'react-d3';
+
 
 class TestApp extends React.Component {
 
@@ -51,9 +53,59 @@ class TestApp extends React.Component {
     
     
 
-
     return panelsInstance 
   }
 }
 
-export default TestApp 
+
+
+
+
+class TestBarChart extends React.Component {
+
+  render(){
+    const barData = [
+      {
+        "name": "Series A",
+        "values": [
+          { "x": 1, "y":  91},
+          { "x": 2, "y": 290},
+          { "x": 3, "y": 25},
+        ]
+      },
+      {
+        "name": "Series B",
+        "values": [
+          { "x": 1, "y":  9},
+          { "x": 2, "y": 49},
+          { "x": 3, "y": 20},
+        ]
+      },
+      {
+        "name": "Series C",
+        "values": [
+          { "x": 1, "y":  14},
+          { "x": 2, "y": 77},
+          { "x": 3, "y": 70}
+        ]
+      }
+    ];
+
+    return (
+      <BarChart
+        data={barData}
+        width={500}
+        height={300}
+        fill={'#3182bd'}
+        title='Bar Chart'
+        yAxisLabel='Label'
+        xAxisLabel='Value'
+      />
+    )
+  }
+}
+  
+
+
+
+export default TestBarChart 
