@@ -47294,7 +47294,7 @@
 	            null,
 	            'password:'
 	          ),
-	          _react2.default.createElement(_reactBootstrap.FormControl, { type: 'email', placeholder: 'Passwd', onChange: this.changePasswd.bind(this) })
+	          _react2.default.createElement(_reactBootstrap.FormControl, { type: 'password', placeholder: 'Passwd', onChange: this.changePasswd.bind(this) })
 	        ),
 	        _react2.default.createElement(
 	          _reactBootstrap.Modal.Footer,

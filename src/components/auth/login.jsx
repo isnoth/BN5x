@@ -45,7 +45,7 @@ class LoginModal extends React.Component {
             <ControlLabel>email:</ControlLabel>
             <FormControl type="email" placeholder="Userid" onChange={this.changeName.bind(this)}/>
             <ControlLabel>password:</ControlLabel>
-            <FormControl type="email" placeholder="Passwd" onChange={this.changePasswd.bind(this)}/>
+            <FormControl type="password" placeholder="Passwd" onChange={this.changePasswd.bind(this)}/>
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={doLogin.bind(this)}>login </Button>
