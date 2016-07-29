@@ -88,7 +88,15 @@ class TestBarChart extends React.Component {
           { "x": 2, "y": 77},
           { "x": 3, "y": 70}
         ]
-      }
+      },
+      {
+        "name": "Series D",
+        "values": [
+          { "x": 1, "y":  1},
+          { "x": 2, "y":  1},
+          { "x": 3, "y": 70}
+        ]
+      },
     ];
 
     return (

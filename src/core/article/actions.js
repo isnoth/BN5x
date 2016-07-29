@@ -1,6 +1,6 @@
 import C from './action-types';
-//import Firebase from 'firebase';
-
+//import {CHANGE_VISIBILITY_FILTER} from './action-types';
+//import Firebase from 'firebase'; 
 //const articlesRef = new Firebase(C.FIREBASE).child('articles');
 
 const articlesActions = {
@@ -12,16 +12,19 @@ const articlesActions = {
       const articlesRef = firebase.tree.child(auth.userRef+"articles/")
 
 			articlesRef.on('value', (snapshot) => {
-				dispatch({ type: C.RECEIVE_ARTICLES_DATA, data: snapshot.val() });
+				dispatch({ type: C.RECEIVE_ARTICLES_DATA, payload: snapshot.val() });
 			});
 		};
 	},
+
 	startArticleEdit(qid) {
 		return { type: C.START_ARTICLE_EDIT, qid };
 	},
+
 	cancelArticleEdit(qid) {
 		return { type: C.FINISH_ARTICLE_EDIT, qid };
 	},
+
 	deleteArticle(qid) {
 		return (dispatch, getState) => {
       const { auth, firebase } = getState();
@@ -38,6 +41,21 @@ const articlesActions = {
 			});
 		};
 	},
+
+  changeProperty(qid, payload){
+		return (dispatch, getState) => {
+      const { auth, firebase } = getState();
+      const articlesRef = firebase.tree.child(auth.userRef+"articles/")
+      console.log(qid, payload)
+      switch (payload){
+        case "TOGGLEDONE":
+          articlesRef.child(qid).transaction((article) => {
+            return Object.assign({}, article, {done: !article.done})
+          })
+      }
+    }
+  },
+
 	submitArticleEdit(qid, content) {
 		return (dispatch, getState) => {
 			//const state = getState();
@@ -88,6 +106,16 @@ const articlesActions = {
 			}
 		};
 	},
+
+  setVisibilityFilter(filter){
+    return (dispatch, getState) =>{
+      dispatch({
+        type: C.CHANGE_VISIBILITY_FILTER, 
+        payload: filter
+      })
+
+    }
+  },
   
   changePomodarioType(qid, content){
     return (dispatch, getState) =>{

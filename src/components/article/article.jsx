@@ -117,8 +117,6 @@ class Article extends Component {
 			</form>);
 		}
 
-
-
 		if (!p.mayedit) {
 			button = '';
 		} else if (p.state === C.SUBMITTING_ARTICLE) {
@@ -128,41 +126,20 @@ class Article extends Component {
         <span>
           <button onClick={p.edit}>Edit</button>
           <button onClick={p.delete}>Delete</button>
+          <button onClick={p.changeProperty.bind(this, p.qid, "TOGGLEDONE")}>Done</button>
         </span>;
 		}
 
-    /*
-		return (
-			<div className="article">
-        <div className="content">
-          <span onClick={p.changePomodarioType}>{p.article.type=="home"?"[H]":"[W]"}</span>
-				  <span ref="content">{p.article.content}</span> 
-        </div>
-
-        <div className="cell">
-          {button} 
-        </div>
-
-        <div className="tomatos">
-          <Tomato 
-            test={this.props.test}
-            toglePomodario = {this.props.toglePomodario}
-            article={p.article}
-          />
-        </div>
-			</div>
-		);
-    */
    return (
      <Row>
      <Col md={12} >
        <Col md={6}>
           <span onClick={p.changePomodarioType}>{p.article.type=="home"?"[H]":"[W]"}</span>
-		    	<span ref="content">{p.article.content}</span> 
+		    	<span style={{textDecoration: p.article.done?"line-through":null}}ref="content">{p.article.content}</span> 
        </Col>
 
-       <Col md={2}>
-            {button} 
+       <Col md={3}>
+         {button} 
        </Col>
        <Col md={2}>
           <Tomato 

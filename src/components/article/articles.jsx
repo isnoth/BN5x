@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import actions from 'core/article/actions';
-import pomodarioAction from "core/pomodario/actions"
+import articlesActions from 'core/article/actions';
+import pomodarioActions from "core/pomodario/actions"
 import Article from './article';
 import PomodarioApp from 'components/pomodario/pomodario'
-import {Col, Panel, ListGroupItem, ListGroup} from "react-bootstrap"
+import {Button, Col, Row, Panel, ListGroupItem, ListGroup} from "react-bootstrap"
 
 
 export default class Articles extends Component {
@@ -13,13 +13,11 @@ export default class Articles extends Component {
 		this.newArticle = this.newArticle.bind(this);
 		const p = this.props;
     console.log(p)
-
-    //this.props.startListeningToArticles()
 	}
 
 
   componentWillMount() {
-    //console.log(this.props.registerListeners)
+    console.log(this.props)
     this.props.startListeningToArticles()
   }
 
@@ -32,32 +30,66 @@ export default class Articles extends Component {
 	}
 	render() {
 		const p = this.props;
+
+    const {articles, 
+      startArticleEdit, 
+      cancelArticleEdit, 
+      submitArticleEdit,
+      deleteArticle,
+      testPlusTomato,
+      changePomodarioType,
+      toglePomodario,
+      changeProperty,
+      setVisibilityFilter,
+    } = this.props;
+
+
     console.log(p)
 		let rows = [];
-		if (p.articles.data) {
-			rows = Object.keys(p.articles.data).map((qid) => {
-				const article = p.articles.data[qid];
-				const articlestate = p.articles.states[qid];
-				return (
-          <ListGroupItem>
-					  <Article
-					  	key={qid}
-					  	article={article}
-					  	qid={qid}
-					  	state={articlestate}
-					  	edit={p.startEdit.bind(this, qid)}
-					  	cancel={p.cancelEdit.bind(this, qid)}
-					  	submit={p.submitEdit.bind(this, qid)}
-					  	delete={p.deleteArticle.bind(this, qid)}
-              test={p.testPlusTomato.bind(this,qid)}
-              changePomodarioType={p.changePomodarioType.bind(this, qid)}
-              toglePomodario={p.toglePomodario.bind(this,qid)}
-					  	mayedit={true}
-					  />
-          </ListGroupItem>
-				);
-			});
-		}
+
+    const getVisibleTodoes = (articles, filter) =>{
+      switch (filter){
+        case "ALL":
+          return articles;
+  
+        case "NOTDONE":
+          return articles.filter( t => !t.done )
+
+        case "DONE":
+          return articles.filter( t => t.done )
+  
+        default:
+          return articles;
+      }
+    }
+
+      rows = getVisibleTodoes(articles.data, articles.filter).map(t =>{
+
+
+				const article = t
+				const articlestate = articles.states[t.key];
+        const qid = t.key
+        //console.log(article.done)
+          return (
+            <ListGroupItem>
+				  	  <Article
+				  	  	key={qid}
+				  	  	article={article}
+				  	  	qid={qid}
+				  	  	state={articlestate}
+				  	  	edit={startArticleEdit.bind(this, qid)}
+				  	  	cancel={cancelArticleEdit.bind(this, qid)}
+				  	  	submit={submitArticleEdit.bind(this, qid)}
+				  	  	delete={deleteArticle.bind(this, qid)}
+                test={testPlusTomato.bind(this,qid)}
+                changePomodarioType={changePomodarioType.bind(this, qid)}
+                toglePomodario={toglePomodario.bind(this,qid)}
+                changeProperty = {changeProperty}
+				  	  	mayedit={true}
+				  	  />
+            </ListGroupItem>
+          )
+        })
 		return (
       <Col md={8} mdOffset={2}>
         <Col md={12} >
@@ -65,37 +97,35 @@ export default class Articles extends Component {
 			  {p.articles.hasreceiveddata ? rows : 'Loading articles...'}
         </ListGroup>
         </Col >
+
+        <Row>
+          <Button onClick={setVisibilityFilter.bind(this, "ALL")}>all</Button>
+          <Button onClick={setVisibilityFilter.bind(this, "NOTDONE")}>not done</Button>
+          <Button onClick={setVisibilityFilter.bind(this, "DONE")}>done</Button>
+        </Row>
+
+
+        <Row>
         <Col md={12}>
-			  	  <form onSubmit={this.newArticle}>
-			  	  	<input ref="newarticle" placeholder="write something clever!"/>
-			  	  	<button type="submit" disabled={p.articles.submittingnew}>{p.articles.submittingnew ? 'Submitting...' : 'Submit'}</button>
-			  	  </form>
+          <form onSubmit={this.newArticle}>
+          	<input ref="newarticle" placeholder="write something clever!"/>
+          	<button type="submit" disabled={p.articles.submittingnew}>{p.articles.submittingnew ? 'Submitting...' : 'Submit'}</button>
+          </form>
         </Col>
-        <PomodarioApp/>
+        </Row>
+
+
+        <Row>
+          <PomodarioApp/>
+        </Row>
 			</Col>
 		);
 	}
 }
 
-const mapStateToProps = (appState) => {
-	return {
-		articles: appState.articles,
-		//auth: appState.auth
-	};
-};
 
-const mapDispatchToProps = (dispatch) => {
-	return {
-    startListeningToArticles(){dispatch(actions.startListeningToArticles())},
-		submitNewArticle(content) { dispatch(actions.submitNewArticle(content)); },
-		startEdit(qid) { dispatch(actions.startArticleEdit(qid)); },
-		cancelEdit(qid) { dispatch(actions.cancelArticleEdit(qid)); },
-		submitEdit(qid, content) { dispatch(actions.submitArticleEdit(qid, content)); },
-		deleteArticle(qid) { dispatch(actions.deleteArticle(qid)); },
-    testPlusTomato(qid, content) {dispatch(actions.testPlusTomato(qid, content))},
-    changePomodarioType(qid, content){dispatch(actions.changePomodarioType(qid, content))},
-    toglePomodario(qid, content) {dispatch(pomodarioAction.toglePomodario(qid, content))}
-	};
-};
+export default connect(state =>({
+  articles: state.articles
+}), Object.assign({}, pomodarioActions, articlesActions))(Articles); 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Articles);
+

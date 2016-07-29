@@ -1,20 +1,31 @@
 import C from './action-types';
-
 export const initialState = {
 		hasreceiveddata: false,
 		submittingnew: false,
 		states: {}, // articles UI state
-		data: {}, // articles data
-    showPomodario: false //tells ui if pomodario panel need be shown
+		data: [], // articles data
+    showPomodario: false, //tells ui if pomodario panel need be shown
+    filter: "all",
 };
+
+
+
+export function article (currentstate=initialState, action) {
+	switch (action.type) {
+  }
+
+}
 
 export function articleReducer (currentstate=initialState, action) {
 	let newstate;
 	switch (action.type) {
 		case C.RECEIVE_ARTICLES_DATA:
+      console.log(action.payload)
 			return Object.assign({}, currentstate, {
 				hasreceiveddata: true,
-				data: action.data
+				data: Object.keys(action.payload).map(function(key){
+          return Object.assign({}, action.payload[key], {key: key})
+        })
 			});
 		case C.AWAIT_NEW_ARTICLE_RESPONSE:
 			return Object.assign({}, currentstate, {
@@ -40,6 +51,10 @@ export function articleReducer (currentstate=initialState, action) {
 			newstate = Object.assign({}, currentstate);
 			newstate.states[action.qid].showPomodario = !newstate.states[action.qid].showPomodario 
 			return newstate;
+
+    case C.CHANGE_VISIBILITY_FILTER:
+      return Object.assign({}, currentstate, {filter: action.payload})
+
 
 		default: return currentstate 
 	}
