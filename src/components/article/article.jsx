@@ -132,7 +132,6 @@ class Article extends Component {
 
    return (
      <Row>
-     <Col md={12} >
        <Col md={6}>
           <span onClick={p.changePomodarioType}>{p.article.type=="home"?"[H]":"[W]"}</span>
 		    	<span style={{textDecoration: p.article.done?"line-through":null}}ref="content">{p.article.content}</span> 
@@ -148,7 +147,6 @@ class Article extends Component {
             article={p.article}
           />
        </Col>
-     </Col>
      </Row>
    )
 	}

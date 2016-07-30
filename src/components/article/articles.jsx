@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { findDOMNode } from 'react-dom';
+
 import articlesActions from 'core/article/actions';
 import pomodarioActions from "core/pomodario/actions"
 import Article from './article';
 import PomodarioApp from 'components/pomodario/pomodario'
-import {Button, Col, Row, Panel, ListGroupItem, ListGroup} from "react-bootstrap"
+import {FormGroup, InputGroup, FormControl, Button, Col, Row, Panel, ListGroupItem, ListGroup} from "react-bootstrap"
 
 
 export default class Articles extends Component {
@@ -22,6 +24,10 @@ export default class Articles extends Component {
   }
 
 	newArticle(e) {
+    console.log('newArticle:', this.refs.newarticle.value)
+    console.log(findDOMNode)
+    //console.log(this.refs)
+
 		if (!this.props.articles.submitting) {
 			e.preventDefault();
 			this.props.submitNewArticle(this.refs.newarticle.value);
@@ -92,26 +98,29 @@ export default class Articles extends Component {
         })
 		return (
       <Col md={8} mdOffset={2}>
-        <Col md={12} >
+
         <ListGroup>
 			  {p.articles.hasreceiveddata ? rows : 'Loading articles...'}
         </ListGroup>
-        </Col >
 
         <Row>
-          <Button onClick={setVisibilityFilter.bind(this, "ALL")}>all</Button>
-          <Button onClick={setVisibilityFilter.bind(this, "NOTDONE")}>not done</Button>
-          <Button onClick={setVisibilityFilter.bind(this, "DONE")}>done</Button>
+          <Col md={12}>
+            <Button onClick={setVisibilityFilter.bind(this, "ALL")}>all</Button>
+            <Button onClick={setVisibilityFilter.bind(this, "NOTDONE")}>not done</Button>
+            <Button onClick={setVisibilityFilter.bind(this, "DONE")}>done</Button>
+          </Col>
         </Row>
 
 
         <Row>
-        <Col md={12}>
-          <form onSubmit={this.newArticle}>
-          	<input ref="newarticle" placeholder="write something clever!"/>
-          	<button type="submit" disabled={p.articles.submittingnew}>{p.articles.submittingnew ? 'Submitting...' : 'Submit'}</button>
-          </form>
-        </Col>
+          <Col md={12}>
+            <form onSubmit={this.newArticle}>
+              <FormGroup>
+                <input ref="newarticle" placeholder="write something clever!"/>
+                <Button type="submit" disabled={p.articles.submittingnew}>{p.articles.submittingnew ? 'Submitting...' : 'Submit'}</Button>
+              </FormGroup>
+            </form>
+          </Col>
         </Row>
 
 

@@ -80172,6 +80172,8 @@
 	
 	var _reactRedux = __webpack_require__(219);
 	
+	var _reactDom = __webpack_require__(155);
+	
 	var _actions = __webpack_require__(539);
 	
 	var _actions2 = _interopRequireDefault(_actions);
@@ -80221,6 +80223,10 @@
 	  }, {
 	    key: 'newArticle',
 	    value: function newArticle(e) {
+	      console.log('newArticle:', this.refs.newarticle.value);
+	      console.log(_reactDom.findDOMNode);
+	      //console.log(this.refs)
+	
 	      if (!this.props.articles.submitting) {
 	        e.preventDefault();
 	        this.props.submitNewArticle(this.refs.newarticle.value);
@@ -80300,31 +80306,31 @@
 	        _reactBootstrap.Col,
 	        { md: 8, mdOffset: 2 },
 	        _react2.default.createElement(
-	          _reactBootstrap.Col,
-	          { md: 12 },
-	          _react2.default.createElement(
-	            _reactBootstrap.ListGroup,
-	            null,
-	            p.articles.hasreceiveddata ? rows : 'Loading articles...'
-	          )
+	          _reactBootstrap.ListGroup,
+	          null,
+	          p.articles.hasreceiveddata ? rows : 'Loading articles...'
 	        ),
 	        _react2.default.createElement(
 	          _reactBootstrap.Row,
 	          null,
 	          _react2.default.createElement(
-	            _reactBootstrap.Button,
-	            { onClick: setVisibilityFilter.bind(this, "ALL") },
-	            'all'
-	          ),
-	          _react2.default.createElement(
-	            _reactBootstrap.Button,
-	            { onClick: setVisibilityFilter.bind(this, "NOTDONE") },
-	            'not done'
-	          ),
-	          _react2.default.createElement(
-	            _reactBootstrap.Button,
-	            { onClick: setVisibilityFilter.bind(this, "DONE") },
-	            'done'
+	            _reactBootstrap.Col,
+	            { md: 12 },
+	            _react2.default.createElement(
+	              _reactBootstrap.Button,
+	              { onClick: setVisibilityFilter.bind(this, "ALL") },
+	              'all'
+	            ),
+	            _react2.default.createElement(
+	              _reactBootstrap.Button,
+	              { onClick: setVisibilityFilter.bind(this, "NOTDONE") },
+	              'not done'
+	            ),
+	            _react2.default.createElement(
+	              _reactBootstrap.Button,
+	              { onClick: setVisibilityFilter.bind(this, "DONE") },
+	              'done'
+	            )
 	          )
 	        ),
 	        _react2.default.createElement(
@@ -80336,11 +80342,15 @@
 	            _react2.default.createElement(
 	              'form',
 	              { onSubmit: this.newArticle },
-	              _react2.default.createElement('input', { ref: 'newarticle', placeholder: 'write something clever!' }),
 	              _react2.default.createElement(
-	                'button',
-	                { type: 'submit', disabled: p.articles.submittingnew },
-	                p.articles.submittingnew ? 'Submitting...' : 'Submit'
+	                _reactBootstrap.FormGroup,
+	                null,
+	                _react2.default.createElement('input', { ref: 'newarticle', placeholder: 'write something clever!' }),
+	                _react2.default.createElement(
+	                  _reactBootstrap.Button,
+	                  { type: 'submit', disabled: p.articles.submittingnew },
+	                  p.articles.submittingnew ? 'Submitting...' : 'Submit'
+	                )
 	              )
 	            )
 	          )
@@ -80599,35 +80609,31 @@
 	        null,
 	        _react2.default.createElement(
 	          _reactBootstrap.Col,
-	          { md: 12 },
+	          { md: 6 },
 	          _react2.default.createElement(
-	            _reactBootstrap.Col,
-	            { md: 6 },
-	            _react2.default.createElement(
-	              'span',
-	              { onClick: p.changePomodarioType },
-	              p.article.type == "home" ? "[H]" : "[W]"
-	            ),
-	            _react2.default.createElement(
-	              'span',
-	              { style: { textDecoration: p.article.done ? "line-through" : null }, ref: 'content' },
-	              p.article.content
-	            )
+	            'span',
+	            { onClick: p.changePomodarioType },
+	            p.article.type == "home" ? "[H]" : "[W]"
 	          ),
 	          _react2.default.createElement(
-	            _reactBootstrap.Col,
-	            { md: 3 },
-	            button
-	          ),
-	          _react2.default.createElement(
-	            _reactBootstrap.Col,
-	            { md: 2 },
-	            _react2.default.createElement(Tomato, {
-	              test: this.props.test,
-	              toglePomodario: this.props.toglePomodario,
-	              article: p.article
-	            })
+	            'span',
+	            { style: { textDecoration: p.article.done ? "line-through" : null }, ref: 'content' },
+	            p.article.content
 	          )
+	        ),
+	        _react2.default.createElement(
+	          _reactBootstrap.Col,
+	          { md: 3 },
+	          button
+	        ),
+	        _react2.default.createElement(
+	          _reactBootstrap.Col,
+	          { md: 2 },
+	          _react2.default.createElement(Tomato, {
+	            test: this.props.test,
+	            toglePomodario: this.props.toglePomodario,
+	            article: p.article
+	          })
 	        )
 	      );
 	    }
