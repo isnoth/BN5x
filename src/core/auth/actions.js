@@ -1,5 +1,7 @@
 import {
   SIGN_IN_SUCCESS,
+  SIGN_IN_FAILED,
+  SIGN_IN_ONGOING,
   SIGN_OUT_SUCCESS,
   UPDATE_PROFILE
 } from './action-types';
@@ -49,6 +51,10 @@ export function login(pra) {
     const { tree, firebase } = getState();
     const ref = firebase.tree/*.child('articles');*/
 
+    dispatch({
+      type: SIGN_IN_ONGOING,
+    })
+
     ref.authWithPassword(pra, function(err,data){
       if(!err ){
         console.log("auth success!");
@@ -61,6 +67,10 @@ export function login(pra) {
 
       } else {
         console.log("auth failed,msg:",err);
+        dispatch({
+          type: SIGN_IN_FAILED,
+          payload: err.toString()
+        })
 
       }
     })

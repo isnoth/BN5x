@@ -30,7 +30,7 @@ class LoginModal extends React.Component {
 
   render(){
 
-    const{ui, login, closeLoginModal} = this.props
+    const{ui, auth, login, closeLoginModal} = this.props
     const doLogin=()=>{
       login(this.state)
       //closeLoginModal()
@@ -46,6 +46,7 @@ class LoginModal extends React.Component {
             <FormControl type="email" placeholder="Userid" onChange={this.changeName.bind(this)}/>
             <ControlLabel>password:</ControlLabel>
             <FormControl type="password" placeholder="Passwd" onChange={this.changePasswd.bind(this)}/>
+            {auth.authenticated!="TRUE"?(<div><hr />{auth.authInfo}</div>):null}
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={doLogin.bind(this)}>login </Button>
@@ -57,6 +58,7 @@ class LoginModal extends React.Component {
 
 export default connect((state, ownProps) => ({
   ui: state.uiState,
+  auth: state.auth,
 }), Object.assign({}, authActions, uiActions ))(LoginModal);
 
 

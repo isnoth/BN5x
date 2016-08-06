@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {Panel} from "react-bootstrap"
 import mousetrap from "mousetrap"
 
-import { BarChart } from 'react-d3';
+//import { BarChart } from 'react-d3';
 
 
 class TestApp extends React.Component {

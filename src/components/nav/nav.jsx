@@ -50,7 +50,7 @@ class NavApp extends React.Component {
             <NavItem eventKey={6} href="#resize">Tree2</NavItem>
           </Nav>
           <LoginModal/>
-            {auth.authenticated?(
+            {auth.authenticated === "TRUE"?(
               <Nav pullRight>
                 <NavDropdown eventKey={7} title={title} id="basic-nav-dropdown">
                   <MenuItem eventKey={7.1} onClick={logout.bind(this)}>Log out</MenuItem>
