@@ -6,6 +6,7 @@ import {
   UPDATE_PROFILE
 } from './action-types';
 import { uiActions } from 'core/ui';
+import { filesActions } from 'core/files';
 
 
 export function registerAuthListener(){
@@ -20,6 +21,8 @@ export function registerAuthListener(){
         dispatch({
           type: SIGN_IN_SUCCESS,
         })
+
+        dispatch(filesActions.getFiles())
 
         dispatch({
           type: UPDATE_PROFILE,
@@ -60,6 +63,10 @@ export function login(pra) {
         console.log("auth success!");
 
         dispatch(uiActions.closeLoginModal())
+        dispatch({
+          type: SIGN_IN_SUCCESS,
+        })
+
         dispatch({
           type: SIGN_IN_SUCCESS,
         })

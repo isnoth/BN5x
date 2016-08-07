@@ -44,6 +44,7 @@
     "react-resizable-and-movable": "^2.0.0",
     "react-router-redux": "^4.0.2",
     "redux-logger": "^2.6.1",
+    "vis": "^4.16.1",
     "webpack": "^1.12.14",
     "webpack-dev-server": "^1.14.1",
     "wilddog": "^0.7.0"

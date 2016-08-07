@@ -6,7 +6,7 @@ import {Tabs,Tab,  Col, Button, ButtonGroup, DropdownButton, MenuItem, Panel, Gl
 
 
 class Files extends React.Component {
-  componentWillMount(){
+  componentDidMount(){
     const {getFiles} = this.props
     getFiles()
   }
