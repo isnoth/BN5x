@@ -115,6 +115,8 @@ class TestNotify extends React.Component {
     }
 
     this.changeEdit = this.changeEdit.bind(this)
+    this.changeMin = this.changeMin.bind(this)
+    this.changeSec = this.changeSec.bind(this)
   }
 
   changeEdit(){
