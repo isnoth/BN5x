@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import vis from 'vis'
 import 'vis/dist/vis.css'
+import 'styles/timeline.css'
 
 class TestVis extends React.Component {
 
@@ -22,7 +23,8 @@ class TestVis extends React.Component {
       const items1 = Object.keys(value).map( function(i){
         const start = new Date(value[i].date-1000*60*25)
         const end = new Date(value[i].date)
-        return ({id: value[i].key, content: value[i].type, start:start, end: end })
+        const styleClass = value[i].type==="home" ? "orange":"green"
+        return ({id: value[i].key, content: value[i].type, start:start, end: end , className: styleClass  })
       })
       const items = [
         {id: 7, content: 'item 7', start: new Date()},
