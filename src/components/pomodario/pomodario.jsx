@@ -103,62 +103,50 @@ var LaterApp = React.createClass({
 
 
 
-var TestNotify= React.createClass({
-  getInitialState: function(){
-    return {
+
+class TestNotify extends React.Component {
+  constructor(props){
+    super(props);
+    this.state={
       edit: false,
       timer: 0,
       min: 25,
       sec: 0
-    };
-  },
+    }
 
+    this.changeEdit = this.changeEdit.bind(this)
+  }
 
-  onInit: function(){
-    this.setState(
-      {
-        edit: false,
-        timer: 0,
-        min: 25,
-        sec: 0
-      }
-    )
-  },
-
-  changeEdit: function(){
+  changeEdit(){
     this.setState({
       timer: parseInt(this.state.min)*60 + parseInt(this.state.sec)
     })
-    console.log('min: ', this.state.min, 'sec: ', this.state.sec, 'timer: ', this.state.timer )
-
+    //console.log('min: ', this.state.min, 'sec: ', this.state.sec, 'timer: ', this.state.timer )
     this.setState({edit: !this.state.edit});
-  },
-  changeMin: function(event){
+  }
+
+
+  changeMin(event){
     this.setState({
       min: event.target.value,
     })
-  },
-  changeSec: function(event){
+  }
+
+  changeSec(event){
     this.setState({
       sec: event.target.value,
     })
-  },
-  render: function(){
-    let p = this.props
+  }
 
-    /*
-    console.log(p.pomodario.toggle)
-    if (!p.pomodario.toggle){ //not show pomotoapp
-      return <span></span>
-    }
-    */
+  render(){
+    let p = this.props
 
     if (this.state.edit){
       return (
         <div onClick={this.changeEdit}>
           <LaterApp 
             timer={this.state.timer}
-            onTimeOut={p.onTimeOut.bind(this, p.pomodario.refkey)}
+            onTimeOut={p.onTimeOut.bind(this, p.pomodario.refkey, p.pomodario.type)}
           />
         </div>
       )
@@ -184,7 +172,7 @@ var TestNotify= React.createClass({
       )
     }
   }
-})
+}
 
 const mapStateToProps = (appState) => {
 	return { pomodario: appState.pomodario };
@@ -192,11 +180,11 @@ const mapStateToProps = (appState) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		onTimeOut(qid) { 
+		onTimeOut(qid, type) { 
       console.log('disp=>', qid)
       dispatch(articleActions.testPlusTomato(qid, {type: C.ACTUAL_POMODARIO_PLUS}));
       dispatch(actions.toglePomodarioOff(qid, "reserve"));
-      dispatch(actions.setPomodarioDone(qid, "reserve"));
+      dispatch(actions.setPomodarioDone(qid, type));
     },
 
 		changeQid(qid) { 

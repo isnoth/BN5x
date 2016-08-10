@@ -120,7 +120,9 @@ const articlesActions = {
   changePomodarioType(qid, content){
     return (dispatch, getState) =>{
       const {auth, articles, firebase} = getState()
-      const obj = articles.data[qid] 
+      //const obj = articles.data[qid] 
+      //console.log(articles.data)
+      const obj = articles.data.filter(i=>i.key==qid)[0]
       console.log(obj)
       console.log("changePomodarioType", qid, content)
       var newtype = obj.type=="home"?"work":"home"

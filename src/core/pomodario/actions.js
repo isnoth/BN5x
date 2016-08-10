@@ -11,14 +11,14 @@ CHANGE_REF_KEY
 //const pomodarioRef = new Firebase(C.FIREBASE).child('pomodarios'); 
 const pomodarioActions = {
 
-  setPomodarioDone(qid, article){
+  setPomodarioDone(qid, type){
     return (dispatch, getState) => {
       const {firebase, pomodario, auth, articles } = getState();
       const pomodarioRef = firebase.tree.child(auth.userRef+"pomodarios/")
       console.log("pomodarioRef: ", qid)
       if (pomodario.refkey != null){
-        console.log("push to server: ", qid)
-        pomodarioRef.push({qid, date: (new Date()).getTime(), type:articles.data[qid].type})
+        console.log("push to server: ", qid, type)
+        pomodarioRef.push({qid, date: (new Date()).getTime(), type:type})
       }
     }
   },
@@ -36,11 +36,11 @@ const pomodarioActions = {
     }
   },
 
-  toglePomodario(qid, article){
+  toglePomodario(qid, type){
     return (dispatch, getState) => {
       //pomodarioRef.push({article})
       dispatch({type: TOGLE_POMODARIO})
-      dispatch({type: CHANGE_REF_KEY, data: qid})
+      dispatch({type: CHANGE_REF_KEY, payload: {refkey: qid, type: type }})
     }
   },
 

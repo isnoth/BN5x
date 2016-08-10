@@ -39,6 +39,7 @@ class Tomato extends Component{
   }
 
   toglePomodario(e){
+    console.log('toglePomodario:', e)
     console.log('this.refs:', this.refs)
     this.props.toglePomodario('reserve')
   }
@@ -108,6 +109,8 @@ class Article extends Component {
 
 	render() {
 		const p = this.props;
+    const { toglePomodario } = this.props;
+
 		let button;
 		if (p.state === C.EDITING_ARTICLE) {
 			return (<form className="article" onSubmit={this.submit}>
@@ -143,7 +146,7 @@ class Article extends Component {
        <Col md={2}>
           <Tomato 
             test={this.props.test}
-            toglePomodario = {this.props.toglePomodario}
+            toglePomodario = {toglePomodario.bind(this, p.article.types)}
             article={p.article}
           />
        </Col>

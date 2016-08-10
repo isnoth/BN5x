@@ -75,6 +75,7 @@ export default class Articles extends Component {
 				const article = t
 				const articlestate = articles.states[t.key];
         const qid = t.key
+        const type = t.type
         //console.log(article.done)
           return (
             <ListGroupItem>
@@ -89,7 +90,7 @@ export default class Articles extends Component {
 				  	  	delete={deleteArticle.bind(this, qid)}
                 test={testPlusTomato.bind(this,qid)}
                 changePomodarioType={changePomodarioType.bind(this, qid)}
-                toglePomodario={toglePomodario.bind(this,qid)}
+                toglePomodario={toglePomodario.bind(this, qid, type)}
                 changeProperty = {changeProperty}
 				  	  	mayedit={true}
 				  	  />
