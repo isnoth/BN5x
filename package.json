@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --compilers js:babel-core/register --require ./test/setup.js -t 100000",
+    "test2": "mocha --compilers js:babel-core/register test/date.test.js -t 100000",
     "start": "webpack-dev-server --progress --host 0.0.0.0",
     "dev": "webpack-dev-server  --config webpack.dev.js --progress --host 0.0.0.0",
     "build": "webpack --config webpack.dist.js --progress "

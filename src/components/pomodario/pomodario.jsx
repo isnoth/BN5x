@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import actions from "core/pomodario/actions"
+import { pomodarioActions } from 'core/pomodario';
 import articleActions from 'core/article/actions';
 //import actions from '../../actions';
 import C from 'core/article/action-types';
@@ -12,12 +12,11 @@ import {
 } from "core/pomodario/action-types"
 
 
-
 import {Col, Input, Button, ProgressBar } from "react-bootstrap"
 
 var Notify = require('notifyjs');
 
-var LaterApp = React.createClass({
+var CountDown = React.createClass({
   getInitialState: function(){
     return {
       timer: this.props.timer,
@@ -104,7 +103,7 @@ var LaterApp = React.createClass({
 
 
 
-class TestNotify extends React.Component {
+class CountDownWithInput extends React.Component {
   constructor(props){
     super(props);
     this.state={
@@ -114,9 +113,18 @@ class TestNotify extends React.Component {
       sec: 0
     }
 
+    const {
+      setRefObj,
+      pomodarioRun,
+      pomodarioTimeout,
+      pomodarioAbort,
+      pushPomodarioToServer
+    } = this.props
+
     this.changeEdit = this.changeEdit.bind(this)
     this.changeMin = this.changeMin.bind(this)
     this.changeSec = this.changeSec.bind(this)
+    this.pomodarioRun = pomodarioRun.bind(this)
   }
 
   changeEdit(){
@@ -124,6 +132,10 @@ class TestNotify extends React.Component {
       timer: parseInt(this.state.min)*60 + parseInt(this.state.sec)
     })
     //console.log('min: ', this.state.min, 'sec: ', this.state.sec, 'timer: ', this.state.timer )
+    
+    if (!this.state.edit){
+      this.pomodarioRun()
+    }
     this.setState({edit: !this.state.edit});
   }
 
@@ -142,13 +154,15 @@ class TestNotify extends React.Component {
 
   render(){
     let p = this.props
+    const {pomodarioTimeout} = this.props
 
     if (this.state.edit){
       return (
         <div onClick={this.changeEdit}>
-          <LaterApp 
+          <CountDown 
             timer={this.state.timer}
-            onTimeOut={p.onTimeOut.bind(this, p.pomodario.refkey, p.pomodario.type)}
+            onTimeOut={pomodarioTimeout}
+
           />
         </div>
       )
@@ -176,25 +190,4 @@ class TestNotify extends React.Component {
   }
 }
 
-const mapStateToProps = (appState) => {
-	return { pomodario: appState.pomodario };
-};
-
-const mapDispatchToProps = (dispatch) => {
-	return {
-		onTimeOut(qid, type) { 
-      console.log('disp=>', qid)
-      dispatch(articleActions.testPlusTomato(qid, {type: C.ACTUAL_POMODARIO_PLUS}));
-      dispatch(actions.toglePomodarioOff(qid, "reserve"));
-      dispatch(actions.setPomodarioDone(qid, type));
-    },
-
-		changeQid(qid) { 
-      console.log('change qid', qid)
-      dispatch(actions.changePomodarioKey(qid))
-    },
-
-	};
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(TestNotify);
+export default connect(state =>({pomodario: state.pomodario}), Object.assign({}, pomodarioActions))(CountDownWithInput);

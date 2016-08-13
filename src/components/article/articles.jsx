@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import { findDOMNode } from 'react-dom';
 
 import articlesActions from 'core/article/actions';
-import pomodarioActions from "core/pomodario/actions"
+import {pomodarioActions} from "core/pomodario"
 import Article from './article';
+import TestVis from "components/testVis";
+
 import PomodarioApp from 'components/pomodario/pomodario'
 import {FormGroup, InputGroup, FormControl, Button, Col, Row, Panel, ListGroupItem, ListGroup} from "react-bootstrap"
 
@@ -47,6 +49,7 @@ export default class Articles extends Component {
       toglePomodario,
       changeProperty,
       setVisibilityFilter,
+      setRefObj
     } = this.props;
 
 
@@ -80,6 +83,9 @@ export default class Articles extends Component {
           return (
             <ListGroupItem>
 				  	  <Article
+                setRefObj={setRefObj.bind(this, t)}
+
+
 				  	  	key={qid}
 				  	  	article={article}
 				  	  	qid={qid}
@@ -99,6 +105,8 @@ export default class Articles extends Component {
         })
 		return (
       <Col md={8} mdOffset={2}>
+        <Row>
+        </Row>
 
         <ListGroup>
 			  {p.articles.hasreceiveddata ? rows : 'Loading articles...'}

@@ -41,6 +41,8 @@ class Tomato extends Component{
   toglePomodario(e){
     console.log('toglePomodario:', e)
     console.log('this.refs:', this.refs)
+    const {setRefObj} = this.props
+    setRefObj()
     this.props.toglePomodario('reserve')
   }
 
@@ -109,7 +111,7 @@ class Article extends Component {
 
 	render() {
 		const p = this.props;
-    const { toglePomodario } = this.props;
+    const { toglePomodario, setRefObj } = this.props;
 
 		let button;
 		if (p.state === C.EDITING_ARTICLE) {
@@ -147,6 +149,7 @@ class Article extends Component {
           <Tomato 
             test={this.props.test}
             toglePomodario = {toglePomodario.bind(this, p.article.types)}
+            setRefObj={setRefObj}
             article={p.article}
           />
        </Col>
