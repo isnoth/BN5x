@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { myDate, getTimeStampHour, todayXhour} from "utils/date_util"
+import {Button, Col} from "react-bootstrap"
+
 
 import vis from 'vis'
 import 'vis/dist/vis.css'
@@ -36,12 +38,18 @@ class TestVis extends React.Component {
 
       //const timelineItems = new vis.DataSet(items)
       const timelineItems = new vis.DataSet(items1)
-      const options = { };
+      const options = {
+        editable: true, 
+        onAdd: function (item, cb){
+          item.content = "hello"
+          cb(item)
+        }
+      };
       that.TimelineElement = new vis.Timeline(container, timelineItems, options)
 
       //which part of time will be shown
       const startTime = todayXhour(9)
-      const endTime = todayXhour(17)
+      const endTime = todayXhour(23)
       const shift = startTime.getTimezoneOffset()*60000
       that.TimelineElement.setWindow(startTime.getTime()+shift, endTime.getTime()+shift)
 
@@ -53,7 +61,7 @@ class TestVis extends React.Component {
     console.log(this.TimelineElement)
 
     const today = todayXhour(9)
-    const tomorrow = todayXhour(17)
+    const tomorrow = todayXhour(23)
     const shift = today.getTimezoneOffset()*60000
     console.log(today)
     console.log(tomorrow)
@@ -72,11 +80,11 @@ class TestVis extends React.Component {
 
   render(){
     return (
-      <div>
+      <Col>
         <p>hello vis</p>
         <div ref='container' />
-        <button onClick={this.transform.bind(this)}>Today</button>
-      </div>
+        <Button onClick={this.transform.bind(this)}>Today</Button>
+      </Col>
     )
   }
 }

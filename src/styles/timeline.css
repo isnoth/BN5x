@@ -1,3 +1,9 @@
+
+/*show item overflow*/
+.vis-item .vis-item-overflow {
+  overflow: visible;
+}
+
 .vis-item.green {
   background-color: greenyellow;
   border-color: green;

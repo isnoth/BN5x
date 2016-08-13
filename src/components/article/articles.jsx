@@ -104,6 +104,11 @@ export default class Articles extends Component {
           )
         })
 		return (
+      <Col>
+      <Col md={12}>
+        <TestVis/>
+      </Col>
+
       <Col md={8} mdOffset={2}>
         <Row>
         </Row>
@@ -137,6 +142,7 @@ export default class Articles extends Component {
           <PomodarioApp/>
         </Row>
 			</Col>
+      </Col>
 		);
 	}
 }
