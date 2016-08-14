@@ -19,6 +19,7 @@ import Desciption from "./files/description";
 import Test2 from "./test2";
 import Login from "./login";
 import TestVis from "./testVis";
+import TestGrid from "./testGrid";
 
 
 class Wrap extends Component {
@@ -60,6 +61,7 @@ export class Root extends Component {
             <Route path="test2" component={Test2} />
             <Route path="tree2" component={Tree2} />
             <Route path="testVis" component={TestVis} />
+            <Route path="testGrid" component={TestGrid} />
             <Route path="resize" component={MyFirstGrid} />
             <Route path="login" component={Login} />
             <Route path="files" component={Files} >

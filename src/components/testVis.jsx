@@ -57,11 +57,11 @@ class TestVis extends React.Component {
     })
   }
 
-  transform(){
+  transform(h1, h2){
     console.log(this.TimelineElement)
 
-    const today = todayXhour(9)
-    const tomorrow = todayXhour(23)
+    const today = todayXhour(h1)
+    const tomorrow = todayXhour(h2)
     const shift = today.getTimezoneOffset()*60000
     console.log(today)
     console.log(tomorrow)
@@ -83,7 +83,8 @@ class TestVis extends React.Component {
       <Col>
         <p>hello vis</p>
         <div ref='container' />
-        <Button onClick={this.transform.bind(this)}>Today</Button>
+        <Button onClick={this.transform.bind(this, 9, 23)}>Today</Button>
+        <Button onClick={this.transform.bind(this, 9-24, 23-24)}>Yesterday</Button>
       </Col>
     )
   }
