@@ -8,8 +8,14 @@ import {Button, Col} from "react-bootstrap"
 import vis from 'vis'
 import 'vis/dist/vis.css'
 import 'styles/timeline.css'
+import Timeline from 'react-visjs-timeline'
 
 class TestVis extends React.Component {
+
+
+  componentDidMount() {
+    this.init()
+  }
 
 
   init(){
@@ -73,10 +79,6 @@ class TestVis extends React.Component {
 
 
 
-
-  componentDidMount() {
-    this.init()
-  }
 
   render(){
     return (

@@ -19,7 +19,9 @@ import Desciption from "./files/description";
 import Test2 from "./test2";
 import Login from "./login";
 import TestVis from "./testVis";
+import TestVis2 from "./testVis2";
 import TestGrid from "./testGrid";
+import Register from "./createUser";
 
 
 class Wrap extends Component {
@@ -61,9 +63,11 @@ export class Root extends Component {
             <Route path="test2" component={Test2} />
             <Route path="tree2" component={Tree2} />
             <Route path="testVis" component={TestVis} />
+            <Route path="testVis2" component={TestVis2} />
             <Route path="testGrid" component={TestGrid} />
             <Route path="resize" component={MyFirstGrid} />
             <Route path="login" component={Login} />
+            <Route path="register" component={Register} />
             <Route path="files" component={Files} >
               <Route path="/files/:id" component={Flat} />
             </Route>

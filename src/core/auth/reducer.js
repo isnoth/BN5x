@@ -4,7 +4,8 @@ import {
   SIGN_IN_FAILED,
   SIGN_OUT_SUCCESS,
   UPDATE_PROFILE,
-
+  CREATE_USER_FAIL,
+  CREATE_USER_SUCCESS
 } from './action-types';
 
 export const initialState = {
@@ -12,6 +13,7 @@ export const initialState = {
   authInfo: "",
   uid: '',
   userRef: null,
+  createUserStatus: "NULL",
 };
 
 export function authReducer(state = initialState, action) {
@@ -31,6 +33,12 @@ export function authReducer(state = initialState, action) {
 
     case UPDATE_PROFILE:
       return Object.assign({}, state, action.payload)
+
+    case CREATE_USER_FAIL:
+      return Object.assign({}, state, {createUserStatus: "FAIL"})
+
+    case CREATE_USER_SUCCESS:
+      return Object.assign({}, state, {createUserStatus: "SUCCESS"})
 
     default:
       return state

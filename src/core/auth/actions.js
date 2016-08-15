@@ -3,7 +3,9 @@ import {
   SIGN_IN_FAILED,
   SIGN_IN_ONGOING,
   SIGN_OUT_SUCCESS,
-  UPDATE_PROFILE
+  UPDATE_PROFILE,
+  CREATE_USER_FAIL,
+  CREATE_USER_SUCCESS
 } from './action-types';
 import { uiActions } from 'core/ui';
 import { filesActions } from 'core/files';
@@ -85,4 +87,24 @@ export function login(pra) {
 
 }
 
+
+export function createUser(email, password) {
+  return (dispatch, getState) => {
+    const { auth, firebase } = getState();
+    const ref = firebase.tree
+
+    ref.createUser({email:"Loki@asgard.com",password:"examplepassword"},
+    function(err,data){
+      console.log(err)
+      if(err!=null){
+        dispatch({type: CREATE_USER_FAIL})
+        //not success
+      } else {
+        dispatch({type: CREATE_USER_SUCCESS})
+        //create user success
+      }
+    });
+
+  }
+}
 

@@ -6,7 +6,8 @@ CHANGE_REF_KEY,
 POMODARIO_START,
 POMODARIO_DONE,
 POMODARIO_ABORT,
-SET_REF_OBJ
+SET_REF_OBJ,
+GET_POMODARIOS_SUCCESS
 } from "./action-types"
 
 const initialState={
@@ -16,6 +17,7 @@ const initialState={
   state: "EDIT",
   startTime: null,
   endTime: null,
+  data: {}
 }
 
 export function pomodarioReducer(currentstate=initialState, action) {
@@ -29,6 +31,10 @@ export function pomodarioReducer(currentstate=initialState, action) {
       return Object.assign({}, currentstate, {startTime: new Date()})
     case POMODARIO_DONE:
       return Object.assign({}, currentstate, {endTime: new Date()})
+    case GET_POMODARIOS_SUCCESS:
+      return Object.assign({}, currentstate, {data: action.payload})
+
+
 
     case SHOW_POMODARIO:
       return Object.assign({}, currentstate, {toggle:true})

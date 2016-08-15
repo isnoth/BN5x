@@ -7,12 +7,27 @@ CHANGE_REF_KEY,
 
 SET_REF_OBJ,
 POMODARIO_START,
-POMODARIO_DONE
-
+POMODARIO_DONE,
+GET_POMODARIOS_SUCCESS
 
 } from "./action-types"
 
 import { articleActions } from 'core/article';
+
+
+export function startRegisterListeners(fileId) {
+  return (dispatch, getState) => {
+    const { pomodario, auth, firebase } = getState();
+    const pomodarioRef = firebase.tree.child(auth.userRef+"pomodarios/")
+
+    pomodarioRef.on('value', snapshot => (
+      dispatch({
+        type: GET_POMODARIOS_SUCCESS,
+        payload: snapshot.val()
+      }))
+    );
+  }
+}
 
 
 export function setRefObj(obj){
