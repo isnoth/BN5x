@@ -5,7 +5,8 @@ import { findDOMNode } from 'react-dom';
 import articlesActions from 'core/article/actions';
 import {pomodarioActions} from "core/pomodario"
 import Article from './article';
-import TestVis from "components/testVis";
+//import TestVis from "components/testVis";
+import TestVis2 from "components/testVis2";
 
 import PomodarioApp from 'components/pomodario/pomodario'
 import {FormGroup, InputGroup, FormControl, Button, Col, Row, Panel, ListGroupItem, ListGroup} from "react-bootstrap"
@@ -106,7 +107,7 @@ export default class Articles extends Component {
 		return (
       <Col>
       <Col md={12}>
-        <TestVis/>
+        <TestVis2/>
       </Col>
 
       <Col md={8} mdOffset={2}>

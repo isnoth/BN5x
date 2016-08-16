@@ -14,6 +14,32 @@ import Timeline from 'react-visjs-timeline'
 
 
 class TestVis extends React.Component {
+  constructor(props){
+    super(props)
+
+    const shift = todayXhour(0).getTimezoneOffset()*60000
+    const start = todayXhour(9).getTime()+shift
+    const end= todayXhour(23).getTime()+shift
+
+    this.state={
+      start: start,
+      end: end,
+    }
+  }
+
+  setTime(a, b){
+    console.log('setTime..', a, b)
+    const shift = todayXhour(a).getTimezoneOffset()*60000
+    const start = todayXhour(a).getTime()+shift
+    const end= todayXhour(b).getTime()+shift
+    this.setState({
+      start: start,
+      end: end,
+    })
+  }
+
+
+
   componentDidMount(){
     const {startRegisterListeners} = this.props
     startRegisterListeners()
@@ -30,9 +56,6 @@ class TestVis extends React.Component {
       return ({id: i, content: value[i].content, start:start, end: end , className: styleClass  })
     })
 
-    const start = todayXhour(9)
-    const end= todayXhour(23)
-    const shift = start.getTimezoneOffset()*60000
     const options = {
       //width: '100%',
       //height: '60px',
@@ -47,16 +70,17 @@ class TestVis extends React.Component {
       //    hour: 'ha'
       //  }
       //}
-      start: start.getTime()+shift,
-      end: end.getTime()+shift,
+      start: this.state.start,
+      end: this.state.end,
     }
+    console.log(options)
 
     return (
       <Col>
         <p>hello vis</p>
         <Timeline options={options} items={items} />
-        <Button >Today</Button>
-        <Button >Yesterday</Button>
+        <Button onClick={this.setTime.bind(this, 9, 23)}>Today</Button>
+        <Button onClick={this.setTime.bind(this, 9-24, 23-24)}>Yesterday</Button>
       </Col>
     )
   }
