@@ -12,19 +12,21 @@ import {getVal, toList, paste, create, createNeighbourNode, createChildNode} fro
 export function getFiles() {
   return (dispatch, getState) => {
     const { files, auth, firebase} = getState();
-    //console.log(auth.userRef)
+    console.log(auth.userRef)
     const ref = firebase.tree.child(auth.userRef+'directories/nodes/')
     ref.once('value', function(snap){
-      //console.log(snap.val())
+      console.log(snap.val())
       let fileList = snap.val()
-      dispatch({
-        type: GET_FILES_SUCCESS,
-        payload: Object.keys(fileList)
-      })
+      if (fileList){
+        dispatch({
+          type: GET_FILES_SUCCESS,
+          payload: Object.keys(fileList)
+        })
 
-      Object.keys(fileList).map(function(i){
-        dispatch(getFileMeta(i))
-      })
+        Object.keys(fileList).map(function(i){
+          dispatch(getFileMeta(i))
+        })
+      }
 
     })
   }

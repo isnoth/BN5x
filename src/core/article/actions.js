@@ -12,7 +12,9 @@ const articlesActions = {
       const articlesRef = firebase.tree.child(auth.userRef+"articles/")
 
 			articlesRef.on('value', (snapshot) => {
-				dispatch({ type: C.RECEIVE_ARTICLES_DATA, payload: snapshot.val() });
+        if (snapshot.val()){
+          dispatch({ type: C.RECEIVE_ARTICLES_DATA, payload: snapshot.val() });
+        }
 			});
 		};
 	},
@@ -135,40 +137,6 @@ const articlesActions = {
     }
   },
 
-
-  testPlusTomato(qid, content){
-    return (dispatch, getState) =>{
-
-      const { auth, firebase } = getState();
-      const articlesRef = firebase.tree.child(auth.userRef+"articles/")
-
-      console.log("content:", content)
-      switch(content.type){
-        case C.ACTUAL_POMODARIO_PLUS:
-          articlesRef.child(qid).transaction((article) => {
-            return Object.assign({}, article, {tomato_passed: article.tomato_passed+1})
-          })
-          return 
-        case C.ACTUAL_POMODARIO_MINUS:
-          articlesRef.child(qid).transaction((article) => {
-            return Object.assign({}, article, {tomato_passed: article.tomato_passed-1})
-          })
-          return 
-        case C.ESTIMATE_POMODARIO_PLUS:
-          articlesRef.child(qid).transaction((article) => {
-            return Object.assign({}, article, {tomato_total: article.tomato_total+1})
-          })
-          return 
-        case C.ESTIMATE_POMODARIO_MINUS:
-          articlesRef.child(qid).transaction((article) => {
-            return Object.assign({}, article, {tomato_total: article.tomato_total-1})
-          })
-          return 
-        default: 
-          console.log("unknown action type.", content)
-      }
-    }
-  }
 };
 
 export default articlesActions;

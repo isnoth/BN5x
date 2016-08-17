@@ -49,12 +49,17 @@ class TestVis extends React.Component {
 
     const {pomodario } = this.props
     const value = pomodario.data
-    const items = Object.keys(value).map( function(i){
-      const start = new Date(value[i].startTime)
-      const end = new Date(value[i].endTime)
-      const styleClass = value[i].type==="home" ? "orange":"green"
-      return ({id: i, content: value[i].content, start:start, end: end , className: styleClass  })
-    })
+    let items
+    if (!value){
+      items = [{id:0, content:"initial", start:new Date(), end:new Date(), className: "green"}]
+    }else{
+      items = Object.keys(value).map( function(i){
+        const start = new Date(value[i].startTime)
+        const end = new Date(value[i].endTime)
+        const styleClass = value[i].type==="home" ? "orange":"green"
+        return ({id: i, content: value[i].content, start:start, end: end , className: styleClass  })
+      })
+    }
 
     const options = {
       //width: '100%',

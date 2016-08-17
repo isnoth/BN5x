@@ -5,7 +5,9 @@ import {
   SIGN_OUT_SUCCESS,
   UPDATE_PROFILE,
   CREATE_USER_FAIL,
-  CREATE_USER_SUCCESS
+  CREATE_USER_SUCCESS,
+  CREATE_USER_INIT,
+  CREATE_USER_ONGOING
 } from './action-types';
 import { uiActions } from 'core/ui';
 import { filesActions } from 'core/files';
@@ -24,12 +26,13 @@ export function registerAuthListener(){
           type: SIGN_IN_SUCCESS,
         })
 
-        dispatch(filesActions.getFiles())
 
         dispatch({
           type: UPDATE_PROFILE,
           payload: Object.assign({}, authData, {userRef: "/notes/users/"+authData.uid+'/'})
         })
+
+        setTimeout( dispatch(filesActions.getFiles()), 1000)
 
       }else{
         dispatch({
@@ -93,11 +96,16 @@ export function createUser(email, password) {
     const { auth, firebase } = getState();
     const ref = firebase.tree
 
-    ref.createUser({email:"Loki@asgard.com",password:"examplepassword"},
+    //dispatch({type: CREATE_USER_INIT})
+    dispatch({type: CREATE_USER_ONGOING})
+
+    ref.createUser({email:email, password:password},
     function(err,data){
       console.log(err)
       if(err!=null){
-        dispatch({type: CREATE_USER_FAIL})
+        dispatch({type: CREATE_USER_FAIL,
+          payload: err.toString()
+        })
         //not success
       } else {
         dispatch({type: CREATE_USER_SUCCESS})

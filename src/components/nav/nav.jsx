@@ -58,7 +58,8 @@ class NavApp extends React.Component {
               </Nav>
             ):(
               <Nav pullRight>
-                <NavItem eventKey={8} onClick={openLoginModal.bind(this)}>login</NavItem>
+                <NavItem eventKey={9} href="#register">Register</NavItem>
+                <NavItem eventKey={8} onClick={openLoginModal.bind(this)}>Login</NavItem>
               </Nav>
             )}
         </Navbar.Collapse>

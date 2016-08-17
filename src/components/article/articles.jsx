@@ -45,9 +45,8 @@ export default class Articles extends Component {
       cancelArticleEdit, 
       submitArticleEdit,
       deleteArticle,
-      testPlusTomato,
+      //testPlusTomato,
       changePomodarioType,
-      toglePomodario,
       changeProperty,
       setVisibilityFilter,
       setRefObj
@@ -95,9 +94,7 @@ export default class Articles extends Component {
 				  	  	cancel={cancelArticleEdit.bind(this, qid)}
 				  	  	submit={submitArticleEdit.bind(this, qid)}
 				  	  	delete={deleteArticle.bind(this, qid)}
-                test={testPlusTomato.bind(this,qid)}
                 changePomodarioType={changePomodarioType.bind(this, qid)}
-                toglePomodario={toglePomodario.bind(this, qid, type)}
                 changeProperty = {changeProperty}
 				  	  	mayedit={true}
 				  	  />
