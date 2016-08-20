@@ -155,5 +155,9 @@ export class Node{
 }
 
 
-
+export class Panl extends Node{
+  constructor(lNodes){
+    super(lNodes)
+  }
+}
 

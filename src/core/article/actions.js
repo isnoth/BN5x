@@ -92,12 +92,13 @@ const articlesActions = {
 			const error = false;
       const tomato_total =10;
       const tomato_passed = 1;
+      const type = "work";
 
 			if (error) {
 				dispatch({ type: C.DISPLAY_ERROR, error });
 			} else {
 				dispatch({ type: C.AWAIT_NEW_ARTICLE_RESPONSE });
-				articlesRef.push({ content, username, uid , tomato_total, tomato_passed }, (error2) => {
+				articlesRef.push({ content, username, uid , tomato_total, tomato_passed, type}, (error2) => {
 					dispatch({ type: C.RECEIVE_NEW_ARTICLE_RESPONSE });
 					if (error2) {
 						dispatch({ type: C.DISPLAY_ERROR, error: 'Submission failed! ' + error });

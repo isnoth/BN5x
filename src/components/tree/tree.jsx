@@ -4,7 +4,7 @@ import { treeActions } from 'core/tree';
 import { connect } from 'react-redux';
 
 
-import {Node} from "utils/node"
+import {Node, Panl} from "utils/node"
 import {OverlayTrigger, Tooltip, Col, Button, ButtonGroup, DropdownButton, MenuItem, Panel, Glyphicon} from "react-bootstrap"
 import mousetrap from "mousetrap"
 var ResizableAndMovable =require('react-resizable-and-movable')
@@ -37,6 +37,7 @@ class TestNode extends React.Component {
     const {update, changeFocus} = this.props
     var that = this
     var node = new Node(this.props.nodes)
+    var panl = new Panl(this.props.nodes)
     var thisnode = node.getbyName(this.props.id)
     var collapsed = thisnode.collapsed
     var children = node.getChildren(this.props.id).map(function(children){
