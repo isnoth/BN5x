@@ -79,7 +79,16 @@ class TestNode extends React.Component {
 
 class Flat extends React.Component {
 
+  constructor(props){
+    super(props)
+    this.layoutChange = this.layoutChange.bind(this)
+  }
+
   layoutChange(value){
+    const {nodeUpdate} = this.props
+    value.map(i=>{
+      nodeUpdate(i.i, {type: "COMMON", value:{x: i.x, y: i.y, w:i.w, h:i.h}})
+    })
     console.log(value)
   }
 
@@ -130,7 +139,7 @@ class Flat extends React.Component {
           h: !i.h?1:i.h,
         }
       })
-      console.log(layout1)
+      console.log("layout1:", layout1)
 
       let children = panls.root().children.map((nodeName, index)=>{
         const child = panls.getbyName(nodeName)
@@ -151,7 +160,7 @@ class Flat extends React.Component {
       })
 
       return (
-        <ReactGridLayout className="layout" layout={layout} cols={12} rowHeight={30} width={1200} onLayoutChange={this.layoutChange.bind(this)} >
+        <ReactGridLayout className="layout" layout={layout1} cols={12} rowHeight={30} width={1200} onLayoutChange={this.layoutChange.bind(this)} >
           {children}
         </ReactGridLayout>
       )
