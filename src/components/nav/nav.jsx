@@ -46,7 +46,7 @@ class NavApp extends React.Component {
             <NavItem eventKey={2} href="#articles">Pomodario</NavItem>
             <NavItem eventKey={3} href="#stat">Stat</NavItem>
             <NavItem eventKey={4} href="#pomodario">Timer</NavItem>
-            <NavItem eventKey={5} href="#test2">Test</NavItem>
+            <NavItem eventKey={5} href="#flat">flat</NavItem>
             <NavItem eventKey={6} href="#resize">Tree2</NavItem>
           </Nav>
           <LoginModal/>

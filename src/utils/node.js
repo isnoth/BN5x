@@ -155,9 +155,19 @@ export class Node{
 }
 
 
-export class Panl extends Node{
+export class Panls extends Node{
   constructor(lNodes){
     super(lNodes)
+  }
+
+  getLayout(){
+    //console.log(this._lNodes)
+    //console.log(super.lNodes)
+    //return this._lNodes
+    //console.log (super.getChildren('root'))
+    return super.getChildren('root').map(function(i){
+      return {i: i.id, x: i.x, y:i.y, w:i.w, h:i.h}
+    })
   }
 }
 

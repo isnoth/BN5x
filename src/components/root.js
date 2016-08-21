@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 //import Articles from './pages/articles';
 import NavApp from './nav/nav';
 import Flat from "./tree/tree";
+import Flat2 from "./flat/flat";
 import Stat from "./stat/stat";
 import Pomodario from "./pomodario/pomodario";
 import Articles from "./article/articles";
@@ -69,7 +70,7 @@ export class Root extends Component {
             <Route path="login" component={Login} />
             <Route path="register" component={Register} />
             <Route path="files" component={Files} >
-              <Route path="/files/:id" component={Flat} />
+              <Route path="/files/:id" component={Flat2} />
             </Route>
 					</Route>
 				</Router>
