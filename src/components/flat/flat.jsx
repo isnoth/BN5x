@@ -82,6 +82,8 @@ class Flat extends React.Component {
   constructor(props){
     super(props)
     this.layoutChange = this.layoutChange.bind(this)
+    const {nodeUpdate} = this.props
+    this.nodeUpdate = nodeUpdate.bind(this)
   }
 
   layoutChange(value){
@@ -101,7 +103,7 @@ class Flat extends React.Component {
   }
 
 
-  update(){ }
+  //update(){ }
   changeFocus(){ }
 
 
@@ -145,12 +147,14 @@ class Flat extends React.Component {
         const child = panls.getbyName(nodeName)
         return (
           <div key={nodeName}>
+          {/*
             <div>
             {child.content}
             </div>
+            */}
 
             <TestNode 
-              update={this.update} 
+              update={this.nodeUpdate} 
               changeFocus={this.changeFocus} 
               nodes={list.list} 
               id={child.id} />
