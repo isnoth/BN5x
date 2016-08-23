@@ -1,5 +1,4 @@
 import {Node} from "utils/node"
-import {queue} from "async";
 import {getVal, toList, paste, create, createNeighbourNode, createChildNode} from "utils/firebaseUtil"
 
 import {
@@ -168,16 +167,12 @@ export function nodeUpdate(key, change) {
       //  break
 
       case "COMMON":
-        var q = async.queue(function(args, callback) {  //只有两个参数, 第二个为callback!!!
-          setTimeout(function(){
-            console.log('process:', args)
-            callback(null)}, 3000)
-        }, 3)
-        
-        q.push(i, function(err){
-          console.log("data processed!")
+        const args = {ref: ref, key: key, value: change.value}
+        const queue = files2.queue
+        queue.push(args, function (){
+          console.log("update pushed to server")
         })
-
+        break
 
     }
   }

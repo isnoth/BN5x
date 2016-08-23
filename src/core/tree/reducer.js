@@ -1,3 +1,4 @@
+import {queue} from "async";
 
 import {
   CREATE_TASK_SUCCESS,
@@ -13,6 +14,7 @@ export const initialState = {
   deleted: null,
   list: [],
   previous: [],
+
 };
 
 
@@ -90,6 +92,14 @@ export const filesInitalState = {
   ref: null,
   currentFocus: null,//which node is in focus
   cut: null, //which node is in cut state
+  queue: queue(function(args, callback){
+    args.ref.child(args.key).update( args.value )
+    callback(null)
+    //setTimeout(function(){
+    //  args.ref.child(args.key).update( args.value )
+    //  callback(null)
+    //}, 1)
+  }, 10)
 } 
 
 export function files2Reducer(state = filesInitalState, action) {

@@ -24,7 +24,7 @@ class TestNode extends React.Component {
 
   changeCollapse(key, collapsedState){
     const {update, changeFocus} = this.props
-    update(key, {type: "COLLAPSED", collapsed: collapsedState})
+    update(key, {type: "COMMON", value:{collapsed: collapsedState}})
   }
 
   updateContent(key, value){
@@ -127,7 +127,7 @@ class Flat extends React.Component {
     value.map(i=>{
       nodeUpdate(i.i, {type: "COMMON", value:{x: i.x, y: i.y, w:i.w, h:i.h}})
     })
-    console.log(value)
+    console.info("layoutChange:", value)
   }
 
   registerListeners(oldFileId, newFileId, startRegisterListeners){
@@ -186,15 +186,16 @@ class Flat extends React.Component {
 
   }
 
-  render() {
-    // layout is an array of objects, see the demo for more complete usage
-    var layout = [
-      {i: 'a', x: 0, y: 0, w: 1, h: 2, static: true},
-      {i: 'b', x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4},
-      {i: 'c', x: 4, y: 0, w: 1, h: 2},
-      {i: 'd', x: 4, y: 0, w: 1, h: 2, isDraggable: false}
-    ];
+  shouldComponentUpdate(nextProps, nextState){
+    console.log("nextState:", nextProps, nextState)
+    const {files} = nextProps
+    console.log(files.queue.length())
+    return !files.queue.length()
+    //return true
+  }
 
+
+  render() {
 
     const {files, params} = this.props
     console.log(files)
@@ -208,8 +209,8 @@ class Flat extends React.Component {
       layout1 = layout1.map(i=>{
         return {
           i: i.i,
-          x: (!i.x)||(i.x>50)?1:i.x,
-          y: (!i.y)||(i.y>50)?1:i.y,
+          x: (!i.x)||(i.x>50)||(i.x<0)?1:i.x,
+          y: (!i.y)||(i.y>50)||(i.y<0)?1:i.y,
           w: !i.w?1:i.w,
           h: !i.h?1:i.h,
         }
@@ -234,7 +235,7 @@ class Flat extends React.Component {
       })
 
       return (
-        <ReactGridLayout className="layout" layout={layout1} cols={12} rowHeight={30} width={1200} onLayoutChange={this.layoutChange.bind(this)} >
+        <ReactGridLayout className="layout" layout={layout1} cols={48} rowHeight={30} width={1400} onLayoutChange={this.layoutChange.bind(this)} >
           {children}
         </ReactGridLayout>
       )
