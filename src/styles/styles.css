@@ -90,6 +90,13 @@ textarea:focus{
     margin-top: 5px;
 }
 
+.tree-node-root {
+    display: -webkit-flex;
+    display: flex;
+    margin-top: 5px;
+    margin-left: 20px;
+}
+
 .dropdown-hiden {
   display: none;
 }
@@ -194,6 +201,10 @@ textarea:focus{
   overflow-y: auto;
   overflow-x: hidden;
   padding: 5px;
+}
+
+.flat-panel{
+  margin-left: -15px;
 }
 
 .main-content {

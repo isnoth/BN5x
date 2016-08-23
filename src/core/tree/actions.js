@@ -1,4 +1,5 @@
 import {Node} from "utils/node"
+import {queue} from "async";
 import {getVal, toList, paste, create, createNeighbourNode, createChildNode} from "utils/firebaseUtil"
 
 import {
@@ -146,8 +147,6 @@ export function nodeCreateChild() {
 }
 
 
-
-
 export function nodeUpdate(key, change) {
   //console.log(key, change)
 
@@ -164,9 +163,22 @@ export function nodeUpdate(key, change) {
         ref.child(key).update({collapsed: change.collapsed})
         break
 
+      //case "COMMON":
+      //  ref.child(key).update( change.value )
+      //  break
+
       case "COMMON":
-        ref.child(key).update( change.value )
-        break
+        var q = async.queue(function(args, callback) {  //只有两个参数, 第二个为callback!!!
+          setTimeout(function(){
+            console.log('process:', args)
+            callback(null)}, 3000)
+        }, 3)
+        
+        q.push(i, function(err){
+          console.log("data processed!")
+        })
+
+
     }
   }
 }

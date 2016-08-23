@@ -7,6 +7,7 @@ import {OverlayTrigger, Tooltip, Col, Button, ButtonGroup, DropdownButton, MenuI
 
 import 'styles/react-grid-layout.css'
 import 'styles/react-resizable.css'
+import 'styles/styles.css'
 
 import { treeActions } from 'core/tree';
 
@@ -38,36 +39,55 @@ class TestNode extends React.Component {
 
   render(){
 
-    const {update, changeFocus} = this.props
+    const {update, changeFocus, isRoot} = this.props
     var that = this
     var node = new Node(this.props.nodes)
     var panl = new Panls(this.props.nodes)
     var thisnode = node.getbyName(this.props.id)
     var collapsed = thisnode.collapsed
+    var changeText = function(evt){
+      this.updateContent(thisnode.key, evt.target.value)
+    }
+
+    let content;
+
+    if (isRoot){
+      content = (
+        <div className='tree-node-root'>
+          <Textarea
+            className="tree-textarea mousetrap" 
+            value={thisnode.content} 
+            onChange={changeText.bind(this)} 
+            onFocus={this.setFocus.bind(this, thisnode.key)}></Textarea>
+        </div>
+      )
+    }else{
+      content= (
+        <div className='tree-node-wrapper'>
+          <div onClick={this.changeCollapse.bind(this, thisnode.key, !thisnode.collapsed)} className="tree-node-icon-container">
+            <Glyphicon className="tree-node-expand-button" glyph={collapsed==false?"minus-sign":"plus-sign"} /> 
+          </div>
+          <Textarea
+            className="tree-textarea mousetrap" 
+            value={thisnode.content} 
+            onChange={changeText.bind(this)} 
+            onFocus={this.setFocus.bind(this, thisnode.key)}></Textarea>
+        </div>
+      )
+    }
+
+
+
     var children = node.getChildren(this.props.id).map(function(children){
       return <div className="tree-node-child-list">
         <TestNode update={update} changeFocus={changeFocus} nodes={that.props.nodes} id={children.id} />
       </div>
     })
 
-   var changeText = function(evt){
-     this.updateContent(thisnode.key, evt.target.value)
-   }
 
     return (
       <div>
-        <div className='tree-node-wrapper'>
-          <div onClick={this.changeCollapse.bind(this, thisnode.key, !thisnode.collapsed)} className="tree-node-icon-container">
-            <Glyphicon className="tree-node-expand-button" glyph={collapsed==false?"minus-sign":"plus-sign"} /> 
-          </div>
-          <Textarea rows={1} 
-            className="tree-textarea mousetrap" 
-            cols={60} 
-            value={thisnode.content} 
-            onChange={changeText.bind(this)} 
-            ref="inputNode" 
-            onFocus={this.setFocus.bind(this, thisnode.key)}></Textarea>
-        </div>
+        {content}
         {collapsed==false?children:null}
       </div>
     )
@@ -82,8 +102,24 @@ class Flat extends React.Component {
   constructor(props){
     super(props)
     this.layoutChange = this.layoutChange.bind(this)
-    const {nodeUpdate} = this.props
+    const {
+      nodeUpdate,
+      changeFocus, 
+      nodeCreateChild,
+      nodeCreateNeighbour,
+      nodeDelete,
+      nodeCut,
+      nodePaste
+    } = this.props
     this.nodeUpdate = nodeUpdate.bind(this)
+    this.changeFocus = changeFocus.bind(this)
+
+    this.nodeCreateChild = nodeCreateChild.bind(this)
+    this.nodeCreateNeighbour = nodeCreateNeighbour.bind(this)
+    this.nodeDelete = nodeDelete.bind(this)
+    this.nodeCut = nodeCut.bind(this)
+    this.nodePaste = nodePaste.bind(this)
+
   }
 
   layoutChange(value){
@@ -102,16 +138,52 @@ class Flat extends React.Component {
     }
   }
 
+  bindKeys(){
+    console.log("bindKeys")
 
-  //update(){ }
-  changeFocus(){ }
+    const {
+      nodeCreateChild,
+      nodeCreateNeighbour,
+      nodeDelete,
+      nodeCut,
+      nodePaste
+    } = this
 
+    Mousetrap.bind('ctrl+enter', function() {
+      //console.log("bind(ctrl+enter)")
+      nodeCreateNeighbour()
+    });
 
+    Mousetrap.bind('shift+enter', function(evt) {
+      console.log("bind(ctrl+enter)", evt)
+      evt.preventDefault()
+      nodeCreateChild()
+    });
 
+    Mousetrap.bind('ctrl+del', function() {
+      //console.log("bind(ctrl+delete)")
+      nodeDelete()
+    });
+
+    Mousetrap.bind('ctrl+x', function() {
+      //console.log("bind(ctrl+x)")
+      nodeCut()
+    });
+
+    Mousetrap.bind('alt+v', function() {
+      //console.log("bind(ctrl+paste)")
+      nodePaste()
+    });
+
+  }
 
   componentDidMount() {
     const {params, files, startRegisterListeners} = this.props
     this.registerListeners(files.key,  params.id, startRegisterListeners)
+    this.bindKeys()
+
+
+
   }
 
   render() {
@@ -132,11 +204,12 @@ class Flat extends React.Component {
     if (files[params.id] && (files[params.id].list.length>0)){
       const panls = new Panls(list.list)
       let layout1 = panls.getLayout()
+      console.log("layout1:", layout1)
       layout1 = layout1.map(i=>{
         return {
           i: i.i,
-          x: i.x>50?1:i.x,
-          y: i.y>50?1:i.y,
+          x: (!i.x)||(i.x>50)?1:i.x,
+          y: (!i.y)||(i.y>50)?1:i.y,
           w: !i.w?1:i.w,
           h: !i.h?1:i.h,
         }
@@ -147,17 +220,14 @@ class Flat extends React.Component {
         const child = panls.getbyName(nodeName)
         return (
           <div key={nodeName}>
-          {/*
-            <div>
-            {child.content}
+            <div className="flat-panel" >
+              <TestNode 
+                update={this.nodeUpdate} 
+                changeFocus={this.changeFocus} 
+                nodes={list.list} 
+                isRoot={true}
+                id={child.id} />
             </div>
-            */}
-
-            <TestNode 
-              update={this.nodeUpdate} 
-              changeFocus={this.changeFocus} 
-              nodes={list.list} 
-              id={child.id} />
           </div>
 
         )
