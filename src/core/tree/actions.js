@@ -162,17 +162,17 @@ export function nodeUpdate(key, change) {
         ref.child(key).update({collapsed: change.collapsed})
         break
 
-      //case "COMMON":
-      //  ref.child(key).update( change.value )
-      //  break
-
       case "COMMON":
-        const args = {ref: ref, key: key, value: change.value}
-        const queue = files2.queue
-        queue.push(args, function (){
-          console.log("update pushed to server")
-        })
+        ref.child(key).update( change.value )
         break
+
+      //case "COMMON":
+      //  const args = {ref: ref, key: key, value: change.value}
+      //  const queue = files2.queue
+      //  queue.push(args, function (){
+      //    console.log("update pushed to server")
+      //  })
+      //  break
 
     }
   }

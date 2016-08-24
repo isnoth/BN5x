@@ -3,7 +3,7 @@ import {Panls} from "../src/utils/node"
 import {expect, assert} from 'chai';
 
 describe('Panls should be ok', function () {
-  it('get layout should return ok', function () {
+  xit('get layout should return ok', function () {
     const nodes = [
       {id: 'BN1', content: "taobao", x:1, y:2, h:3, w:4},
       {id: 'BN2', content: "taobao", x:11, y:12, h:13, w:14},

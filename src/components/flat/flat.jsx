@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 var ReactGridLayout = require('react-grid-layout');
 import Textarea from 'react-textarea-autosize';
 import {OverlayTrigger, Tooltip, Col, Button, ButtonGroup, DropdownButton, MenuItem, Panel, Glyphicon} from "react-bootstrap"
+var _ = require('lodash')
 
 import 'styles/react-grid-layout.css'
 import 'styles/react-resizable.css'
@@ -122,12 +123,24 @@ class Flat extends React.Component {
 
   }
 
-  layoutChange(value){
+  layoutChange(oldLayout, value){
     const {nodeUpdate} = this.props
-    value.map(i=>{
-      nodeUpdate(i.i, {type: "COMMON", value:{x: i.x, y: i.y, w:i.w, h:i.h}})
-    })
-    console.info("layoutChange:", value)
+
+    console.log("old, new layout:", oldLayout, value)
+    const update = value.map(i=>(
+      {
+      i:i.i,
+      x:i.x,
+      y:i.y,
+      w:i.w,
+      h:i.h, }
+    ))
+    if(_.isEqual(oldLayout, update)){
+      console.log("layout not change!")
+    }else{
+      nodeUpdate("root", {type: "COMMON", value:{layout: update}})
+      console.info("layoutChange:", oldLayout, update)
+    }
   }
 
   registerListeners(oldFileId, newFileId, startRegisterListeners){
@@ -181,19 +194,20 @@ class Flat extends React.Component {
     const {params, files, startRegisterListeners} = this.props
     this.registerListeners(files.key,  params.id, startRegisterListeners)
     this.bindKeys()
-
-
-
   }
 
-  shouldComponentUpdate(nextProps, nextState){
-    console.log("nextState:", nextProps, nextState)
-    const {files} = nextProps
-    console.log(files.queue.length())
-    return !files.queue.length()
-    //return true
+  componentWillReceiveProps(nextProps) {
+    const {params, files, startRegisterListeners} = nextProps
+    this.registerListeners(files.key ,params.id, startRegisterListeners)
   }
 
+  //shouldComponentUpdate(nextProps, nextState){
+  //  console.log("nextState:", nextProps, nextState)
+  //  const {files} = nextProps
+  //  console.log(files.queue.length())
+  //  //return !files.queue.length()
+  //  return true
+  //}
 
   render() {
 
@@ -205,17 +219,8 @@ class Flat extends React.Component {
     if (files[params.id] && (files[params.id].list.length>0)){
       const panls = new Panls(list.list)
       let layout1 = panls.getLayout()
-      console.log("layout1:", layout1)
-      layout1 = layout1.map(i=>{
-        return {
-          i: i.i,
-          x: (!i.x)||(i.x>50)||(i.x<0)?1:i.x,
-          y: (!i.y)||(i.y>50)||(i.y<0)?1:i.y,
-          w: !i.w?1:i.w,
-          h: !i.h?1:i.h,
-        }
-      })
-      console.log("layout1:", layout1)
+      layout1 = !layout1?panls.initLayout():layout1
+      console.log("layout1 is:", layout1)
 
       let children = panls.root().children.map((nodeName, index)=>{
         const child = panls.getbyName(nodeName)
@@ -235,7 +240,14 @@ class Flat extends React.Component {
       })
 
       return (
-        <ReactGridLayout className="layout" layout={layout1} cols={48} rowHeight={30} width={1400} onLayoutChange={this.layoutChange.bind(this)} >
+        <ReactGridLayout 
+          className="layout" 
+          layout={layout1} 
+          cols={48} 
+          rowHeight={30} 
+          width={1580} 
+          onLayoutChange={value=>(this.layoutChange(layout1, value))} >
+
           {children}
         </ReactGridLayout>
       )

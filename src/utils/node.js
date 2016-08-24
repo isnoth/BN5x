@@ -161,13 +161,17 @@ export class Panls extends Node{
   }
 
   getLayout(){
-    //console.log(this._lNodes)
-    //console.log(super.lNodes)
-    //return this._lNodes
-    //console.log (super.getChildren('root'))
-    return super.getChildren('root').map(function(i){
-      return {i: i.id, x: i.x, y:i.y, w:i.w, h:i.h}
-    })
+    return super.root().layout
   }
+
+  initLayout(){
+    return super.getChildren('root').map(function(i){
+      return {i: i.id, x: 5, y:5, w:5, h:5}
+    })
+
+  }
+
+
+
 }
 
