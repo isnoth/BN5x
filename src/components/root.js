@@ -22,7 +22,7 @@ import Login from "./login";
 import TestVis from "./testVis";
 import TestVis2 from "./testVis2";
 import TestGrid from "./testGrid";
-import Keybind from "./testKeybind"
+//import Keybind from "./testKeybind"
 import Register from "./createUser";
 
 
@@ -67,7 +67,6 @@ export class Root extends Component {
             <Route path="testVis" component={TestVis} />
             <Route path="testVis2" component={TestVis2} />
             <Route path="testGrid" component={TestGrid} />
-            <Route path="testKeybind" component={Keybind} />
             <Route path="resize" component={MyFirstGrid} />
             <Route path="login" component={Login} />
             <Route path="register" component={Register} />
