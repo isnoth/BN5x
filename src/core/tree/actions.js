@@ -1,4 +1,4 @@
-import {Node} from "utils/node"
+import {Node, Panls} from "utils/node"
 import {getVal, toList, paste, create, createNeighbourNode, createChildNode} from "utils/firebaseUtil"
 
 import {
@@ -12,6 +12,7 @@ import {
   CHANGE_CURRENT_FOCUS,
   CUT_NODE,
   START_LISTENING,
+  UPDATE_LAYOUT_SUCCESS,
 } from './action-types';
 
 export function stopRegisterListeners(key, ref) {
@@ -19,6 +20,30 @@ export function stopRegisterListeners(key, ref) {
     console.log('listern off: ',key )
     ref.off()
   }
+}
+
+
+export function updateLayout(value){
+
+  return (dispatch, getState) => {
+    const lists = Object.keys(value).map(
+      function(key){
+        return Object.assign(
+          {}, 
+          value[key],
+          {key: key}
+        )
+      }
+    )
+
+    const panls = new Panls(lists)
+    let layout1 = panls.getLayout()
+    dispatch({
+      type: UPDATE_LAYOUT_SUCCESS,
+      payload: layout1
+    })
+  }
+
 }
 
 export function startRegisterListeners(fileId) {
@@ -44,12 +69,19 @@ export function startRegisterListeners(fileId) {
     })
 
     console.log("listen on :",fileId )
-    ref.on('value', snapshot => (
+    ref.on('value', (snapshot) => {
       dispatch({
         type: GET_TASK_SUCCESS,
         payload: {id: fileId, value: snapshot.val()}
-      }))
-    );
+      })
+
+
+    });
+
+    ref.once('value', (snapshot) => {
+      dispatch(updateLayout(snapshot.val()))
+    })
+
   };
 }
 

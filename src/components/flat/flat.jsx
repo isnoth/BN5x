@@ -2,6 +2,9 @@ import React, { Component, PropTypes} from 'react';
 import ReactDOM from "react-dom"
 import { connect } from 'react-redux';
 var ReactGridLayout = require('react-grid-layout');
+import {Responsive, WidthProvider} from 'react-grid-layout';
+const ResponsiveReactGridLayout = WidthProvider(Responsive);
+console.log("ResponsiveReactGridLayout:", ResponsiveReactGridLayout)
 import Textarea from 'react-textarea-autosize';
 import {OverlayTrigger, Tooltip, Col, Button, ButtonGroup, DropdownButton, MenuItem, Panel, Glyphicon} from "react-bootstrap"
 var _ = require('lodash')
@@ -102,7 +105,6 @@ class Flat extends React.Component {
 
   constructor(props){
     super(props)
-    this.layoutChange = this.layoutChange.bind(this)
     const {
       nodeUpdate,
       changeFocus, 
@@ -121,13 +123,30 @@ class Flat extends React.Component {
     this.nodeCut = nodeCut.bind(this)
     this.nodePaste = nodePaste.bind(this)
 
+    this.layoutChange = this.layoutChange.bind(this)
+    this.layout = [] //store layout for temprary
+    this.updateLayout = this.updateLayout.bind(this)
+
   }
 
-  layoutChange(oldLayout, value){
+  updateLayout(){
     const {nodeUpdate} = this.props
+    const layout = this.state.layout
+    nodeUpdate("root", {type: "COMMON", value:{layout: layout}})
+  }
+
+  layoutChange(oldLayout, value, all){
+    console.info("layoutChange:", oldLayout, value)
+    const {nodeUpdate} = this.props
+      //debugger
+    /*
+    if (window.screen.width<600){
+      return 
+    }
+    */
 
     console.log("old, new layout:", oldLayout, value)
-    const update = value.map(i=>(
+    const update = all.lg.map(i=>(
       {
       i:i.i,
       x:i.x,
@@ -138,8 +157,13 @@ class Flat extends React.Component {
     if(_.isEqual(oldLayout, update)){
       console.log("layout not change!")
     }else{
+
+      //debugger
+      console.log("width:", window.screen.width<600)
       nodeUpdate("root", {type: "COMMON", value:{layout: update}})
-      console.info("layoutChange:", oldLayout, update)
+      //this.setState({layout: update})
+      console.log("layout:", this.state)
+      //console.info("layoutChange:", oldLayout, update)
     }
   }
 
@@ -190,10 +214,12 @@ class Flat extends React.Component {
 
   }
 
+
   componentDidMount() {
     const {params, files, startRegisterListeners} = this.props
     this.registerListeners(files.key,  params.id, startRegisterListeners)
     this.bindKeys()
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -219,8 +245,10 @@ class Flat extends React.Component {
     if (files[params.id] && (files[params.id].list.length>0)){
       const panls = new Panls(list.list)
       let layout1 = panls.getLayout()
+      console.log('layout1: ', layout1)
       layout1 = !layout1?panls.initLayout():layout1
       console.log("layout1 is:", layout1)
+      //this.setState({layout: layout1})
 
       let children = panls.root().children.map((nodeName, index)=>{
         const child = panls.getbyName(nodeName)
@@ -239,19 +267,35 @@ class Flat extends React.Component {
         )
       })
 
+          //cols={{lg: 48, md: 10, sm: 6, xs: 4, xxs: 2}}
+      console.log("before render: ", files.layout)
+      const layout = files.layout.length>0?files.layout:panls.initLayout()
+
       return (
+
+        <ResponsiveReactGridLayout className="layout" layouts={{lg:layout, sm:layout}}
+          breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
+          cols={{lg: 48, md: 10, sm: 6, xs: 4, xxs: 2}}
+          onLayoutChange={(current, all)=>{console.log("onLayoutChange", current, all); this.layoutChange(layout1, current, all)}}
+          >
+          {children}
+        </ResponsiveReactGridLayout>
+
+      )
+          //onResizeStop={()=>(this.updateLayout())}
+
+        /*
         <ReactGridLayout 
           className="layout" 
           layout={layout1} 
-          cols={48} 
+          cols={48}
           rowHeight={30} 
           width={1580} 
           onLayoutChange={value=>(this.layoutChange(layout1, value))} >
 
           {children}
         </ReactGridLayout>
-      )
-
+        */
 
     }else{
       return (
