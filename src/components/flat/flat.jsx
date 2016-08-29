@@ -275,11 +275,12 @@ class Flat extends React.Component {
       return (
 
         <ResponsiveReactGridLayout className="layout" layouts={{lg:layout, sm:panls.initLayout()}}
-          breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-          cols={{lg: 48, md: 10, sm: 6, xs: 4, xxs: 2}}
+          breakpoints={{lg: 1200,  xs: 480, xxs: 0}}
+          cols={{lg: 48, xs: 4, xxs: 2}}
           rowHeight={30} 
           onLayoutChange={(current, all)=>{console.log("onLayoutChange", current, all); this.layoutChange(layout1, current, all)}}
           isDraggable={(window.screen.width<600)?false:true}
+          isResizable={(window.screen.width<600)?false:true}
           >
           {children}
         </ResponsiveReactGridLayout>
