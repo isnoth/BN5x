@@ -9,11 +9,42 @@ import { filesActions } from 'core/files';
 
 class NavApp extends React.Component {
 
-  render(){
-    const {auth, login, logout , openLoginModal, pushToTab, createFile} = this.props
-    let title = auth.uid?auth.uid:'loading'
+	constructor(props) {
+		super(props);
+		this.backup = this.backup.bind(this);
+  }
 
-    const {files} = this.props
+
+  backup () {
+      const now = new Date()
+      const fileName = "BN5x_"+(now.getMonth()+1)+'_' +now.getDate()+".json"
+      const {auth, firebase} = this.props
+      let childRef = auth.userRef
+      let ref = firebase.tree.child(childRef)
+      console.log(ref)
+      ref.once('value', (snapshot) => {
+          saveData(snapshot.val(), fileName)
+      })
+
+      const saveData = (data, fileName)=>{
+        var a = document.createElement("a");
+        document.body.appendChild(a);
+        a.style = "display: none";
+        var json = JSON.stringify(data),
+            blob = new Blob([json], {type: "octet/stream"}),
+            url = window.URL.createObjectURL(blob);
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+  };
+  
+
+
+  render(){
+    const {auth, login, logout , openLoginModal, pushToTab, createFile, files} = this.props
+    let title = auth.uid?auth.uid:'loading'
     const l_files = files.idList.map(function(i, index){
       const fileName = files[i]==null?i:files[i].name
       return <MenuItem key={index} eventKey={index} onClick={pushToTab.bind(this, i)}href={"#/files/"+i+"/"}>{fileName}</MenuItem>
@@ -53,7 +84,8 @@ class NavApp extends React.Component {
             {auth.authenticated === "TRUE"?(
               <Nav pullRight>
                 <NavDropdown eventKey={7} title={title} id="basic-nav-dropdown">
-                  <MenuItem eventKey={7.1} onClick={logout.bind(this)}>Log out</MenuItem>
+                  <MenuItem eventKey={7.1} onClick={this.backup}>Backup</MenuItem>
+                  <MenuItem eventKey={7.2} onClick={logout.bind(this)}>Log out</MenuItem>
                 </NavDropdown>
               </Nav>
             ):(
@@ -73,5 +105,7 @@ class NavApp extends React.Component {
 
 export default connect((state, ownProps) => ({
   auth: state.auth,
-  files: state.files
+  files: state.files,
+  firebase: state.firebase,
+
 }), Object.assign({}, authActions, uiActions, filesActions ))(NavApp);
