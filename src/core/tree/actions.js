@@ -19,32 +19,27 @@ export function stopRegisterListeners(key, ref) {
   return (dispatch, getState) => {
     console.log('listern off: ',key )
     ref.off()
+    dispatch({
+      type: UPDATE_LAYOUT_SUCCESS,
+      payload: [],
+    })
   }
 }
 
 
-export function updateLayout(value){
+export function updateLayout(fileId, layout){
+  console.log("updateLayout......")
 
   return (dispatch, getState) => {
-    const lists = Object.keys(value).map(
-      function(key){
-        return Object.assign(
-          {}, 
-          value[key],
-          {key: key}
-        )
-      }
-    )
-
-    const panls = new Panls(lists)
-    let layout1 = panls.getLayout()
     dispatch({
       type: UPDATE_LAYOUT_SUCCESS,
-      payload: layout1
+      payload: {fileId: fileId, layout: layout}
     })
   }
 
 }
+
+
 
 export function startRegisterListeners(fileId) {
   return (dispatch, getState) => {
@@ -69,18 +64,32 @@ export function startRegisterListeners(fileId) {
     })
 
     console.log("listen on :",fileId )
-    ref.on('value', (snapshot) => {
-      dispatch({
-        type: GET_TASK_SUCCESS,
-        payload: {id: fileId, value: snapshot.val()}
-      })
-
-
-    });
 
     ref.once('value', (snapshot) => {
-      dispatch(updateLayout(snapshot.val()))
+      const value = snapshot.val()
+      const lists = Object.keys(value).map(
+        function(key){
+          return Object.assign(
+            {}, 
+            value[key],
+            {key: key}
+          )
+        }
+      )
+      const panls = new Panls(lists)
+      let layout1 = panls.getLayout()
+      dispatch(updateLayout(fileId, layout1))
+
+      ref.on('value', (snapshot) => {
+        dispatch({
+          type: GET_TASK_SUCCESS,
+          payload: {id: fileId, value: snapshot.val()}
+        })
+      });
+
     })
+
+
 
   };
 }

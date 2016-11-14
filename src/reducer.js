@@ -4,7 +4,7 @@ import { routerReducer } from 'react-router-redux';
 // Reducers
 import { authReducer } from 'core/auth';
 import { firebaseReducer } from './core/firebase';
-import { treeReducer } from './core/tree';
+//import { treeReducer } from './core/tree';
 import { files2Reducer } from './core/tree'
 import { tree2Reducer } from './core/tree2';
 import { pomodarioReducer } from './core/pomodario';

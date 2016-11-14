@@ -112,7 +112,8 @@ class Flat extends React.Component {
       nodeCreateNeighbour,
       nodeDelete,
       nodeCut,
-      nodePaste
+      nodePaste,
+      updateLayout
     } = this.props
     this.nodeUpdate = nodeUpdate.bind(this)
     this.changeFocus = changeFocus.bind(this)
@@ -125,25 +126,26 @@ class Flat extends React.Component {
 
     this.layoutChange = this.layoutChange.bind(this)
     this.layout = [] //store layout for temprary
-    this.updateLayout = this.updateLayout.bind(this)
-
+    this.updateReducerLayout = updateLayout.bind(this)
   }
 
+  /*
   updateLayout(){
     const {nodeUpdate} = this.props
     const layout = this.state.layout
     nodeUpdate("root", {type: "COMMON", value:{layout: layout}})
   }
+  */
 
+  //update layout to server
   layoutChange(oldLayout, value, all){
     console.info("layoutChange:", oldLayout, value)
     const {nodeUpdate} = this.props
-      //debugger
-    /*
+
+    //mobile not update
     if (window.screen.width<600){
       return 
     }
-    */
 
     console.log("old, new layout:", oldLayout, value)
     const update = all.lg.map(i=>(
@@ -157,13 +159,15 @@ class Flat extends React.Component {
     if(_.isEqual(oldLayout, update)){
       console.log("layout not change!")
     }else{
-
-      //debugger
+      //update layout in server
       console.log("width:", window.screen.width<600)
       nodeUpdate("root", {type: "COMMON", value:{layout: update}})
-      //this.setState({layout: update})
       console.log("layout:", this.state)
-      //console.info("layoutChange:", oldLayout, update)
+      
+     
+      //update layout to reducer
+      const {params} = this.props
+      this.updateReducerLayout(params.id, update)
     }
   }
 
@@ -225,6 +229,7 @@ class Flat extends React.Component {
   componentWillReceiveProps(nextProps) {
     const {params, files, startRegisterListeners} = nextProps
     this.registerListeners(files.key ,params.id, startRegisterListeners)
+    this.layout = []
   }
 
   //shouldComponentUpdate(nextProps, nextState){
@@ -245,9 +250,9 @@ class Flat extends React.Component {
     if (files[params.id] && (files[params.id].list.length>0)){
       const panls = new Panls(list.list)
       let layout1 = panls.getLayout()
-      console.log('layout1: ', layout1)
+      //console.log('layout1: ', layout1)
       layout1 = !layout1?panls.initLayout():layout1
-      console.log("layout1 is:", layout1)
+      //console.log("layout1 is:", layout1)
       //this.setState({layout: layout1})
 
       let children = panls.root().children.map((nodeName, index)=>{
@@ -269,16 +274,24 @@ class Flat extends React.Component {
 
           //cols={{lg: 48, md: 10, sm: 6, xs: 4, xxs: 2}}
       console.log("before render: ", files.layout)
-      const layout = files.layout.length>0?files.layout:panls.initLayout()
+      //const layout = files.layout.length>0?files.layout:panls.initLayout()
+      const layout = files.layout[params.id]
+      if (files.layout.length=0){
+        return (
+          <div>
+            loading...
+          </div>
+        )
+      }
       console.log("window.screen.width:", window.screen.width)
 
       return (
 
-        <ResponsiveReactGridLayout className="layout" layouts={{lg:layout, sm:panls.initLayout()}}
-          breakpoints={{lg: 1200,  xs: 480, xxs: 0}}
-          cols={{lg: 48, xs: 4, xxs: 2}}
+        <ResponsiveReactGridLayout className="layout" layouts={{lg:layout, xs:panls.initLayout()}}
+          breakpoints={{lg: 1200,  xs: 480}}
+          cols={{lg: 48, xs: 1 }}
           rowHeight={30} 
-          onLayoutChange={(current, all)=>{console.log("onLayoutChange", current, all); this.layoutChange(layout1, current, all)}}
+          onLayoutChange={(current, all)=>{ this.layoutChange(layout1, current, all)}}
           isDraggable={(window.screen.width<600)?false:true}
           isResizable={(window.screen.width<600)?false:true}
           >

@@ -6,38 +6,45 @@ import LoginModal from "components/auth/login"
 import { authActions } from 'core/auth';
 import { uiActions } from 'core/ui';
 import { filesActions } from 'core/files';
+var FileSaver = require('file-saver');
 
 class NavApp extends React.Component {
 
 	constructor(props) {
 		super(props);
 		this.backup = this.backup.bind(this);
+    this.saveData = this.saveData.bind(this);
   }
 
+  saveData (data, fileName){
+    var a = document.createElement("a");
+    document.body.appendChild(a);
+    a.style = "display: none";
+    var json = JSON.stringify(data),
+        blob = new Blob([json], {type: "octet/stream"}),
+        url = window.URL.createObjectURL(blob);
+    console.log(url)
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }
 
   backup () {
       const now = new Date()
       const fileName = "BN5x_"+(now.getMonth()+1)+'_' +now.getDate()+".json"
-      const {auth, firebase} = this.props
-      let childRef = auth.userRef
-      let ref = firebase.tree.child(childRef)
-      console.log(ref)
+      const {auth, firebase, files2} = this.props
+      //let childRef = auth.userRef
+      //let ref = firebase.tree.child(childRef)
+      let ref = files2.ref
+
+      console.log('ref is :', ref)
       ref.once('value', (snapshot) => {
-          saveData(snapshot.val(), fileName)
+          console.log(snapshot.val())
+          this.saveData(snapshot.val(), fileName)
+          //FileSaver.saveAs(snapshot.val(), "hello world.txt");
       })
 
-      const saveData = (data, fileName)=>{
-        var a = document.createElement("a");
-        document.body.appendChild(a);
-        a.style = "display: none";
-        var json = JSON.stringify(data),
-            blob = new Blob([json], {type: "octet/stream"}),
-            url = window.URL.createObjectURL(blob);
-        a.href = url;
-        a.download = fileName;
-        a.click();
-        window.URL.revokeObjectURL(url);
-      }
   };
   
 
@@ -107,5 +114,5 @@ export default connect((state, ownProps) => ({
   auth: state.auth,
   files: state.files,
   firebase: state.firebase,
-
+  files2: state.files2,
 }), Object.assign({}, authActions, uiActions, filesActions ))(NavApp);

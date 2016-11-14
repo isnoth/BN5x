@@ -93,6 +93,7 @@ export const filesInitalState = {
   ref: null,
   currentFocus: null,//which node is in focus
   cut: null, //which node is in cut state
+  state: "IDLE",
   layout: [], //default layout
   queue: queue(function(args, callback){
     args.ref.child(args.key).update( args.value )
@@ -111,7 +112,10 @@ export function files2Reducer(state = filesInitalState, action) {
       return Object.assign({}, state, {[action.payload.id]: treeReducer(initialState, action)})
 
     case START_LISTENING:
-      return Object.assign({}, state, {key:action.payload.key, ref:action.payload.ref})
+      return Object.assign({}, state, {
+        key:action.payload.key, 
+        ref:action.payload.ref}
+        )
 
     case CHANGE_CURRENT_FOCUS:
       return Object.assign({}, state, {currentFocus: action.payload})
@@ -120,7 +124,9 @@ export function files2Reducer(state = filesInitalState, action) {
       return Object.assign({}, state, {cut: action.payload})
 
     case UPDATE_LAYOUT_SUCCESS:
-      return Object.assign({}, state, {layout: action.payload})
+      return Object.assign({}, state, {
+        layout: Object.assign({}, state.layout,{[action.payload.fileId]: action.payload.layout})
+      })
 
     default:
       return state;
