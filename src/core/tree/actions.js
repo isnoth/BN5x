@@ -276,3 +276,15 @@ export function createPanel() {
     createChildNode("root", list, ref, newNode )
   }
 }
+
+export function nodeUpdateIcon(icoNo) {
+  console.log("node update icon", icoNo)
+  return (dispatch, getState) => {
+    const { files2, firebase } = getState();
+    const currentFocus = files2.currentFocus
+
+    dispatch( nodeUpdate(currentFocus, {type: "COMMON", value:{icon: icoNo}}))
+
+  }
+
+}

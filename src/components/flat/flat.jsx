@@ -49,6 +49,7 @@ class TestNode extends React.Component {
     var panl = new Panls(this.props.nodes)
     var thisnode = node.getbyName(this.props.id)
     var collapsed = thisnode.collapsed
+    var icon = thisnode.icon
     var changeText = function(evt){
       this.updateContent(thisnode.key, evt.target.value)
     }
@@ -71,6 +72,7 @@ class TestNode extends React.Component {
           <div onClick={this.changeCollapse.bind(this, thisnode.key, !thisnode.collapsed)} className="tree-node-icon-container">
             <Glyphicon className="tree-node-expand-button" glyph={collapsed==false?"minus-sign":"plus-sign"} /> 
           </div>
+          {icon==1?(<Glyphicon glyph="plane"/>):null}
           <Textarea
             className="tree-textarea mousetrap" 
             value={thisnode.content} 
@@ -113,7 +115,9 @@ class Flat extends React.Component {
       nodeDelete,
       nodeCut,
       nodePaste,
-      updateLayout
+      updateLayout,
+      nodeUpdateIcon,
+      files
     } = this.props
     this.nodeUpdate = nodeUpdate.bind(this)
     this.changeFocus = changeFocus.bind(this)
@@ -123,10 +127,12 @@ class Flat extends React.Component {
     this.nodeDelete = nodeDelete.bind(this)
     this.nodeCut = nodeCut.bind(this)
     this.nodePaste = nodePaste.bind(this)
+    this.nodeUpdateIcon = nodeUpdateIcon.bind(this)
 
     this.layoutChange = this.layoutChange.bind(this)
     this.layout = [] //store layout for temprary
     this.updateReducerLayout = updateLayout.bind(this)
+    this.files = files
   }
 
   /*
@@ -187,8 +193,10 @@ class Flat extends React.Component {
       nodeCreateNeighbour,
       nodeDelete,
       nodeCut,
-      nodePaste
+      nodePaste,
+      nodeUpdateIcon,
     } = this
+
 
     Mousetrap.bind('ctrl+enter', function() {
       //console.log("bind(ctrl+enter)")
@@ -216,6 +224,15 @@ class Flat extends React.Component {
       nodePaste()
     });
 
+    Mousetrap.bind('ctrl+shift+1', function() {
+      console.log("bind(ctrl+1)", )
+      nodeUpdateIcon(1)
+    });
+
+    Mousetrap.bind('ctrl+shift+2', function() {
+      console.log("bind(ctrl+2)", )
+      nodeUpdateIcon(2)
+    });
   }
 
 
@@ -223,7 +240,6 @@ class Flat extends React.Component {
     const {params, files, startRegisterListeners} = this.props
     this.registerListeners(files.key,  params.id, startRegisterListeners)
     this.bindKeys()
-
   }
 
   componentWillReceiveProps(nextProps) {
