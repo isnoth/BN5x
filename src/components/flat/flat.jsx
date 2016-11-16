@@ -50,6 +50,7 @@ class TestNode extends React.Component {
     var thisnode = node.getbyName(this.props.id)
     var collapsed = thisnode.collapsed
     var icon = thisnode.icon
+    const textAreastyle = "tree-textarea mousetrap node-icon-"+icon
     var changeText = function(evt){
       this.updateContent(thisnode.key, evt.target.value)
     }
@@ -72,9 +73,9 @@ class TestNode extends React.Component {
           <div onClick={this.changeCollapse.bind(this, thisnode.key, !thisnode.collapsed)} className="tree-node-icon-container">
             <Glyphicon className="tree-node-expand-button" glyph={collapsed==false?"minus-sign":"plus-sign"} /> 
           </div>
-          {icon==1?(<Glyphicon glyph="plane"/>):null}
+          {/*icon==1?(<Glyphicon glyph="plane"/>):null*/}
           <Textarea
-            className="tree-textarea mousetrap" 
+            className={textAreastyle}
             value={thisnode.content} 
             onChange={changeText.bind(this)} 
             onFocus={this.setFocus.bind(this, thisnode.key)}></Textarea>
@@ -230,9 +231,30 @@ class Flat extends React.Component {
     });
 
     Mousetrap.bind('ctrl+shift+2', function() {
-      console.log("bind(ctrl+2)", )
+      console.log("bind(ctrl+1)", )
       nodeUpdateIcon(2)
     });
+
+    Mousetrap.bind('ctrl+shift+3', function() {
+      console.log("bind(ctrl+1)", )
+      nodeUpdateIcon(3)
+    });
+
+    Mousetrap.bind('ctrl+shift+4', function() {
+      console.log("bind(ctrl+1)", )
+      nodeUpdateIcon(4)
+    });
+
+    Mousetrap.bind('ctrl+shift+5', function() {
+      console.log("bind(ctrl+1)", )
+      nodeUpdateIcon(5)
+    });
+
+    Mousetrap.bind('ctrl+shift+6', function() {
+      console.log("bind(ctrl+1)", )
+      nodeUpdateIcon(6)
+    });
+
   }
 
 

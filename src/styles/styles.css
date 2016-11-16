@@ -360,6 +360,9 @@ textarea:focus{
 .dropdown-menu button{
   background-color: inherit;
 }
+
+
+/*flat*/
 .flat-sidebar{
   width: 17px;
   height: 100%;
@@ -368,3 +371,42 @@ textarea:focus{
   top: 60px;
 }
 
+.glyphicon-plane{
+  margin-top:3px;
+}
+
+.node-icon-1{
+}
+
+.node-icon-2{
+  color:#fff;
+  background-color:#b53f45;
+  border-radius: 4px;
+}
+
+.node-icon-3{
+  color:#fff;
+  border-radius: 4px;
+  //background-color:#00314f;
+  background-color:#acba9d;
+}
+
+.node-icon-4{
+  color:#fff;
+  border-radius: 4px;
+  //background-color:#3e6b7e;
+  background-color:#eed19c;
+}
+
+.node-icon-5{
+  color:#fff;
+  border-radius: 4px;
+  //background-color:#fce4a8;
+  background-color:#efb28c;
+}
+
+.node-icon-6{
+  color:#fff;
+  border-radius: 4px;
+  background-color:#749db9;
+}
