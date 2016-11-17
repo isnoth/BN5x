@@ -6,6 +6,9 @@ import LoginModal from "components/auth/login"
 import { authActions } from 'core/auth';
 import { uiActions } from 'core/ui';
 import { filesActions } from 'core/files';
+
+import 'styles/nav.css'
+
 var FileSaver = require('file-saver');
 
 class NavApp extends React.Component {
@@ -50,11 +53,17 @@ class NavApp extends React.Component {
 
 
   render(){
-    const {auth, login, logout , openLoginModal, pushToTab, createFile, files} = this.props
+    const {auth, login, logout , openLoginModal, pushToTab, createFile, renameFile, files} = this.props
     let title = auth.uid?auth.uid:'loading'
     const l_files = files.idList.map(function(i, index){
       const fileName = files[i]==null?i:files[i].name
-      return <MenuItem key={index} eventKey={index} onClick={pushToTab.bind(this, i)}href={"#/files/"+i+"/"}>{fileName}</MenuItem>
+      //return <MenuItem key={index} eventKey={index} onClick={pushToTab.bind(this, i)}href={"#/files/"+i+"/"}>{fileName}</MenuItem>
+      return (
+        <SplitButton key={index} title={fileName} href={"#/files/"+i+"/"} onClick={pushToTab.bind(this, i)} pullRight id="split-button-pull-right">
+          <MenuItem eventKey="1" onClick={renameFile.bind(this, i, "test rename file")}>Rename</MenuItem>
+        </SplitButton>
+      
+      )
       /*
       return <SplitButton href={"#/files/"+i+"/"} title={fileName} key={i} id={`split-button-basic-${i}`}>
         <MenuItem eventKey="1">Create panel</MenuItem>
@@ -78,6 +87,18 @@ class NavApp extends React.Component {
           <Nav>
             <NavDropdown eventKey={1} title="Files">
               {l_files}
+
+
+               <SplitButton title="Dropdown right" pullRight id="split-button-pull-right">
+                 <MenuItem eventKey="1">Action</MenuItem>
+                 <MenuItem eventKey="2">Another action</MenuItem>
+                 <MenuItem eventKey="3">Something else here</MenuItem>
+                 <MenuItem divider />
+                 <MenuItem eventKey="4">Separated link</MenuItem>
+               </SplitButton>
+
+
+
               <MenuItem divider />
               <MenuItem eventKey={1.3} onClick={createFile.bind(this)}>New File</MenuItem>
             </NavDropdown>

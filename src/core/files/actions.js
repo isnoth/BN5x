@@ -55,6 +55,19 @@ export function getFileMeta(fileId) {
     })
   }
 }
+export function renameFile(fileId, filename){
+  return (dispatch, getState) => {
+    const { files, auth, firebase} = getState();
+    const metaRef = auth.userRef+'files/'+fileId+'/meta/'
+    console.log("metaRef is:", metaRef)
+    firebase.tree.child(metaRef).update({name:filename}, function(err){
+      if (err){
+        console.log(err)
+      }
+      dispatch(getFiles)
+    })
+  }
+}
 
 export function createFile(){
   return (dispatch, getState) => {
