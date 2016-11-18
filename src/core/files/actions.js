@@ -2,9 +2,12 @@ import {
   GET_FILES_SUCCESS,
   PUSH_TO_TAB,
   POP_TO_TAB,
-  GET_FILE_META_SUCCESS
+  GET_FILE_META_SUCCESS,
+  START_EDIT_FILE_NAME,
+  FINISH_EDIT_FILE_NAME
 } from './action-types';
 
+import { uiActions } from 'core/ui';
 import {Node} from "utils/node"
 import {getVal, toList, paste, create, createNeighbourNode, createChildNode} from "utils/firebaseUtil"
 
@@ -64,7 +67,7 @@ export function renameFile(fileId, filename){
       if (err){
         console.log(err)
       }
-      dispatch(getFiles)
+      dispatch(getFileMeta(fileId))
     })
   }
 }
@@ -125,4 +128,30 @@ export function createFile(){
 }
 
 
+export function startEditFileName(fileId){
+  return (dispatch, getState) => {
 
+    dispatch(uiActions.openModifyFilenameModal())
+
+    dispatch({
+      type: START_EDIT_FILE_NAME,
+      payload: fileId
+    })
+
+  }
+}
+
+export function finishEditFileName(fileName){
+  return (dispatch, getState) => {
+
+    const { files} = getState();
+
+    dispatch(renameFile(files.currentEditFileName, fileName ))
+
+    dispatch({
+      type: FINISH_EDIT_FILE_NAME,
+    })
+
+    dispatch(uiActions.closeModifyFilenameModal())
+  }
+}

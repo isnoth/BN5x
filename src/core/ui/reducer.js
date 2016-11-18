@@ -1,11 +1,14 @@
 import {
   CLOSE_LOGIN_MODAL,
-  OPEN_LOGIN_MODAL
+  OPEN_LOGIN_MODAL,
+  OPEN_MODIFY_FILE_MODAL,
+  CLOSE_MODIFY_FILE_MODAL
 } from './action-types';
 
 export const initialState = {
   showLoginModal: false,
   showCreateModal: false,
+  showModifyFileNameModal: false,
 };
 
 export function uiReducer(state = initialState, action) {
@@ -17,6 +20,12 @@ export function uiReducer(state = initialState, action) {
 
     case OPEN_LOGIN_MODAL:
       return Object.assign({}, state, {showLoginModal: true})
+
+    case OPEN_MODIFY_FILE_MODAL:
+      return Object.assign({}, state, {showModifyFileNameModal: true})
+
+    case CLOSE_MODIFY_FILE_MODAL:
+      return Object.assign({}, state, {showModifyFileNameModal: false})
 
     default:
       return state

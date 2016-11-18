@@ -1,6 +1,8 @@
 import {
   OPEN_LOGIN_MODAL,
   CLOSE_LOGIN_MODAL,
+  OPEN_MODIFY_FILE_MODAL,
+  CLOSE_MODIFY_FILE_MODAL,
 } from './action-types';
 
 export function openLoginModal() {
@@ -21,3 +23,20 @@ export function closeLoginModal() {
   }
 }
 
+export function openModifyFilenameModal() {
+  return (dispatch, getState) => {
+    dispatch({
+      type: OPEN_MODIFY_FILE_MODAL,
+      //payload: {key: key}
+    })
+  }
+}
+
+export function closeModifyFilenameModal() {
+  return (dispatch, getState) => {
+    dispatch({
+      type: CLOSE_MODIFY_FILE_MODAL,
+      //payload: {key: key}
+    })
+  }
+}

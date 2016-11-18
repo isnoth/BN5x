@@ -4,11 +4,14 @@ import {
   PUSH_TO_TAB,
   POP_TO_TAB,
   GET_FILE_META_SUCCESS,
+  START_EDIT_FILE_NAME,
+  FINISH_EDIT_FILE_NAME
 } from './action-types';
 
 export const initialState = {
   idList: [],
   tabList: [],
+  currentEditFileName: null,
 };
 
 export function filesReducer(state = initialState, action) {
@@ -28,6 +31,12 @@ export function filesReducer(state = initialState, action) {
 
     case GET_FILE_META_SUCCESS:
       return Object.assign({}, state, {[action.payload.id]: action.payload})
+
+    case START_EDIT_FILE_NAME:
+      return Object.assign({}, state, {currentEditFileName: action.payload})
+
+    case FINISH_EDIT_FILE_NAME:
+      return Object.assign({}, state, {currentEditFileName: null})
 
     default:
       return state

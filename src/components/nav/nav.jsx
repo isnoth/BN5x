@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import {SplitButton, Navbar, NavItem, Nav, NavDropdown, MenuItem } from 'react-bootstrap'
 import LoginModal from "components/auth/login"
+import EditFileModal from "./editFile"
 import { authActions } from 'core/auth';
 import { uiActions } from 'core/ui';
 import { filesActions } from 'core/files';
@@ -49,18 +50,29 @@ class NavApp extends React.Component {
       })
 
   };
+
+
+  updateFileName(fileId){
+    const {renameFile} = this.props
+    return function(id){
+      let pwd = window.prompt("please enter new name", "");
+      console.log(pwd, fileId)
+      renameFile.bind(this, id, pwd)
+    }(fileId)
+  }
   
 
 
   render(){
-    const {auth, login, logout , openLoginModal, pushToTab, createFile, renameFile, files} = this.props
+    const {auth, login, logout , openLoginModal, pushToTab, createFile, renameFile, files, openModifyFilenameModal, startEditFileName} = this.props
     let title = auth.uid?auth.uid:'loading'
+    const updateFileName = this.updateFileName
     const l_files = files.idList.map(function(i, index){
       const fileName = files[i]==null?i:files[i].name
       //return <MenuItem key={index} eventKey={index} onClick={pushToTab.bind(this, i)}href={"#/files/"+i+"/"}>{fileName}</MenuItem>
       return (
         <SplitButton key={index} title={fileName} href={"#/files/"+i+"/"} onClick={pushToTab.bind(this, i)} pullRight id="split-button-pull-right">
-          <MenuItem eventKey="1" onClick={renameFile.bind(this, i, "test rename file")}>Rename</MenuItem>
+          <MenuItem eventKey="1" onClick={startEditFileName.bind(this, i)}>Rename</MenuItem>
         </SplitButton>
       
       )
@@ -77,6 +89,7 @@ class NavApp extends React.Component {
 
     const navbarInstance = (
       <Navbar inverse>
+        <EditFileModal/>
         <Navbar.Header>
           <Navbar.Brand>
             <a href="#">BN5x</a>
@@ -136,4 +149,5 @@ export default connect((state, ownProps) => ({
   files: state.files,
   firebase: state.firebase,
   files2: state.files2,
+  ui: state.uiState,
 }), Object.assign({}, authActions, uiActions, filesActions ))(NavApp);
