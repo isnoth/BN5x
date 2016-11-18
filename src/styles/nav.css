@@ -4,5 +4,21 @@
 
 .dropdown-menu > .btn-group > a {
   width: calc(100% - 25px);
+  border-top:0px;
+  border-left:0px;
+  border-right:0px;
+  border-radius:0px;
 }
 
+.dropdown-menu > .btn-group > button {
+  //width: calc(100% - 25px);
+  border-top:0px;
+  border-left:0px;
+  border-right:0px;
+  border-radius:0px;
+}
+
+.dropdown-menu-right{
+  left: 158px;
+  top: -4px;
+}
