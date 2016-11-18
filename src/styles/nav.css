@@ -1,0 +1,8 @@
+.dropdown-menu > .btn-group{
+  width: 100%;
+}
+
+.dropdown-menu > .btn-group > a {
+  width: calc(100% - 25px);
+}
+
