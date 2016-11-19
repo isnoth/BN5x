@@ -4,17 +4,13 @@
 
 .dropdown-menu > .btn-group > a {
   width: calc(100% - 25px);
-  border-top:0px;
-  border-left:0px;
-  border-right:0px;
+  border:0px;
   border-radius:0px;
+  text-align:left;
 }
 
 .dropdown-menu > .btn-group > button {
-  //width: calc(100% - 25px);
-  border-top:0px;
-  border-left:0px;
-  border-right:0px;
+  border:0px;
   border-radius:0px;
 }
 
