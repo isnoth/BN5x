@@ -4,7 +4,9 @@ import {
   POP_TO_TAB,
   GET_FILE_META_SUCCESS,
   START_EDIT_FILE_NAME,
-  FINISH_EDIT_FILE_NAME
+  FINISH_EDIT_FILE_NAME,
+  ENABLE_EDIT_LAYOUT,
+  DISABLE_EDIT_LAYOUT,
 } from './action-types';
 
 import { uiActions } from 'core/ui';
@@ -155,3 +157,35 @@ export function finishEditFileName(fileName){
     dispatch(uiActions.closeModifyFilenameModal())
   }
 }
+
+
+export function enableEditLayout(fileId){
+  return (dispatch, getState) => {
+    const { files, auth, firebase} = getState();
+    const metaRef = auth.userRef+'files/'+fileId+'/meta/'
+    console.log("metaRef is:", metaRef)
+    firebase.tree.child(metaRef).update({editableLayout: true}, function(err){
+      if (err){
+        console.log(err)
+      }
+      dispatch(getFileMeta(fileId))
+    })
+
+  }
+}
+
+export function disableEditLayout(fileId){
+  return (dispatch, getState) => {
+    const { files, auth, firebase} = getState();
+    const metaRef = auth.userRef+'files/'+fileId+'/meta/'
+    console.log("metaRef is:", metaRef)
+    firebase.tree.child(metaRef).update({editableLayout: false}, function(err){
+      if (err){
+        console.log(err)
+      }
+      dispatch(getFileMeta(fileId))
+    })
+
+  }
+}
+

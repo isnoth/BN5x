@@ -4,16 +4,20 @@ import {
   PUSH_TO_TAB,
   POP_TO_TAB,
   GET_FILE_META_SUCCESS,
+  /*
   START_EDIT_FILE_NAME,
   FINISH_EDIT_FILE_NAME
+  */
 } from './action-types';
 
 export const initialState = {
   idList: [],
   tabList: [],
   currentEditFileName: null,
+  layoutEditble: false,
 };
 
+//file reducer means meta balabala...
 export function filesReducer(state = initialState, action) {
 
   switch (action.type) {
@@ -37,6 +41,14 @@ export function filesReducer(state = initialState, action) {
 
     case FINISH_EDIT_FILE_NAME:
       return Object.assign({}, state, {currentEditFileName: null})
+
+    /*
+    case ENABLE_EDIT_LAYOUT:
+      return Object.assign({}, state, {layoutEditble: true})
+
+    case DISABLE_EDIT_LAYOUT:
+      return Object.assign({}, state, {layoutEditble: false})
+      */
 
     default:
       return state

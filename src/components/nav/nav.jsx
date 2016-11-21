@@ -64,7 +64,7 @@ class NavApp extends React.Component {
 
 
   render(){
-    const {auth, login, logout , openLoginModal, pushToTab, createFile, renameFile, files, openModifyFilenameModal, startEditFileName} = this.props
+    const {auth, login, logout , openLoginModal, pushToTab, createFile, renameFile, files, openModifyFilenameModal, startEditFileName, enableEditLayout, disableEditLayout} = this.props
     let title = auth.uid?auth.uid:'loading'
     const updateFileName = this.updateFileName
     const l_files = files.idList.map(function(i, index){
@@ -73,6 +73,8 @@ class NavApp extends React.Component {
       return (
         <SplitButton key={index} title={fileName} href={"#/files/"+i+"/"} onClick={pushToTab.bind(this, i)} pullRight id="split-button-pull-right">
           <MenuItem eventKey="1" onClick={startEditFileName.bind(this, i)}>Rename</MenuItem>
+          <MenuItem eventKey="2" onClick={enableEditLayout.bind(this, i)}>enable</MenuItem>
+          <MenuItem eventKey="3" onClick={disableEditLayout.bind(this, i)}>disable</MenuItem>
         </SplitButton>
       
       )

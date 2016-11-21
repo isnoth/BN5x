@@ -105,6 +105,7 @@ export const filesInitalState = {
   }, 10)
 } 
 
+//files2 means file details 
 export function files2Reducer(state = filesInitalState, action) {
   switch (action.type) {
 
