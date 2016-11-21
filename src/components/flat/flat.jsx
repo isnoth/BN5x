@@ -215,11 +215,23 @@ class Flat extends React.Component {
       nodeDelete()
     });
 
+    //only in mac
+    Mousetrap.bind('ctrl+`', function() {
+      //console.log("bind(ctrl+delete)")
+      nodeDelete()
+    });
+
     Mousetrap.bind('ctrl+x', function() {
       //console.log("bind(ctrl+x)")
       nodeCut()
     });
 
+    //only in Mac
+    Mousetrap.bind('ctrl+v', function() {
+      nodePaste()
+    });
+
+    //only in Windows
     Mousetrap.bind('alt+v', function() {
       //console.log("bind(ctrl+paste)")
       nodePaste()
