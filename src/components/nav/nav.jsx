@@ -10,7 +10,7 @@ import { filesActions } from 'core/files';
 
 import 'styles/nav.css'
 
-var FileSaver = require('file-saver');
+//var FileSaver = require('file-saver');
 
 class NavApp extends React.Component {
 
