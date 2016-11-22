@@ -288,7 +288,7 @@ class Flat extends React.Component {
     if (files[params.id] && (files[params.id].list.length>0)){
       const panls = new Panls(list.list)
       let layout1 = panls.getLayout()
-      //console.log('layout1: ', layout1)
+      const layoutEditble = panls.editableLayout()
       layout1 = !layout1?panls.initLayout():layout1
       //console.log("layout1 is:", layout1)
       //this.setState({layout: layout1})
@@ -330,7 +330,7 @@ class Flat extends React.Component {
           cols={{lg: 48, xs: 1 }}
           rowHeight={30} 
           onLayoutChange={(current, all)=>{ this.layoutChange(layout1, current, all)}}
-          isDraggable={(window.screen.width<600)?false:true}
+          isDraggable={layoutEditble?((window.screen.width<600)?false:true):false}
           isResizable={(window.screen.width<600)?false:true}
           >
           {children}

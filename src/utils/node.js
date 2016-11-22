@@ -164,6 +164,10 @@ export class Panls extends Node{
     return super.root().layout
   }
 
+  editableLayout(){
+    return !!super.root().editableLayout
+  }
+
   initLayout(){
     return super.getChildren('root').map(function(i){
       return {i: i.id, x: 5, y:5, w:5, h:5}

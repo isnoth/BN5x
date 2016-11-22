@@ -4,10 +4,8 @@ import {
   PUSH_TO_TAB,
   POP_TO_TAB,
   GET_FILE_META_SUCCESS,
-  /*
   START_EDIT_FILE_NAME,
   FINISH_EDIT_FILE_NAME
-  */
 } from './action-types';
 
 export const initialState = {

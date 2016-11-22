@@ -162,7 +162,7 @@ export function finishEditFileName(fileName){
 export function enableEditLayout(fileId){
   return (dispatch, getState) => {
     const { files, auth, firebase} = getState();
-    const metaRef = auth.userRef+'files/'+fileId+'/meta/'
+    const metaRef = auth.userRef+'files/'+fileId+'/nodes/root/'
     console.log("metaRef is:", metaRef)
     firebase.tree.child(metaRef).update({editableLayout: true}, function(err){
       if (err){
@@ -177,7 +177,7 @@ export function enableEditLayout(fileId){
 export function disableEditLayout(fileId){
   return (dispatch, getState) => {
     const { files, auth, firebase} = getState();
-    const metaRef = auth.userRef+'files/'+fileId+'/meta/'
+    const metaRef = auth.userRef+'files/'+fileId+'/nodes/root/'
     console.log("metaRef is:", metaRef)
     firebase.tree.child(metaRef).update({editableLayout: false}, function(err){
       if (err){
