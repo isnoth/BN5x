@@ -1,7 +1,7 @@
 
 import { connect } from 'react-redux'; 
 import React, { Component } from 'react';
-import {SplitButton, Navbar, NavItem, Nav, NavDropdown, MenuItem } from 'react-bootstrap'
+import {SplitButton, Navbar, NavItem, Nav, NavDropdown, MenuItem, Label} from 'react-bootstrap'
 import LoginModal from "components/auth/login"
 import EditFileModal from "./editFile"
 import { authActions } from 'core/auth';
@@ -106,10 +106,10 @@ class NavApp extends React.Component {
               <MenuItem eventKey={1.3} onClick={createFile.bind(this)}>New File</MenuItem>
             </NavDropdown>
             <NavItem eventKey={2} href="#articles">Pomodario</NavItem>
-            <NavItem eventKey={3} href="#stat">Stat</NavItem>
+            {/*<NavItem eventKey={3} href="#stat">Stat</NavItem>
             <NavItem eventKey={4} href="#pomodario">Timer</NavItem>
             <NavItem eventKey={5} href="#flat">flat</NavItem>
-            <NavItem eventKey={6} href="#resize">Tree2</NavItem>
+            <NavItem eventKey={6} href="#resize">Tree2</NavItem>*/}
           </Nav>
           <LoginModal/>
             {auth.authenticated === "TRUE"?(
