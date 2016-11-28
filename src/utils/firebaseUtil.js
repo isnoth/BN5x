@@ -108,31 +108,37 @@ export function paste(cid, nid, list, ref){
     console.log("_index: ", _index)
 
 
-    //newchildren = [...newchildren.slice(0,index), cid, ...newchildren.slice(_index)]
-    if ((index == newchildren.length) || (newchildren.length == 1)){
-      newchildren = [...newchildren, cid]
-    }else{
-      newchildren = [...newchildren.slice(0,index), cid, ...newchildren.slice(_index)]
-    }
 
-
-
-    console.log("newchildren after:", newchildren)
-  
-    if (newparent.id != currentparent.id){
-      ref.child(currentparent.id).update({
-        children: currentchildren
-      })
-    }
-  
-    ref.child(newparent.id).update({
-      children: newchildren
-    }, function(){
-      //console.log("update")
+    if(node.getAllChildrenId(cid).indexOf(nid) > -1){
+      //if 1.1 -> 1 do nothing
+      console.log('1.1 -> 1')
       resolve()
-    })
+    }else{
+      //newchildren = [...newchildren.slice(0,index), cid, ...newchildren.slice(_index)]
+      if ((index == newchildren.length) || (newchildren.length == 1)){
+        newchildren = [...newchildren, cid]
+      }else{
+        newchildren = [...newchildren.slice(0,index), cid, ...newchildren.slice(_index)]
+      }
+
+
+
+      console.log("newchildren after:", newchildren)
   
-    //resolve()
+      if (newparent.id != currentparent.id){
+        ref.child(currentparent.id).update({
+          children: currentchildren
+        })
+      }
+  
+      ref.child(newparent.id).update({
+        children: newchildren
+      }, function(){
+        //console.log("update")
+        resolve()
+      })
+  
+    }
   })
 }
 

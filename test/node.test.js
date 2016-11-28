@@ -3,7 +3,7 @@ import TestUtils from 'react-addons-test-utils';
 import {shallow, mount, render} from 'enzyme'
 import {expect} from 'chai';
 //import TestNode from '../src/components/MyButton';
-import {Node} from "../src/components/tree/node"
+import {Node} from "../src/utils/node"
 //import {getRoot} from "../src/components/MyButton"
 //
 describe.skip('Shallow Rendering', function () {

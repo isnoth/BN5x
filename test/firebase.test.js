@@ -1,5 +1,5 @@
-import {Node} from "../src/components/tree/node"
-import {getVal, toList, paste, create} from "../src/components/tree/firebaseUtil"
+import {Node} from "../src/utils/node"
+import {getVal, toList, paste, create} from "../src/utils/firebaseUtil"
 var chai = require("chai")
 chai.should()
 
@@ -51,6 +51,82 @@ describe('firebase', function () {
         })
       })
     })
+
+
+    it.only('1 -> 1.1', function (done) {
+
+      getVal(ref)
+      .then((value)=>{
+        return toList(value)
+      })
+      .then((lists)=>{
+        //console.log('get list')
+        var node = new Node(lists)
+
+        return paste( "BN-1467360367809-CvK5N", "BN-1467360370407-L0hMd", lists, ref)
+        .then(()=>{
+          return getVal(ref)
+        })
+        .then(value=>{
+          return toList(value)
+
+        })
+        .then(function(lists){
+          console.log("paste done")
+          var node = new Node(lists)
+          console.log(node.getParent("BN-1467360370407-L0hMd"))
+          console.log(node.getParent("BN-1467360370407-L0hMd").children)
+          node.getbyName("BN-1467360367809-CvK5N").children[0].should.equal('BN-1467360370407-L0hMd')
+          node.getbyName("BN-1467360367809-CvK5N").children[1].should.equal('BN-1467360372436-5R6yU')
+          node.getbyName("BN-1467360367809-CvK5N").children[2].should.equal('BN-1467360373476-QuDqW')
+
+          node.getbyName("first_node").children[0].should.equal('BN-1467360367809-CvK5N')
+          node.getbyName("first_node").children[1].should.equal('BN-1467360378328-5FynJ')
+          done()
+        })
+
+        .catch(function(err){
+          done(err)
+        })
+      })
+    })
+
+
+    it('1.2 -> 1.1', function (done) {
+
+      getVal(ref)
+      .then((value)=>{
+        return toList(value)
+      })
+      .then((lists)=>{
+        //console.log('get list')
+        var node = new Node(lists)
+
+        return paste( "BN-1467360372436-5R6yU", "BN-1467360370407-L0hMd", lists, ref)
+        .then(()=>{
+          return getVal(ref)
+        })
+        .then(value=>{
+          return toList(value)
+
+        })
+        .then(function(lists){
+          console.log("paste done")
+          var node = new Node(lists)
+          console.log(node.getParent("BN-1467360370407-L0hMd"))
+          console.log(node.getParent("BN-1467360370407-L0hMd").children)
+          node.getbyName("BN-1467360367809-CvK5N").children[0].should.equal('BN-1467360370407-L0hMd')
+          node.getbyName("BN-1467360367809-CvK5N").children[1].should.equal('BN-1467360372436-5R6yU')
+          node.getbyName("BN-1467360367809-CvK5N").children[2].should.equal('BN-1467360373476-QuDqW')
+          done()
+        })
+
+        .catch(function(err){
+          done(err)
+        })
+      })
+    })
+
 
     it('firebase 2.1 to 1.1', function (done) {
 
@@ -141,7 +217,7 @@ describe('firebase', function () {
 
 
   describe('add', function () {
-    it.only('add should be ok ', function (done) {
+    it('add should be ok ', function (done) {
 
       getVal(ref)
       .then((value)=>{

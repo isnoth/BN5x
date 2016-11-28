@@ -69,6 +69,21 @@ export class Node{
     //return [{id: "BN1"}]
   }
 
+  //get children id and not include self
+  getAllChildrenId(idName){
+    var l = []
+    var that = this
+    var current = this.getbyName(idName)
+
+    if (current.children){
+      current.children.map(function(childId){
+        var lChildren = that.getAllChildrenId(childId)
+        l = l.concat(childId)
+      })
+    }
+    return l
+  }
+
   //async problems?
   getParent(idName){
 
