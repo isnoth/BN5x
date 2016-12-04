@@ -26,6 +26,7 @@ class TestNode extends React.Component {
     changeFocus: PropTypes.func.isRequired
   };
 
+
   changeCollapse(key, collapsedState){
     const {update, changeFocus} = this.props
     update(key, {type: "COMMON", value:{collapsed: collapsedState}})
@@ -43,7 +44,7 @@ class TestNode extends React.Component {
 
   render(){
 
-    const {update, changeFocus, isRoot} = this.props
+    const {update, changeFocus, isRoot, nodeCut, nodeCutWithTarget, nodePasteWithTarget} = this.props
     var that = this
     var node = new Node(this.props.nodes)
     var panl = new Panls(this.props.nodes)
@@ -55,7 +56,40 @@ class TestNode extends React.Component {
       this.updateContent(thisnode.key, evt.target.value)
     }
 
+    //console.log("nodePasteWithTarget is :", nodePasteWithTarget)
+
     let content;
+
+    const allowDrop = (ev)=> {
+        console.log('allowDrop')
+        ev.preventDefault();
+    }
+    
+    const ondrag = (ev) =>{
+        //console.log("ondrag:",  id)
+        console.log("ondrag:", thisnode.id)
+        const { nodeCutWithTarget } = this.props
+        nodeCutWithTarget(thisnode.id)
+        
+        //ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    const drag = (ev) =>{
+        //ev.dataTransfer.setData("text", ev.target.id);
+        //console.log("drag:", ev)
+    }
+    
+    const drop = (ev)=> {
+        console.log('drop:', ev)
+        const { nodePasteWithTarget } = this.props
+        //ev.preventDefault();
+        //var data = ev.dataTransfer.getData("text");
+        console.log(thisnode.id)
+        nodePasteWithTarget(thisnode.id)
+        //console.log("drop", data)
+        //ev.target.appendChild(document.getElementById(data));
+    }
+
 
     if (isRoot){
       content = (
@@ -69,9 +103,13 @@ class TestNode extends React.Component {
       )
     }else{
       content= (
-        <div className='tree-node-wrapper'>
-          <div onClick={this.changeCollapse.bind(this, thisnode.key, !thisnode.collapsed)} className="tree-node-icon-container">
-            <Glyphicon className="tree-node-expand-button" glyph={collapsed==false?"minus-sign":"plus-sign"} /> 
+        <div 
+          onDrop={drop.bind(this, thisnode.key)}  draggable="true" onDragStart={ondrag.bind(this, thisnode.key)} onDrag={drag.bind(this)} onDragOver={allowDrop.bind(this)} 
+          className='tree-node-wrapper' >
+          <div 
+          onClick={this.changeCollapse.bind(this, thisnode.key, !thisnode.collapsed)} className="tree-node-icon-container">
+            <Glyphicon 
+            className="tree-node-expand-button" glyph={collapsed==false?"minus-sign":"plus-sign"} /> 
           </div>
           {/*icon==1?(<Glyphicon glyph="plane"/>):null*/}
           <Textarea
@@ -87,13 +125,14 @@ class TestNode extends React.Component {
 
     var children = node.getChildren(this.props.id).map(function(children){
       return <div className="tree-node-child-list">
-        <TestNode update={update} changeFocus={changeFocus} nodes={that.props.nodes} id={children.id} />
+        <TestNode update={update} changeFocus={changeFocus} nodes={that.props.nodes} id={children.id} nodeCut={nodeCut} nodeCutWithTarget={nodeCutWithTarget} nodePasteWithTarget={nodePasteWithTarget}/>
       </div>
     })
 
 
+
     return (
-      <div>
+      <div >
         {content}
         {collapsed==false?children:null}
       </div>
@@ -115,7 +154,9 @@ class Flat extends React.Component {
       nodeCreateNeighbour,
       nodeDelete,
       nodeCut,
+      nodeCutWithTarget,
       nodePaste,
+      nodePasteWithTarget,
       updateLayout,
       nodeUpdateIcon,
       files
@@ -127,7 +168,10 @@ class Flat extends React.Component {
     this.nodeCreateNeighbour = nodeCreateNeighbour.bind(this)
     this.nodeDelete = nodeDelete.bind(this)
     this.nodeCut = nodeCut.bind(this)
+    this.nodeCutWithTarget = nodeCutWithTarget.bind(this)
     this.nodePaste = nodePaste.bind(this)
+    //console.log("nodePasteWithTarget", this.nodePasteWithTarget)
+    this.nodePasteWithTarget = nodePasteWithTarget.bind(this)
     this.nodeUpdateIcon = nodeUpdateIcon.bind(this)
 
     this.layoutChange = this.layoutChange.bind(this)
@@ -296,6 +340,7 @@ class Flat extends React.Component {
     console.log(files)
     console.log(params.id)
     console.log('list:', files[params.id])
+    //console.log("this.nodePasteWithTarget 1", this.nodePasteWithTarget)
     const list = files[params.id]
     if (files[params.id] && (files[params.id].list.length>0)){
       const panls = new Panls(list.list)
@@ -312,6 +357,9 @@ class Flat extends React.Component {
             <div className="flat-panel" >
               <TestNode 
                 update={this.nodeUpdate} 
+                nodeCut={this.nodeCut}
+                nodeCutWithTarget={this.nodeCutWithTarget}
+                nodePasteWithTarget = {this.nodePasteWithTarget}
                 changeFocus={this.changeFocus} 
                 nodes={list.list} 
                 isRoot={true}

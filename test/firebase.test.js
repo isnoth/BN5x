@@ -16,7 +16,7 @@ describe('firebase', function () {
 
 
 
-  describe('paste', function () {
+  describe.skip('paste', function () {
     it('firebase update same node', function (done) {
 
       getVal(ref)

@@ -15,6 +15,6 @@ fs.readFile("./test/burning-torch-9051-export.json", function(err, data){
     //throw err
   }
 
-   var server = new FirebaseServer(5000, 'localhost.firebaseio.test', JSON.parse(data));
+   var server = new FirebaseServer(5000, 'test.firebase.localhost', JSON.parse(data));
 })
 

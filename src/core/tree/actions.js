@@ -234,6 +234,23 @@ export function nodeCut() {
 
 }
 
+
+export function nodeCutWithTarget(id) {
+  //console.log("node cut")
+  return (dispatch, getState) => {
+    const { files2, firebase } = getState();
+    const ref = files2.ref
+
+    dispatch({
+      type: CUT_NODE,
+      payload: id,
+    });
+
+  }
+
+}
+
+
 export function nodePaste() {
   return (dispatch, getState) => {
     const { files2 } = getState();
@@ -252,6 +269,27 @@ export function nodePaste() {
 
   }
 }
+
+
+export function nodePasteWithTarget(id) {
+  return (dispatch, getState) => {
+    const { files2 } = getState();
+    const ref = files2.ref
+    let list = files2[files2.key].list
+
+    return paste(files2.cut, id, list, ref)
+    .then(function(result){
+
+      dispatch({
+        type: CHANGE_CURRENT_FOCUS,
+        payload: files2.currentFocus,
+      });
+
+    })
+
+  }
+}
+
 
 export function createPanel() {
   //console.log("tree action: ","nodeCreate")
