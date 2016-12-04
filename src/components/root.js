@@ -24,6 +24,7 @@ import TestVis2 from "./testVis2";
 import TestGrid from "./testGrid";
 //import Keybind from "./testKeybind"
 import Register from "./createUser";
+import {AboutUs} from "./aboutus";
 
 
 class Wrap extends Component {
@@ -57,7 +58,7 @@ export class Root extends Component {
 			<Provider store={store}>
 				<Router>
 					<Route path="/" component={Wrap}>
-            <IndexRoute component={Files} />
+            <IndexRoute component={AboutUs} />
             <Route path="stat" component={Stat} />
             <Route path="pomodario" component={Pomodario} />
             <Route path="articles" component={Articles} />
@@ -73,6 +74,7 @@ export class Root extends Component {
             <Route path="files" component={Files} >
               <Route path="/files/:id" component={Flat2} />
             </Route>
+            <Route path="aboutus" component={AboutUs} />
 					</Route>
 				</Router>
 			</Provider>

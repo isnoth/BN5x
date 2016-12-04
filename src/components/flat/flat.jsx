@@ -104,12 +104,16 @@ class TestNode extends React.Component {
     }else{
       content= (
         <div 
-          onDrop={drop.bind(this, thisnode.key)}  draggable="true" onDragStart={ondrag.bind(this, thisnode.key)} onDrag={drag.bind(this)} onDragOver={allowDrop.bind(this)} 
+          onDrop={drop.bind(this, thisnode.key)}  
+          draggable="true" 
+          onDragStart={ondrag.bind(this, thisnode.key)} 
+          onDrag={drag.bind(this)} 
+          onDragOver={allowDrop.bind(this)} 
           className='tree-node-wrapper' >
           <div 
           onClick={this.changeCollapse.bind(this, thisnode.key, !thisnode.collapsed)} className="tree-node-icon-container">
             <Glyphicon 
-            className="tree-node-expand-button" glyph={collapsed==false?"minus-sign":"plus-sign"} /> 
+              className="tree-node-expand-button" glyph={collapsed==false?"minus-sign":"plus-sign"} /> 
           </div>
           {/*icon==1?(<Glyphicon glyph="plane"/>):null*/}
           <Textarea
