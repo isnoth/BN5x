@@ -78,6 +78,35 @@ class TestNode extends React.Component {
         //ev.dataTransfer.setData("text", ev.target.id);
         //console.log("drag:", ev)
     }
+
+    const ontouchDrag = (ev)=>{
+      ev.preventDefault()
+      ev.stopPropagation();
+
+      const elem = ev.changedTouches[0].target;
+      const id=elem.parentNode.id
+
+      //const elem = document.elementFromPoint(changedTouch.clientX, changedTouch.clientY);
+      //const id = elem.id
+
+      console.log("ontouchDrag:", id)
+
+      nodeCutWithTarget(id)
+    }
+
+    const ontouchEnd = (ev)=>{
+      console.log("ontouchEnd:", ev, ev.changedTouches)
+      const changedTouch = ev.changedTouches[0];
+      const elem = document.elementFromPoint(changedTouch.clientX, changedTouch.clientY);
+      //const elem = ev.changedTouches[0].target;
+      const id=elem.parentNode.id
+      console.log("ontouchEnd,", id)
+      nodePasteWithTarget(id)
+    }
+
+    const ontouchMove = (ev, id)=>{
+      //console.log("ontouchMove:", ev, id)
+    }
     
     const drop = (ev)=> {
         console.log('drop:', ev)
@@ -95,6 +124,7 @@ class TestNode extends React.Component {
       content = (
         <div className='tree-node-root'>
           <Textarea
+            id={thisnode.id}
             className="tree-textarea mousetrap" 
             value={thisnode.content} 
             onChange={changeText.bind(this)} 
@@ -103,12 +133,15 @@ class TestNode extends React.Component {
       )
     }else{
       content= (
-        <div 
+        <div id={thisnode.id}
           onDrop={drop.bind(this, thisnode.key)}  
           draggable="true" 
           onDragStart={ondrag.bind(this, thisnode.key)} 
           onDrag={drag.bind(this)} 
           onDragOver={allowDrop.bind(this)} 
+          onTouchStart={ontouchDrag.bind(this)}
+          onTouchEnd={ontouchEnd.bind(this)}
+          onTouchMove={ontouchMove.bind(this, thisnode.id)}
           className='tree-node-wrapper' >
           <div 
           onClick={this.changeCollapse.bind(this, thisnode.key, !thisnode.collapsed)} className="tree-node-icon-container">
