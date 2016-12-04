@@ -94,26 +94,36 @@ export function paste(cid, nid, list, ref){
   
     //cut
     const currentparent = node.getParent(cid)
-    var currentchildren = currentparent.children 
-    console.log("currentchildren before:", currentchildren)
-    currentchildren.splice(currentchildren.indexOf(cid),1)
-    console.log("currentchildren after:", currentchildren)
-  
-    //paste
-    let newchildren = newparent.children 
-    console.log("newchildren before:", newchildren)
-    var index = newchildren.indexOf(nid)+1
-    console.log("index: ", index)
-    var _index =-( newchildren.length - index)
-    console.log("_index: ", _index)
 
-
-
-    if(node.getAllChildrenId(cid).indexOf(nid) > -1){
+    if ((newparent.id==currentparent.id) &&
+        ((newparent.children.indexOf(nid)-(newparent).children.indexOf(cid))) == -1){
+      console.log("1.2 -> 1.1")
+      resolve()
+    }else if(node.getAllChildrenId(cid).indexOf(nid) > -1){
       //if 1.1 -> 1 do nothing
       console.log('1.1 -> 1')
       resolve()
     }else{
+
+      //cut
+      var currentchildren = currentparent.children 
+      currentchildren.splice(currentchildren.indexOf(cid),1) //!!!!
+      //console.log("currentchildren before:", currentchildren)
+      
+      //let _currentchildren = Object.assign([], currentchildren)//
+      //console.log("currentchildren after:", currentchildren, _currentchildren)
+  
+      //paste
+      let newchildren = newparent.children 
+      //console.log("newchildren before:", newchildren)
+      var index = newchildren.indexOf(nid)+1
+      //console.log("index: ", index)
+      var _index =-( newchildren.length - index)
+      //console.log("_index: ", _index)
+
+
+      //currentchildren.splice(currentchildren.indexOf(cid),1) //!!!!
+
       //newchildren = [...newchildren.slice(0,index), cid, ...newchildren.slice(_index)]
       if ((index == newchildren.length) || (newchildren.length == 1)){
         newchildren = [...newchildren, cid]

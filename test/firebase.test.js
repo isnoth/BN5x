@@ -53,7 +53,7 @@ describe('firebase', function () {
     })
 
 
-    it.only('1 -> 1.1', function (done) {
+    it('1 -> 1.1', function (done) {
 
       getVal(ref)
       .then((value)=>{

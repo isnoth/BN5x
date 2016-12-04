@@ -59,7 +59,8 @@ describe('TestNode', function () {
       {id: 'BN1', content: "taobao"},
       {id: 'BN2', content: "taobao"},
       {id: 'BN3', content: "taobao", children:["BN4"]}, 
-      {id: 'BN4', content: "taobao"},
+      {id: 'BN4', content: "taobao", children:["BN5"]},
+      {id: 'BN5', content: "taobao"},
       {id: "root"}, 
       {id: 'BNx', children:["BN1","BN2",'BN3']}
     ]
@@ -68,6 +69,7 @@ describe('TestNode', function () {
 
     expect(node.getAllChildren("BN3")[0].id).to.equal('BN3')
     expect(node.getAllChildren("BN3")[1].id).to.equal('BN4')
+    expect(node.getAllChildren("BN3")[2].id).to.equal('BN5')
 
     expect(node.getAllChildren("BNx")[0].id).to.equal('BNx')
     expect(node.getAllChildren("BNx")[1].id).to.equal('BN1')
@@ -75,5 +77,29 @@ describe('TestNode', function () {
     expect(node.getAllChildren("BNx")[3].id).to.equal('BN3')
     expect(node.getAllChildren("BNx")[4].id).to.equal('BN4')
   })
+
+  it.only('getAllChildrenId() should return ok', function () {
+    const nodes = [
+      {id: 'BN1', content: "taobao"},
+      {id: 'BN2', content: "taobao"},
+      {id: 'BN3', content: "taobao", children:["BN4"]}, 
+      {id: 'BN4', content: "taobao", children:["BN5"]},
+      {id: 'BN5', content: "taobao"},
+      {id: "root"}, 
+      {id: 'BNx', children:["BN1","BN2",'BN3']}
+    ]
+    var node = new Node(nodes)
+    expect(node.getAllChildrenId("BN1")[0]).to.equal('BN1')
+
+    expect(node.getAllChildrenId("BN3")[0]).to.equal('BN3')
+    expect(node.getAllChildrenId("BN3")[1]).to.equal('BN4')
+
+    expect(node.getAllChildrenId("BNx")[0]).to.equal('BNx')
+    expect(node.getAllChildrenId("BNx")[1]).to.equal('BN1')
+    expect(node.getAllChildrenId("BNx")[2]).to.equal('BN2')
+    expect(node.getAllChildrenId("BNx")[3]).to.equal('BN3')
+    expect(node.getAllChildrenId("BNx")[4]).to.equal('BN4')
+  })
+
 
 });
