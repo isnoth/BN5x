@@ -3,7 +3,7 @@ import ReactDOM from "react-dom"
 import { connect } from 'react-redux';
 import {stat} from './stat_util'
 
-export default class Stat extends React.Component {
+class Stat extends React.Component {
 
   componentDidMount() {
     console.log(this)

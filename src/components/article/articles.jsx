@@ -12,7 +12,7 @@ import PomodarioApp from 'components/pomodario/pomodario'
 import {FormGroup, InputGroup, FormControl, Button, Col, Row, Panel, ListGroupItem, ListGroup} from "react-bootstrap"
 
 
-export default class Articles extends Component {
+class Articles extends Component {
 	constructor() {
 		super();
 		this.newArticle = this.newArticle.bind(this);
