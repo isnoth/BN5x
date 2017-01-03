@@ -13,7 +13,7 @@ export class AboutUs extends React.Component {
       <Row>
       <h3> BN5x 树形笔记 </h3>
       <div>
-        <p>灵活的属性笔记管理</p>
+        <p>灵活的树形笔记管理</p>
         <p>GTD系统</p>
         <p>Kanban</p>
         <p> 后端基于Wilddog</p>
@@ -28,7 +28,7 @@ export class AboutUs extends React.Component {
       <p>isnoth <a href="mailto: isnothe@gmail.com">&lt;isnothe@gmail.com&gt;</a> </p>
        <p> 总算把这个发布出来了，也算给自己有一个交代。</p>
        <p> 断断续续开发近一年，经常只是下班后干个一个小时半个小时。</p>
-       <p> 作为自己GTD系统的一份自，我觉得挺对的住这么多Coding的时间的。</p>
+       <p> 作为自己GTD系统的一份子，我觉得挺对的住这么多Coding的时间的。</p>
        <p> 感谢Boogunote 项目的灵感。希望对大家有一些用处。</p>
       </Row>
       </Col>
