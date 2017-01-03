@@ -35,9 +35,11 @@ class NavApp extends React.Component {
   }
 
   backup () {
-      const now = new Date()
-      const fileName = "BN5x_"+(now.getMonth()+1)+'_' +now.getDate()+".json"
       const {auth, firebase, files2} = this.props
+      console.log("files2:", files2)
+
+      const now = new Date()
+      const fileName = files2.key + '_'+(now.getMonth()+1)+'_' +now.getDate()+".json"
       //let childRef = auth.userRef
       //let ref = firebase.tree.child(childRef)
       let ref = files2.ref
