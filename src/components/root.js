@@ -25,9 +25,8 @@ import TestGrid from "./testGrid";
 //import Keybind from "./testKeybind"
 import Register from "./createUser";
 import {AboutUs} from "./aboutus";
-import {Md} from "./md";
-
-console.log('md:', Md)
+import MdWrap from "./md/mdWrap";
+import Md from "./md";
 
 
 class Wrap extends Component {
@@ -78,7 +77,9 @@ export class Root extends Component {
               <Route path="/files/:id" component={Flat2} />
             </Route>
             <Route path="aboutus" component={AboutUs} />
-            <Route path="md" component={Md} />
+            <Route path="md" component={MdWrap} >
+              <Route path="/md/:id" component={Md} />
+            </Route>
 					</Route>
 				</Router>
 			</Provider>

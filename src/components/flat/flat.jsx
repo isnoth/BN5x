@@ -17,8 +17,6 @@ import { treeActions } from 'core/tree';
 
 import {Node, Panls} from "utils/node"
 
-
-
 class TestNode extends React.Component {
 
   static propTypes = {

@@ -108,6 +108,7 @@ class NavApp extends React.Component {
               <MenuItem eventKey={1.3} onClick={createFile.bind(this)}>New File</MenuItem>
             </NavDropdown>
             <NavItem eventKey={2} href="#articles">Pomodario</NavItem>
+            <NavItem eventKey={3} href="#md">md</NavItem>
             {/*<NavItem eventKey={3} href="#stat">Stat</NavItem>
             <NavItem eventKey={4} href="#pomodario">Timer</NavItem>
             <NavItem eventKey={5} href="#flat">flat</NavItem>

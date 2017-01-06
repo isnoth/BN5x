@@ -11,6 +11,8 @@ import { pomodarioReducer } from './core/pomodario';
 import { articleReducer } from './core/article';
 import { uiReducer } from './core/ui'
 import { filesReducer } from './core/files'
+import { mdReducer } from './core/md'
+
 //import { notificationReducer } from 'core/notification';
 //import { tasksReducer } from 'core/tasks';
 
@@ -27,5 +29,6 @@ export default combineReducers({
   articles: articleReducer,
   tree2: tree2Reducer,
   files: filesReducer,
+  md: mdReducer,
   //tasks: tasksReducer
 });

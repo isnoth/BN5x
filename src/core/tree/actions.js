@@ -47,7 +47,7 @@ export function startRegisterListeners(fileId) {
     console.log(auth.userRef)
     let childRef = auth.userRef+"/files/"+fileId+'/nodes/'
 
-    console.log(childRef)
+    //console.log(childRef)
 
     let ref = firebase.tree.child(childRef)
 
