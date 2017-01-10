@@ -8,7 +8,9 @@ import {
   EDITOR_CHANGE_HEADER,
   EDITOR_CHANGE_CONTENT,
   EDITOR_CHANGE_RENDER,
-  EDITOR_COMPLETE
+  EDITOR_COMPLETE,
+
+  TOGGLE_EDIT
 
 } from './action-types';
 
@@ -23,8 +25,10 @@ export const fileInitialState = {
 export function fileReducer( state=fileInitialState, action ){
   switch (action.type) {
     case START_MD_UPDATE_CONTENT:
-      if (state.key == action.payload.id){
-        return {...state, status: "ONGOING"}
+      if (state.key != action.payload.id){
+        return state
+      }else{
+        return Object.assign({}, state,  {status: "ONGOING"})
       }
 
     case FINISH_MD_UPDATE_CONTENT:
@@ -45,7 +49,7 @@ export function fileReducer( state=fileInitialState, action ){
       if (state.key != action.payload.key){
         return state
       }else{
-        return Object.assign({}, state, { status: "IDLE", content: action.payload.content})
+        return Object.assign({}, state, { status: "IDLE"})
       }
 
 
@@ -64,6 +68,7 @@ export function fileReducer( state=fileInitialState, action ){
 
 export const articlesInitialState = {
   articles: [],
+  onEdit: true,
 };
 
 export function mdReducer(state = articlesInitialState, action) {
@@ -89,6 +94,8 @@ export function mdReducer(state = articlesInitialState, action) {
     case EDITOR_COMPLETE:
       return  Object.assign({}, state, {articles: state.articles.map(i=>fileReducer(i, action))})
 
+    case TOGGLE_EDIT:
+      return  Object.assign({}, state, {onEdit: !state.onEdit})
 
     default:
       return state

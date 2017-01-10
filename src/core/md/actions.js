@@ -7,7 +7,9 @@ import {
   EDITOR_CHANGE_HEADER,
   EDITOR_CHANGE_CONTENT,
   EDITOR_CHANGE_RENDER,
-  EDITOR_COMPLETE
+  EDITOR_COMPLETE,
+
+  TOGGLE_EDIT
 
 } from './action-types';
 
@@ -145,3 +147,12 @@ export function editorChangeContent(key, content) {
       })
   }
 }
+
+export function doEdit() {
+  return (dispatch, getState) => {
+      dispatch({
+        type: TOGGLE_EDIT,
+      })
+  }
+}
+

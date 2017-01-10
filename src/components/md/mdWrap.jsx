@@ -11,8 +11,9 @@ class MdWrap extends React.Component {
 
   constructor(props){
     super(props);
-    const { createFile } = this.props
+    const { createFile, getMdContent } = this.props
     this.createFile = createFile.bind(this)
+    this.getMdContent = getMdContent.bind(this)
   }
 
   componentDidMount(){
@@ -33,7 +34,7 @@ class MdWrap extends React.Component {
       console.log("l_files:", i)
       let path = "#md/"+i.key
       return <li>
-        <a href={path}>{i.header}</a>
+        <a href={path} onClick={this.getMdContent.bind(this, i.key)}>{i.header}</a>
       </li>
     })
 

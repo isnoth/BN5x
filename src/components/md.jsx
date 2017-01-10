@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import {Col, Row, Panel, } from "react-bootstrap";
-import {Button, Input, FormGroup, FormControl, ControlLabel} from "react-bootstrap"
+import {Glyphicon, Button, Input, FormGroup, FormControl, ControlLabel} from "react-bootstrap"
 //var ReactMarkdown = require('react-markdown');
 import ReactMarkdown from 'react-markdown'
 import Textarea from 'react-textarea-autosize';
@@ -15,31 +15,27 @@ import 'styles/md.less'
 class Md extends React.Component {
   constructor(props){
     super(props);
-    this.state={
-      header: '',
-      input: '',
-    }
 
-    const { updateFile, editorChangeHeader, editorChangeContent } = this.props
+    const { updateFile, editorChangeHeader, editorChangeContent, doEdit } = this.props
 
     this.editorChangeHeader = editorChangeHeader.bind(this)
     this.editorChangeContent = editorChangeContent.bind(this)
     this.updateFile = updateFile.bind(this)
     this.contentChange = this.contentChange.bind(this)
     this.headerChange = this.headerChange.bind(this)
-
+    this.doEdit = doEdit.bind(this)
   }
 
   componentDidMount(){
-    const {params, getMdContent, md} = this.props
-    getMdContent(params.id)
+   // const {params, getMdContent, md} = this.props
+   // getMdContent(params.id)
   }
 
   componentWillReceiveProps(nextProps) {
-    const {params, getMdContent, md} = this.props
-    if (params.id != nextProps.params.id){
-      getMdContent(nextProps.params.id)
-    }
+    //const {params, getMdContent, md} = this.props
+    //if (params.id != nextProps.params.id){
+    //  getMdContent(nextProps.params.id)
+    //}
   }
 
   contentChange(evt){
@@ -68,29 +64,38 @@ class Md extends React.Component {
       status = fnd[0].status
     }
 
-    return (<div>
-      <Col className="editor" md={5}>
-      <Row>
-        <input
-            type="text"
-            value={header} 
-            onChange={this.headerChange}
-            placeholder="header"/>
-        <Button onClick={this.updateFile.bind(this, params.id)}>Submit</Button>
-      </Row>
-      <Row>
-          {status}
-          <Textarea
-              type="text"
-              value={content} 
-              onChange={this.contentChange}
-              placeholder="content"/>
+    const editor = ()=>{
+      if (md.onEdit){
+        return (
+          <Col className="editor" md={5}>
+            <input
+                type="text"
+                value={header} 
+                onChange={this.headerChange}
+                placeholder="header"/>
+            {status}
+            <Button onClick={this.updateFile.bind(this, params.id)}>Submit</Button>
+						<hr/>
+            <Textarea
+                type="text"
+                value={content} 
+                onChange={this.contentChange}
+                placeholder="content"/>
 
-      </Row>
-      </Col>
-      <Col md={6}>
-      <h2>{header}</h2>
-      {<ReactMarkdown source={content} />}
+          </Col>
+        )
+      }
+    }
+
+    return (<div>
+      {editor()}
+      <Col className="view" md={6}>
+        <h3>
+					<Glyphicon glyph={md.onEdit?"triangle-left":"edit"} onClick={this.doEdit}/>
+          {header}
+        </h3>
+        <hr/>
+        {<ReactMarkdown source={content} />}
       </Col>
 
     </div>)
