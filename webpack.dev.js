@@ -49,6 +49,7 @@ module.exports = {
         }
       },
       { test: /\.css$/, loader: "style-loader!css-loader" },
+      { test: /\.less$/, loader: "style!css!less" },
       { test: /\.png$/, loader: "url-loader?limit=100000" },
       { test: /\.jpg$/, loader: "file-loader" },
       { test: /\.json$/, loader: 'json' } // for react-markdown

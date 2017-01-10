@@ -39,6 +39,8 @@
     "flux": "^2.1.1",
     "html-webpack-plugin": "^2.21.0",
     "jsdom": "^8.2.0",
+    "less": "^2.7.2",
+    "less-loader": "^2.2.3",
     "lodash": "^4.11.1",
     "mousetrap": "^1.5.3",
     "object-assign": "^4.0.1",

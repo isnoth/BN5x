@@ -10,17 +10,7 @@ import Textarea from 'react-textarea-autosize';
 import { treeActions } from 'core/tree';
 import { mdActions } from 'core/md';
 
-class MdWrap extends React.Component {
-  render(){
-    return (<div>
-      <h2>this is Md</h2>
-      <Col md={1}>
-        aside
-      </Col>
-      {this.props.children}
-    </div>)
-  }
-}
+import 'styles/md.less'
 
 class Md extends React.Component {
   constructor(props){
@@ -28,124 +18,76 @@ class Md extends React.Component {
     this.state={
       header: '',
       input: '',
-      ref:null,
     }
 
-    //====
-    //
-    const { updateFile } = this.props
+    const { updateFile, editorChangeHeader, editorChangeContent } = this.props
 
-    this.changeEdit = this.changeEdit.bind(this)
-    this.changeHeader = this.changeHeader.bind(this)
+    this.editorChangeHeader = editorChangeHeader.bind(this)
+    this.editorChangeContent = editorChangeContent.bind(this)
     this.updateFile = updateFile.bind(this)
+    this.contentChange = this.contentChange.bind(this)
 
   }
 
-
-  componentDidMount(){
-    this.state.ref.value = '123123'
-
-    //this.state.ref.value = md.mdContent[params.id].id
+  componentWillMount(){
+    const {params, getMdContent, md} = this.props
+    getMdContent(params.id)
   }
 
   componentWillReceiveProps(nextProps) {
-    //const {params, files, startRegisterListeners} = nextProps
-    //this.registerListeners(files.key ,params.id, startRegisterListeners)
-
     const {params, getMdContent, md} = this.props
-    console.log(params, nextProps)
     if (params.id != nextProps.params.id){
-      //this.state.ref.value = '123123'
-      console.log("params id change:", params.id, nextProps.params.id)
-      getMdContent(params.id)
+      getMdContent(nextProps.params.id)
     }
-
-    if (md.mdContent[params.id]){
-      this.state.ref.value = md.mdContent[params.id].content
-      this.changeEdit()
-    }
-
-    //this.state.ref.value = md.mdContent[params.id].id
   }
 
-//  updateFile(){
-//    console.log("updateFile:", this.props)
-//    const {
-//      auth,
-//      tree,
-//      firebase,
-//      params,
-//      getMdContent,
-//    } = this.props
-//
-//    let id = params.id
-//    let content = this.state.input
-//
-//    let rootRef = firebase.tree.child(auth.userRef+"/allInOne/")
-//    rootRef.child(id).update({content: content}, function(err){
-//      if (err){
-//        console.log(err)
-//      } else{
-//        console.log("success")
-//        getMdContent(params.id)
-//      }
-//    })
-//  }
-
-  changeEdit(){
-    this.setState({
-      input: this.state.ref.value
-    })
+  contentChange(evt){
+    const {params} = this.props
+    this.editorChangeContent(params.id, evt.target.value)
   }
 
-  changeHeader(evt){
-    this.setState({
-      header: evt.target.value,
-    })
-  }
 
   render(){
+    //this.updateInput()
+    const {md, params} = this.props
+
+    let content = ''
+    let header = ''
+    let fnd = md.articles.filter(i=>i.key==params.id)
+    if (fnd.length==1){
+      content = fnd[0].content
+      header = fnd[0].header
+    }
 
     return (<div>
       <h2>this is Md</h2>
-      <Col md={5}>
-      <input
-          type="text"
-          value={this.state.header} 
-          onChange={this.changeHeader}
-          placeholder="header"/>
+      <Col className="editor" md={5}>
+      <Row>
+        <input
+            type="text"
+            value={md.editor.header} 
+            onChange={this.editorChangeHeader}
+            placeholder="header"/>
+        <Button onClick={this.updateFile.bind(this, params.id)}>Submit</Button>
+      </Row>
+      <Row>
+          <Textarea
+              type="text"
+              value={content} 
+              onChange={this.contentChange}
+              placeholder="content"/>
 
-      <FormGroup controlId="formControlsTextarea">
-        <ControlLabel>Textarea</ControlLabel>
-        <FormControl inputRef={ref=>{
-          this.state.ref = ref }}
-          componentClass="textarea"
-          placeholder="textarea" 
-          onKeyUp={this.changeEdit}
-          />
-      </FormGroup>
-      <Button onClick={this.updateFile.bind(this, this.props.params.id, this.state.input)}>Submit</Button>
-
+      </Row>
       </Col>
       <Col md={6}>
-      {<ReactMarkdown source={this.state.input} />}
+      <h2>{header}</h2>
+      {<ReactMarkdown source={content} />}
       </Col>
 
     </div>)
   }
 }
 
-
-class Nd extends React.Component {
-  constructor(props){
-    super(props)
-    const {auth} = this.props
-    console.log(auth)
-  }
-  render(){
-    return <h2>this is Nd</h2>
-  }
-}
 
 export default connect(state =>({
     auth: state.auth,

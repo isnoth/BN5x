@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import {Col, Row, Panel, } from "react-bootstrap";
+import {Col, Row, Panel, Button} from "react-bootstrap";
 
 import { mdActions } from 'core/md';
 
@@ -11,7 +11,8 @@ class MdWrap extends React.Component {
 
   constructor(props){
     super(props);
-    this.createFile = this.createFile.bind(this)
+    const { createFile } = this.props
+    this.createFile = createFile.bind(this)
   }
 
   componentDidMount(){
@@ -21,37 +22,18 @@ class MdWrap extends React.Component {
     updateList()
   }
 
-  createFile(){
-    const {
-      auth,
-      tree,
-      firebase,
-    } = this.props
-
-    let rootRef = firebase.tree.child(auth.userRef+"/allInOne/")
-    let id = getUniqueId()
-
-    rootRef.child(id).set({id: id}, function(err){
-      if (err){
-        console.log(err)
-      } else{
-        console.log("success")
-      }
-    })
-  }
-
 
   render(){
     const {
       md
     } = this.props
-    //console.log('md is: ', md)
+    console.log('md is: ', md)
 
-    const l_files = md.fileList.map((i, index)=>{
+    const l_files = md.articles.map((i, index)=>{
       console.log("l_files:", i)
-      let path = "#md/"+i 
+      let path = "#md/"+i.key
       return <li>
-        <a href={path}>{i}</a>
+        <a href={path}>{i.key}</a>
       </li>
     })
 
@@ -60,7 +42,7 @@ class MdWrap extends React.Component {
         aside
         {l_files}
 
-        <button onClick={this.createFile}>create file</button>
+        <Button onClick={this.createFile}>create </Button>
       </Col>
       {this.props.children}
     </div>)
