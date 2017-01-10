@@ -26,10 +26,11 @@ class Md extends React.Component {
     this.editorChangeContent = editorChangeContent.bind(this)
     this.updateFile = updateFile.bind(this)
     this.contentChange = this.contentChange.bind(this)
+    this.headerChange = this.headerChange.bind(this)
 
   }
 
-  componentWillMount(){
+  componentDidMount(){
     const {params, getMdContent, md} = this.props
     getMdContent(params.id)
   }
@@ -43,7 +44,13 @@ class Md extends React.Component {
 
   contentChange(evt){
     const {params} = this.props
+    console.log(params.id)
     this.editorChangeContent(params.id, evt.target.value)
+  }
+
+  headerChange(evt){
+    const {params} = this.props
+    this.editorChangeHeader(params.id, evt.target.value)
   }
 
 
@@ -53,24 +60,26 @@ class Md extends React.Component {
 
     let content = ''
     let header = ''
+    let status = ""
     let fnd = md.articles.filter(i=>i.key==params.id)
     if (fnd.length==1){
       content = fnd[0].content
       header = fnd[0].header
+      status = fnd[0].status
     }
 
     return (<div>
-      <h2>this is Md</h2>
       <Col className="editor" md={5}>
       <Row>
         <input
             type="text"
-            value={md.editor.header} 
-            onChange={this.editorChangeHeader}
+            value={header} 
+            onChange={this.headerChange}
             placeholder="header"/>
         <Button onClick={this.updateFile.bind(this, params.id)}>Submit</Button>
       </Row>
       <Row>
+          {status}
           <Textarea
               type="text"
               value={content} 

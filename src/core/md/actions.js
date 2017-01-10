@@ -1,12 +1,14 @@
 import {
-  UPDATE_FILE_LIST,
+  GET_FILE_LIST,
   UPDATE_MD_CONTENT,
   START_MD_UPDATE_CONTENT,
   FINISH_MD_UPDATE_CONTENT,
 
   EDITOR_CHANGE_HEADER,
   EDITOR_CHANGE_CONTENT,
-  EDITOR_CHANGE_RENDER
+  EDITOR_CHANGE_RENDER,
+  EDITOR_COMPLETE
+
 } from './action-types';
 
 
@@ -16,10 +18,10 @@ export function createFile(){
   return (dispatch, getState) => {
     const { firebase, auth } = getState();
 
-    let rootRef = firebase.tree.child(auth.userRef+"/allInOne/")
+    let rootRef = firebase.tree.child(auth.userRef+"/allInOne/files")
     let id = getUniqueId()
 
-    rootRef.child(id).set({id: id, header: "new"}, function(err){
+    rootRef.child(id).set({key: id, header: "new"}, function(err){
       if (err){
         console.log(err)
       } else{
@@ -32,18 +34,20 @@ export function createFile(){
 
 
 
-export function updateList(list) {
+export function getFileList(list) {
   return (dispatch, getState) => {
     const { files2, auth, firebase } = getState();
-    let rootRef = firebase.tree.child(auth.userRef+"/allInOne/")
+    let rootRef = firebase.tree.child(auth.userRef+"/allInOne/files")
     rootRef.once("value", (snap)=>{
       let list = snap.val()
       console.log('list is:', list)
 
-      dispatch({
-        type: UPDATE_FILE_LIST,
-        payload: Object.keys(list)
-      })
+      if (list){
+        dispatch({
+          type: GET_FILE_LIST,
+          payload: list
+        })
+      }
     })
   }
 }
@@ -63,18 +67,19 @@ export function getMdContent(key) {
 
     rootRef.once("value", (snap)=>{
       let val = snap.val()
-
-
-      //dispatch({
-      //  type: FINISH_MD_UPDATE_CONTENT,
-      //  payload: {id: id,}
-      //})
       console.log("getMdContent action!", val)
 
-      dispatch({
-        type: FINISH_MD_UPDATE_CONTENT,
-        payload: {key: key, content:val.content}
-      })
+      if (val){
+        dispatch({
+          type: FINISH_MD_UPDATE_CONTENT,
+          payload: {key: key, content:val.content}
+        })
+      }else{
+        dispatch({
+          type: FINISH_MD_UPDATE_CONTENT,
+          payload: {key: key, content:""}
+        })
+      }
     })
   }
 }
@@ -85,6 +90,7 @@ export function updateFile(key) {
 
     const { files2, auth, firebase, md } = getState();
     let rootRef = firebase.tree.child(auth.userRef+"/allInOne/")
+    let filesRef = rootRef.child("files")
 
     let fnd = md.articles.filter(i=>i.key==key)
     if (fnd.length==1){
@@ -92,7 +98,24 @@ export function updateFile(key) {
         if (err){
           console.log(err)
         } else{
-          console.log("update success")
+          console.log("update content success")
+
+          filesRef.child(key).update({header: fnd[0].header}, function(err){
+            if (err){
+              console.log(err)
+            } else{
+              alert('success')
+              console.log("update header success")
+
+              dispatch({
+                type: EDITOR_COMPLETE,
+                payload: {key: key }
+              })
+
+
+            }
+          })
+
           //return getMdContent(id)
         }
       })
@@ -104,16 +127,17 @@ export function updateFile(key) {
 }
 
 
-export function editorChangeHeader(evt) {
+export function editorChangeHeader(key, header) {
   return (dispatch, getState) => {
       dispatch({
         type: EDITOR_CHANGE_HEADER,
-        payload: evt.target.value
+        payload: {key: key, header:header}
       })
   }
 }
 
 export function editorChangeContent(key, content) {
+  console.log("editorChangeContent", key, content)
   return (dispatch, getState) => {
       dispatch({
         type: EDITOR_CHANGE_CONTENT,

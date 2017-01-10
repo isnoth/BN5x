@@ -17,9 +17,9 @@ class MdWrap extends React.Component {
 
   componentDidMount(){
     const {
-      updateList
+      getFileList
     } = this.props
-    updateList()
+    getFileList()
   }
 
 
@@ -33,15 +33,13 @@ class MdWrap extends React.Component {
       console.log("l_files:", i)
       let path = "#md/"+i.key
       return <li>
-        <a href={path}>{i.key}</a>
+        <a href={path}>{i.header}</a>
       </li>
     })
 
     return (<div>
       <Col md={1}>
-        aside
         {l_files}
-
         <Button onClick={this.createFile}>create </Button>
       </Col>
       {this.props.children}
