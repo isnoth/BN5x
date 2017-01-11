@@ -11,6 +11,7 @@ import {
 } from './action-types';
 import { uiActions } from 'core/ui';
 import { filesActions } from 'core/files';
+import { mdActions } from 'core/md';
 
 
 export function registerAuthListener(){
@@ -32,6 +33,8 @@ export function registerAuthListener(){
           payload: Object.assign({}, authData, {userRef: "/notes/users/"+authData.uid+'/'})
         })
 
+
+        dispatch(mdActions.getFileList()) //for markdown
         setTimeout( dispatch(filesActions.getFiles()), 1000)
 
       }else{
@@ -72,10 +75,7 @@ export function login(pra) {
           type: SIGN_IN_SUCCESS,
         })
 
-        dispatch({
-          type: SIGN_IN_SUCCESS,
-        })
-
+        dispatch(mdActions.getFileList()) //for markdown
 
       } else {
         console.log("auth failed,msg:",err);

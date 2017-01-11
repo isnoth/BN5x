@@ -1,5 +1,9 @@
 import {
   GET_FILE_LIST,
+  FILE_CREATED,
+  FILE_DELETED,
+
+
   UPDATE_MD_CONTENT,
 
   START_MD_UPDATE_CONTENT,
@@ -78,6 +82,11 @@ export function mdReducer(state = articlesInitialState, action) {
       return Object.assign({}, state, {articles: 
                            Object.keys(action.payload).map(i=>(action.payload[i]))}
                           )
+    case FILE_CREATED:
+      return Object.assign({}, state, {articles: [...state.articles, action.payload]})
+
+    case FILE_DELETED:
+      return Object.assign({}, state, {articles: state.articles.filter(i=>(i.key!= action.payload.key))})
 
     case START_MD_UPDATE_CONTENT:
       return  Object.assign({}, state, {articles:state.articles.map(i=>fileReducer(i, action))})

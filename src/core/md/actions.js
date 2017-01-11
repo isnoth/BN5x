@@ -1,5 +1,9 @@
 import {
   GET_FILE_LIST,
+  FILE_CREATED,
+  FILE_DELETED,
+
+
   UPDATE_MD_CONTENT,
   START_MD_UPDATE_CONTENT,
   FINISH_MD_UPDATE_CONTENT,
@@ -35,6 +39,18 @@ export function createFile(){
 }
 
 
+export function deleteFile(key){
+  return (dispatch, getState) => {
+    const { firebase, auth } = getState();
+
+    let rootRef = firebase.tree.child(auth.userRef+"/allInOne/files")
+    rootRef.child(key).remove()
+
+  }
+}
+
+
+
 
 export function getFileList(list) {
   return (dispatch, getState) => {
@@ -51,6 +67,24 @@ export function getFileList(list) {
         })
       }
     })
+
+    rootRef.on("child_added", (snap)=>{
+      let val = snap.val()
+       dispatch({
+         type: FILE_CREATED,
+         payload: val
+       })
+    })
+
+    rootRef.on("child_removed", (snap)=>{
+      let val = snap.val()
+       dispatch({
+         type: FILE_DELETED,
+         payload: val
+       })
+    })
+
+
   }
 }
 
