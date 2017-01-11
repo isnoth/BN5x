@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import {Col, Row, Panel, Button} from "react-bootstrap";
+import {Col, Row, Panel, Button, ListGroup, ListGroupItem} from "react-bootstrap";
 
 import { mdActions } from 'core/md';
 
@@ -33,14 +33,16 @@ class MdWrap extends React.Component {
     const l_files = md.articles.map((i, index)=>{
       console.log("l_files:", i)
       let path = "#md/"+i.key
-      return <li>
+      return <ListGroupItem>
         <a href={path} onClick={this.getMdContent.bind(this, i.key)}>{i.header}</a>
-      </li>
+      </ListGroupItem>
     })
 
     return (<div>
       <Col md={1}>
-        {l_files}
+        <ListGroup>
+          {l_files}
+        </ListGroup>
         <Button onClick={this.createFile}>create </Button>
       </Col>
       {this.props.children}

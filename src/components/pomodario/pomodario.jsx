@@ -170,13 +170,13 @@ class CountDownWithInput extends React.Component {
       return (
         <div >
           <Col xs={2}>
-            <Input type="text" 
+            <input type="text" 
                    value={this.state.min} 
                    onChange = {this.changeMin}
                    placeholder="minute"/> 
           </Col>
           <Col xs={2}>
-            <Input type="text" 
+            <input type="text" 
                    value={this.state.sec} 
                    onChange = {this.changeSec}
                    placeholder="second"/> 

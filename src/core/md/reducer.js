@@ -68,7 +68,7 @@ export function fileReducer( state=fileInitialState, action ){
 
 export const articlesInitialState = {
   articles: [],
-  onEdit: true,
+  onEdit: false,
 };
 
 export function mdReducer(state = articlesInitialState, action) {

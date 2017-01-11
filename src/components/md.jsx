@@ -76,7 +76,8 @@ class Md extends React.Component {
             {status}
             <Button onClick={this.updateFile.bind(this, params.id)}>Submit</Button>
 						<hr/>
-            <Textarea
+            <textarea
+                className={status=="EDIT"?"on-edit":""}
                 type="text"
                 value={content} 
                 onChange={this.contentChange}
