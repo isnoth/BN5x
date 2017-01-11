@@ -43,8 +43,10 @@ export function deleteFile(key){
   return (dispatch, getState) => {
     const { firebase, auth } = getState();
 
-    let rootRef = firebase.tree.child(auth.userRef+"/allInOne/files")
+    let rootRef = firebase.tree.child(auth.userRef+"/allInOne/")
+    let metaRef = firebase.tree.child(auth.userRef+"/allInOne/files")
     rootRef.child(key).remove()
+    metaRef.child(key).remove()
 
   }
 }

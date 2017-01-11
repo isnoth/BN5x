@@ -90,7 +90,7 @@ class Md extends React.Component {
 
     return (<div>
       {editor()}
-      <Col className="view" md={6}>
+      <Col className="view" md={5}>
         <h3>
 					<Glyphicon glyph={md.onEdit?"triangle-left":"edit"} onClick={this.doEdit}/>
           {header}

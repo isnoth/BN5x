@@ -34,7 +34,7 @@ class MdWrap extends React.Component {
     })
 
     return (<div>
-      <Col md={1}>
+      <Col md={2}>
         {l_files}
         <Button onClick={this.createFile}>create </Button>
       </Col>
