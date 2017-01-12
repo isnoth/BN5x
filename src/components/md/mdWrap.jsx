@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import {Col, Row, Panel, Button, ListGroup, ListGroupItem, SplitButton, MenuItem} from "react-bootstrap";
+import {Col, Row, Panel, Button, ListGroup, ListGroupItem, SplitButton, MenuItem, Glyphicon} from "react-bootstrap";
 
 import { mdActions } from 'core/md';
 
@@ -18,10 +18,7 @@ class MdWrap extends React.Component {
   }
 
   render(){
-    const {
-      md,
-    } = this.props
-    console.log('md is: ', md)
+    const { md, } = this.props
 
     const l_files = md.articles.map((i, index)=>{
       console.log("l_files:", i)

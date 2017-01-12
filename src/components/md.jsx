@@ -68,20 +68,13 @@ class Md extends React.Component {
       if (md.onEdit){
         return (
           <Col className="editor" md={5}>
-            <input
-                type="text"
-                value={header} 
-                onChange={this.headerChange}
-                placeholder="header"/>
-            {status}
-            <Button onClick={this.updateFile.bind(this, params.id)}>Submit</Button>
-						<hr/>
             <textarea
                 className={status=="EDIT"?"on-edit":""}
                 type="text"
                 value={content} 
                 onChange={this.contentChange}
                 placeholder="content"/>
+            <Button onClick={this.updateFile.bind(this, params.id)}>Submit</Button>
 
           </Col>
         )
@@ -89,13 +82,18 @@ class Md extends React.Component {
     }
 
     return (<div>
-      {editor()}
-      <Col className="view" md={5}>
         <h3>
 					<Glyphicon glyph={md.onEdit?"triangle-left":"edit"} onClick={this.doEdit}/>
-          {header}
+          <input
+                className="content-header"
+                type="text"
+                value={header} 
+                onChange={this.headerChange}
+                placeholder="header"/>
         </h3>
-        <hr/>
+            <hr/>
+      {editor()}
+      <Col className="view" md={5}>
         {<ReactMarkdown source={content} />}
       </Col>
 
