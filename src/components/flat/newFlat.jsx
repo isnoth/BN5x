@@ -5,11 +5,17 @@ import { connect } from 'react-redux';
 import { flatActions } from 'core/flat';
 
 import {Col} from 'react-bootstrap'
+var ReactGridLayout = require('react-grid-layout');
+import {Responsive, WidthProvider} from 'react-grid-layout';
+const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 import {createChildNode} from 'utils/firebase'
-import {getUniqueId} from 'utils/node2'
+import {getUniqueId, initLayout} from 'utils/node2'
 
 import 'styles/flat.less'
+import 'styles/react-grid-layout.css'
+import 'styles/react-resizable.css'
+//import 'styles/styles.css'
 
 
 
@@ -32,25 +38,59 @@ export class Node extends React.Component {
     console.log(isRoot, content, _key, _ref)
 
     let children = content[_key].children?content[_key].children.map(i=>{
-      return <Node 
-             nodeUpdate={nodeUpdate}
-             isRoot={false} 
-             content={content} 
-             _ref={_ref}
-             _key={i}/>
+      //must need a div to wrap the Node(for ReactGridLayout!!!)
+      return <div className="node-wrap" key={i}> 
+               <Node 
+                 nodeUpdate={nodeUpdate}
+                 isRoot={false} 
+                 content={content} 
+                 _ref={_ref}
+                 _key={i}/>
+             </div>
     }):null
-
 
     let nodeUrl = "#newflat/"+_key
 
-    return <div className="node-wrap">
-        <button onClick={createChildNode.bind(this, _ref, content, _key, {key: getUniqueId(), content:""}, console.log )}>+</button>
-        <a href={nodeUrl}> link </a>
-        <textarea 
-        onChange={this.updateContent} 
-        value={content[_key].content?content[_key].content:""}/>
-        {children}
-      </div>
+    if (isRoot){
+      return <div >
+          <button onClick={createChildNode.bind(this, _ref, content, _key, {key: getUniqueId(), content:""}, console.log )}>+</button>
+          <a href={nodeUrl}> link </a>
+          <textarea 
+          onChange={this.updateContent} 
+          value={content[_key].content?content[_key].content:""}/>
+
+          <ReactGridLayout 
+            className="layout" 
+            layout={initLayout(content, _key)} 
+            cols={48}
+            rowHeight={30} 
+            width={1580} >
+          {children}
+          </ReactGridLayout>
+
+            {/*<ResponsiveReactGridLayout 
+            className="layout" 
+            layouts={{lg:initLayout(content, _key)}}
+            breakpoints={{lg: 1200,  xs: 480}}
+            cols={{lg: 48, xs: 1 }}
+            rowHeight={30} 
+            isDraggable={true}
+            isResizable={true}
+            >
+          {children}
+          </ResponsiveReactGridLayout>*/}
+        </div>
+    }else{
+      return <div className="node-wrap">
+          <button onClick={createChildNode.bind(this, _ref, content, _key, {key: getUniqueId(), content:""}, console.log )}>+</button>
+          <a href={nodeUrl}> link </a>
+          <textarea 
+          onChange={this.updateContent} 
+          value={content[_key].content?content[_key].content:""}/>
+          {children}
+        </div>
+
+    }
   }
 }
 

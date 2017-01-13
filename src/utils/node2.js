@@ -12,3 +12,10 @@ export function getUniqueId() {
   return "BN-" + new Date().getTime().toString() + "-" + randomString(5, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
 }
 
+
+
+export function initLayout(content, cNodeKey){
+  return content[cNodeKey].children.map(function(i){
+    return {i: i, x: 5, y:5, w:5, h:5}
+  })
+}
