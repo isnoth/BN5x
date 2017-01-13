@@ -40,11 +40,15 @@ export class Node extends React.Component {
              _key={i}/>
     }):null
 
+
+    let nodeUrl = "#newflat/"+_key
+
     return <div className="node-wrap">
+        <button onClick={createChildNode.bind(this, _ref, content, _key, {key: getUniqueId(), content:""}, console.log )}>+</button>
+        <a href={nodeUrl}> link </a>
         <textarea 
         onChange={this.updateContent} 
         value={content[_key].content?content[_key].content:""}/>
-        <button onClick={createChildNode.bind(this, _ref, content, _key, {key: getUniqueId(), content:""}, console.log )}>+</button>
         {children}
       </div>
   }
@@ -58,7 +62,7 @@ export class Newflat extends React.Component {
     this.nodeUpdate = nodeUpdate.bind(this)
   }
   render(){
-    const {flat} = this.props
+    const {flat, params} = this.props
 
 
     return (
@@ -73,7 +77,7 @@ export class Newflat extends React.Component {
              isRoot={true} 
              content={flat.content} 
              _ref={flat.ref}
-             _key="root"/>):"loading"}
+             _key={params.id}/>):"loading"}
         </Col>
       </Col>
     )

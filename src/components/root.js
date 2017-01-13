@@ -82,7 +82,10 @@ export class Root extends Component {
             <Route path="md" component={MdWrap} >
               <Route path="/md/:id" component={Md} />
             </Route>
-            <Route path="newFlat" component={Newflat} />
+            <Route path="newFlat" component={Newflat} >
+              <Route path="/newFlat/:id" component={Newflat} />
+            </Route>
+
 					</Route>
 				</Router>
 			</Provider>

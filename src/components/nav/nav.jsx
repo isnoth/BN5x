@@ -109,7 +109,7 @@ class NavApp extends React.Component {
             </NavDropdown>
             <NavItem eventKey={2} href="#articles">Pomodario</NavItem>
             <NavItem eventKey={3} href="#md">md</NavItem>
-            <NavItem eventKey={4} href="#newFlat">NewFlat</NavItem>
+            <NavItem eventKey={4} href="#newFlat/root">NewFlat</NavItem>
             {/*<NavItem eventKey={3} href="#stat">Stat</NavItem>
             <NavItem eventKey={4} href="#pomodario">Timer</NavItem>
             <NavItem eventKey={5} href="#flat">flat</NavItem>
