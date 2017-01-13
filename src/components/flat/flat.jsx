@@ -42,7 +42,7 @@ class TestNode extends React.Component {
 
   render(){
 
-    const {update, changeFocus, isRoot, nodeCut, nodeCutWithTarget, nodePasteWithTarget} = this.props
+    const {update, changeFocus, isRoot, nodeCut, nodeCutWithTarget, nodePasteWithTarget } = this.props
     var that = this
     var node = new Node(this.props.nodes)
     var panl = new Panls(this.props.nodes)

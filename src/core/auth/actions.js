@@ -12,6 +12,7 @@ import {
 import { uiActions } from 'core/ui';
 import { filesActions } from 'core/files';
 import { mdActions } from 'core/md';
+import { flatActions } from 'core/flat';
 
 
 export function registerAuthListener(){
@@ -35,6 +36,7 @@ export function registerAuthListener(){
 
 
         dispatch(mdActions.getFileList()) //for markdown
+        dispatch(flatActions.startListening())
         setTimeout( dispatch(filesActions.getFiles()), 1000)
 
       }else{

@@ -25,8 +25,10 @@ import TestGrid from "./testGrid";
 //import Keybind from "./testKeybind"
 import Register from "./createUser";
 import {AboutUs} from "./aboutus";
+
 import MdWrap from "./md/mdWrap";
 import Md from "./md";
+import Newflat from "./flat/newFlat";
 
 
 class Wrap extends Component {
@@ -80,6 +82,7 @@ export class Root extends Component {
             <Route path="md" component={MdWrap} >
               <Route path="/md/:id" component={Md} />
             </Route>
+            <Route path="newFlat" component={Newflat} />
 					</Route>
 				</Router>
 			</Provider>

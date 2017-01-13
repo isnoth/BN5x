@@ -88,24 +88,25 @@ export function createFile(){
        id: newNodeid,
        name: "new",
        type: 'flat' },
-     nodes:{
-       root:{
-         children:["first_node", ],
-         id: "root",
-         width: 20000,
-       },
-       first_node:{
-         content: "",
-         fold: false,
-         height: 100,
-         width: 100,
-         x:100,
-         y:100,
-         zindex: 100,
-         id: "first_node",
-         collapsed: false
+       nodes:{
+         root:{
+           children:["first_node", ],
+           id: "root",
+           width: 20000,
+         },
+         first_node:{
+           content: "",
+           fold: false,
+           height: 100,
+           width: 100,
+           x:100,
+           y:100,
+           zindex: 100,
+           id: "first_node",
+           collapsed: false
+         }
        }
-    }}
+    }
 
     dirRef.child(newNodeid).set({id: newNodeid}, function(error){
       if (error){

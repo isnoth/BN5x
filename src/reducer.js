@@ -11,11 +11,12 @@ import { pomodarioReducer } from './core/pomodario';
 import { articleReducer } from './core/article';
 import { uiReducer } from './core/ui'
 import { filesReducer } from './core/files'
+
 import { mdReducer } from './core/md'
+import { flatReducer } from './core/flat'
 
 //import { notificationReducer } from 'core/notification';
 //import { tasksReducer } from 'core/tasks';
-
 
 export default combineReducers({
   auth: authReducer,
@@ -30,5 +31,6 @@ export default combineReducers({
   tree2: tree2Reducer,
   files: filesReducer,
   md: mdReducer,
+  flat: flatReducer,
   //tasks: tasksReducer
 });
