@@ -22,9 +22,11 @@ import 'styles/react-resizable.css'
 export class Node extends React.Component {
   constructor(props){
     super(props)
-    const { nodeUpdate } = this.props
+    const { nodeUpdate, nodeUpdateLayout } = this.props
     this.nodeUpdate = nodeUpdate.bind(this)
     this.updateContent = this.updateContent.bind(this)
+    this.layoutChange = this.layoutChange.bind(this)
+    this.nodeUpdateLayout = nodeUpdateLayout.bind(this)
   }
 
   updateContent(evt){
@@ -32,16 +34,24 @@ export class Node extends React.Component {
     this.nodeUpdate({key: _key, content: evt.target.value})
   }
 
+  layoutChange(current, all){
+    //console.log("layoutChange:", current, all)
+    const {_key} = this.props
+    this.nodeUpdateLayout(_key, current)
+  }
+
 
   render(){
-    const {isRoot, content, _key, _ref, nodeUpdate} = this.props
+    const {isRoot, content, _key, _ref, nodeUpdate, nodeUpdateLayout} = this.props
     console.log(isRoot, content, _key, _ref)
 
     let children = content[_key].children?content[_key].children.map(i=>{
       //must need a div to wrap the Node(for ReactGridLayout!!!)
-      return <div className="node-wrap" key={i}> 
+      return <div  key={i}> 
                <Node 
+                 className="node-wrap"
                  nodeUpdate={nodeUpdate}
+                 nodeUpdateLayout={nodeUpdateLayout}
                  isRoot={false} 
                  content={content} 
                  _ref={_ref}
@@ -59,26 +69,27 @@ export class Node extends React.Component {
           onChange={this.updateContent} 
           value={content[_key].content?content[_key].content:""}/>
 
-          <ReactGridLayout 
+          {/*<ReactGridLayout 
             className="layout" 
             layout={initLayout(content, _key)} 
             cols={48}
             rowHeight={30} 
             width={1580} >
           {children}
-          </ReactGridLayout>
+          </ReactGridLayout>*/}
 
-            {/*<ResponsiveReactGridLayout 
-            className="layout" 
-            layouts={{lg:initLayout(content, _key)}}
+            <ResponsiveReactGridLayout 
+            //className="layout" 
+            layouts={{lg:content[_key].layout?content[_key].layout:initLayout(content, _key)}}
             breakpoints={{lg: 1200,  xs: 480}}
             cols={{lg: 48, xs: 1 }}
             rowHeight={30} 
             isDraggable={true}
             isResizable={true}
+            onLayoutChange={(current, all)=>{ this.layoutChange( current, all)}}
             >
           {children}
-          </ResponsiveReactGridLayout>*/}
+          </ResponsiveReactGridLayout>
         </div>
     }else{
       return <div className="node-wrap">
@@ -97,9 +108,10 @@ export class Node extends React.Component {
 export class Newflat extends React.Component {
   constructor(props){
     super(props)
-    const { createRoot, nodeUpdate } = this.props
+    const { createRoot, nodeUpdate, nodeUpdateLayout } = this.props
     this.createRoot = createRoot.bind(this)
     this.nodeUpdate = nodeUpdate.bind(this)
+    this.nodeUpdateLayout = nodeUpdateLayout.bind(this)
   }
   render(){
     const {flat, params} = this.props
@@ -111,9 +123,10 @@ export class Newflat extends React.Component {
           <b>newflat <button onClick={this.createRoot}>create root</button></b>
         </Col>
 
-        <Col md={6}>
+        <Col md={12}>
           {flat.content?  (<Node 
              nodeUpdate={this.nodeUpdate}
+             nodeUpdateLayout={this.nodeUpdateLayout}
              isRoot={true} 
              content={flat.content} 
              _ref={flat.ref}

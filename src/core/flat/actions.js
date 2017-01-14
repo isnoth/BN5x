@@ -1,5 +1,5 @@
 import {
-  START_LISTERNING_TO_FLAT
+  START_LISTERNING_TO_FLAT,
 
 } from './action-types';
 
@@ -30,6 +30,22 @@ export function nodeUpdate(payload) {
   return (dispatch, getState) => {
     const { flat, firebase } = getState();
     flat.ref.child(payload.key).update(payload)
+  }
+}
+
+export function nodeUpdateLayout(key, payload) {
+  return (dispatch, getState) => {
+    const { flat, firebase } = getState();
+
+    const newlayout = payload.map(i=>(
+      {
+      i:i.i,
+      x:i.x,
+      y:i.y,
+      w:i.w,
+      h:i.h, }
+    ))
+    flat.ref.child(key).update({layout: newlayout})
   }
 }
 
