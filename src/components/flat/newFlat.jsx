@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 
 import { flatActions } from 'core/flat';
 
-import {Col} from 'react-bootstrap'
+import {Col, Glyphicon} from 'react-bootstrap'
 var ReactGridLayout = require('react-grid-layout');
 import {Responsive, WidthProvider} from 'react-grid-layout';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
+import Textarea from 'react-textarea-autosize';
 
 import {createChildNode} from 'utils/firebase'
 import {getUniqueId, initLayout} from 'utils/node2'
@@ -41,15 +42,20 @@ export class Node extends React.Component {
   }
 
 
+  ondrag(evt){
+    evt.preventDefault()
+  }
+
+
   render(){
     const {isRoot, content, _key, _ref, nodeUpdate, nodeUpdateLayout} = this.props
-    console.log(isRoot, content, _key, _ref)
+    //console.log(isRoot, content, _key, _ref)
 
     let children = content[_key].children?content[_key].children.map(i=>{
       //must need a div to wrap the Node(for ReactGridLayout!!!)
       return <div  key={i}> 
                <Node 
-                 className="node-wrap"
+                 className="tree-node-wrap"
                  nodeUpdate={nodeUpdate}
                  nodeUpdateLayout={nodeUpdateLayout}
                  isRoot={false} 
@@ -63,9 +69,12 @@ export class Node extends React.Component {
 
     if (isRoot){
       return <div >
-          <button onClick={createChildNode.bind(this, _ref, content, _key, {key: getUniqueId(), content:""}, console.log )}>+</button>
-          <a href={nodeUrl}> link </a>
-          <textarea 
+          <div>
+            <Glyphicon glyph="plus-sign" onClick={createChildNode.bind(this, _ref, content, _key, {key: getUniqueId(), content:""}, console.log )}/>
+            <button href={nodeUrl}> L </button>
+          </div>
+          <Textarea 
+          className='tree-textarea'
           onChange={this.updateContent} 
           value={content[_key].content?content[_key].content:""}/>
 
@@ -92,10 +101,14 @@ export class Node extends React.Component {
           </ResponsiveReactGridLayout>
         </div>
     }else{
-      return <div className="node-wrap">
-          <button onClick={createChildNode.bind(this, _ref, content, _key, {key: getUniqueId(), content:""}, console.log )}>+</button>
-          <a href={nodeUrl}> link </a>
-          <textarea 
+      return <div className="tree-node-wrap">
+          <div className="node-btn-wrap">
+            <Glyphicon glyph="plus-sign" onClick={createChildNode.bind(this, _ref, content, _key, {key: getUniqueId(), content:""}, console.log )}/>
+
+            <button ><a href={nodeUrl}> L</a> </button>
+          </div>
+          <Textarea 
+          className='tree-textarea'
           onChange={this.updateContent} 
           value={content[_key].content?content[_key].content:""}/>
           {children}
