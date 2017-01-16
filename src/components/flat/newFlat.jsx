@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux'; 
+import { hashHistory } from 'react-router'
 
 import { flatActions } from 'core/flat';
 
@@ -35,6 +36,11 @@ export class Node extends React.Component {
     this.nodeUpdate({key: _key, content: evt.target.value})
   }
 
+  updateFold(fold){
+    const {_key} = this.props
+    this.nodeUpdate({key: _key, fold: fold})
+  }
+
   layoutChange(current, all){
     //console.log("layoutChange:", current, all)
     const {_key} = this.props
@@ -65,7 +71,7 @@ export class Node extends React.Component {
              </div>
     }):null
 
-    let nodeUrl = "#newflat/"+_key
+    let nodeUrl = "/newflat/"+_key
 
     if (isRoot){
       return <div >
@@ -97,21 +103,22 @@ export class Node extends React.Component {
             isResizable={true}
             onLayoutChange={(current, all)=>{ this.layoutChange( current, all)}}
             >
-          {children}
+            {children}
           </ResponsiveReactGridLayout>
         </div>
     }else{
       return <div className="tree-node-wrap">
           <div className="node-btn-wrap">
-            <Glyphicon glyph="plus-sign" onClick={createChildNode.bind(this, _ref, content, _key, {key: getUniqueId(), content:""}, console.log )}/>
-
-            <button ><a href={nodeUrl}> L</a> </button>
+            <Glyphicon glyph="plus-sign" onClick={this.updateFold.bind(this, !content[_key].fold)}/>
+            <div className="dot" onClick={()=>{ hashHistory.push(nodeUrl) }}></div>
+            {content[_key].fold?<div className="dot-fold" ></div>:null}
+            {/*<Glyphicon glyph="euro" className="dot" onClick={()=>{ hashHistory.push(nodeUrl) }}/>*/}
           </div>
           <Textarea 
           className='tree-textarea'
           onChange={this.updateContent} 
           value={content[_key].content?content[_key].content:""}/>
-          {children}
+          {content[_key].fold?null:children}
         </div>
 
     }
