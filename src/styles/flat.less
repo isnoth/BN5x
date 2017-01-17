@@ -1,7 +1,11 @@
 .tree-node-wrap{
   margin-left: 20px;
-}
 
+  & textarea:focus{
+    border-color: #000;
+    box-shadow: none;
+  }
+}
 
 .dot {
   width:3px;
@@ -9,7 +13,7 @@
   border-radius:50%;
   display: block;
   position:absolute;
-  left:6px;
+  left:24px;
   top:6px;
   z-index: 2;
 }
@@ -17,8 +21,9 @@
 .dot-fold{
   width:18px;
   height:18px;
+  left: 18px;
   border-radius:50%;
-  border: 6px solid #999;
+  border: 6px solid #ccc;
   display: block;
   position:absolute;
   z-index: 1;
@@ -26,10 +31,24 @@
 
 .node-btn-wrap{
   position:absolute;
-  margin-left:-20px;
+  margin-left:-38px;
   margin-top:3px;
   width:18px;
   height:18px;
+  &:hover .fold{
+    display: block;
+    position: absolute;
+    margin-left:6px;
+    margin-top: 4px;
+    color: #666;
+  }
+
+  .fold{
+    display: none;
+    //position: absolute;
+    //margin-left: 18px;
+    //margin-top: 5px;
+  }
 }
 
 

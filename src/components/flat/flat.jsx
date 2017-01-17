@@ -68,6 +68,8 @@ class TestNode extends React.Component {
         console.log("ondrag:", thisnode.id)
         const { nodeCutWithTarget } = this.props
         nodeCutWithTarget(thisnode.id)
+        //ev.preventDefault()
+        ev.stopPropagation()
         
         //ev.dataTransfer.setData("text", ev.target.id);
     }
@@ -75,6 +77,7 @@ class TestNode extends React.Component {
     const drag = (ev) =>{
         //ev.dataTransfer.setData("text", ev.target.id);
         //console.log("drag:", ev)
+        ev.stopPropagation()
     }
     
     const drop = (ev)=> {
@@ -86,6 +89,8 @@ class TestNode extends React.Component {
         nodePasteWithTarget(thisnode.id)
         //console.log("drop", data)
         //ev.target.appendChild(document.getElementById(data));
+        ev.stopPropagation()
+        ev.preventDefault()
     }
 
 

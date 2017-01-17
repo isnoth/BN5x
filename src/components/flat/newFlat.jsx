@@ -47,12 +47,6 @@ export class Node extends React.Component {
     this.nodeUpdateLayout(_key, current)
   }
 
-
-  ondrag(evt){
-    evt.preventDefault()
-  }
-
-
   render(){
     const {isRoot, content, _key, _ref, nodeUpdate, nodeUpdateLayout} = this.props
     //console.log(isRoot, content, _key, _ref)
@@ -75,9 +69,11 @@ export class Node extends React.Component {
 
     if (isRoot){
       return <div >
-          <div>
-            <Glyphicon glyph="plus-sign" onClick={createChildNode.bind(this, _ref, content, _key, {key: getUniqueId(), content:""}, console.log )}/>
-            <button href={nodeUrl}> L </button>
+
+          <div className="node-btn-wrap">
+          {content[_key].children?<Glyphicon className="fold" glyph={content[_key].fold?"plus":"minus"} onClick={this.updateFold.bind(this, !content[_key].fold)}/>:null}
+            <div className="dot" onClick={()=>{ hashHistory.push(nodeUrl) }}></div>
+            {content[_key].fold?<div className="dot-fold" ></div>:null}
           </div>
           <Textarea 
           className='tree-textarea'
@@ -109,10 +105,9 @@ export class Node extends React.Component {
     }else{
       return <div className="tree-node-wrap">
           <div className="node-btn-wrap">
-            <Glyphicon glyph="plus-sign" onClick={this.updateFold.bind(this, !content[_key].fold)}/>
+          {content[_key].children?<Glyphicon className="fold" glyph={content[_key].fold?"plus":"minus"} onClick={this.updateFold.bind(this, !content[_key].fold)}/>:null}
             <div className="dot" onClick={()=>{ hashHistory.push(nodeUrl) }}></div>
             {content[_key].fold?<div className="dot-fold" ></div>:null}
-            {/*<Glyphicon glyph="euro" className="dot" onClick={()=>{ hashHistory.push(nodeUrl) }}/>*/}
           </div>
           <Textarea 
           className='tree-textarea'
@@ -139,9 +134,10 @@ export class Newflat extends React.Component {
 
     return (
       <Col>
-        <Col md={6}>
+      {/*<Col md={6}>
           <b>newflat <button onClick={this.createRoot}>create root</button></b>
-        </Col>
+        </Col>*/}
+
 
         <Col md={12}>
           {flat.content?  (<Node 
