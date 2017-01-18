@@ -1,9 +1,27 @@
 import {
   START_LISTERNING_TO_FLAT,
-
+  DISABLE_DRAGABLE_FLAT,
+  ENABLE_DRAGABLE_FLAT,
 } from './action-types';
 
 import { getUniqueId } from "utils/node"
+
+
+export function disableDragableFlat(){
+  return (dispatch, getState) => {
+    dispatch({
+      type: DISABLE_DRAGABLE_FLAT,
+    })
+  }
+}
+
+export function enableDragableFlat(){
+  return (dispatch, getState) => {
+    dispatch({
+      type: ENABLE_DRAGABLE_FLAT,
+    })
+  }
+}
 
 export function createRoot(){
   return (dispatch, getState) => {

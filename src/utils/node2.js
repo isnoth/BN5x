@@ -1,6 +1,34 @@
 export function getChildren(key, obj){
 }
 
+export function getParent( key, obj ){
+  let fnd = Object.keys(obj).filter(i=>{
+    let children = obj[i].children
+    return children.indexOf(key)>-1
+  })
+
+  return fnd?fnd[0]:null
+}
+
+export function nodeGetAllChildrenId(key, obj){
+  let children = obj[key].children
+
+  if (children){
+    obj[key].children.forEach(i=>{
+      children = children.concat(nodeGetAllChildrenId(i, obj))
+    })
+    return children
+  }else{
+    return []
+  }
+}
+
+export function nodeDelete(key, obj, ref){
+
+}
+
+
+
 export function getUniqueId() {
   function randomString(length, chars) {
     var result = '';

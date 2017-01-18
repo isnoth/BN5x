@@ -78,7 +78,7 @@ describe('TestNode', function () {
     expect(node.getAllChildren("BNx")[4].id).to.equal('BN4')
   })
 
-  it.only('getAllChildrenId() should return ok', function () {
+  it('getAllChildrenId() should return ok', function () {
     const nodes = [
       {id: 'BN1', content: "taobao"},
       {id: 'BN2', content: "taobao"},

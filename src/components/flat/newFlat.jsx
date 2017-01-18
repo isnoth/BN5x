@@ -24,11 +24,13 @@ import 'styles/react-resizable.css'
 export class Node extends React.Component {
   constructor(props){
     super(props)
-    const { nodeUpdate, nodeUpdateLayout } = this.props
+    const { nodeUpdate, nodeUpdateLayout,} = this.props
     this.nodeUpdate = nodeUpdate.bind(this)
     this.updateContent = this.updateContent.bind(this)
     this.layoutChange = this.layoutChange.bind(this)
     this.nodeUpdateLayout = nodeUpdateLayout.bind(this)
+    this.drag = this.drag.bind(this)
+    this.drop = this.drop.bind(this)
   }
 
   updateContent(evt){
@@ -41,20 +43,61 @@ export class Node extends React.Component {
     this.nodeUpdate({key: _key, fold: fold})
   }
 
+  drag(evt){
+    console.log("drag")
+  }
+
+  drop(evt){
+  }
+
+
   layoutChange(current, all){
     //console.log("layoutChange:", current, all)
     const {_key} = this.props
     this.nodeUpdateLayout(_key, current)
   }
 
+  componentDidMount(){
+    //console.log(this._input)
+    //console.log(ReactDOM.findDOMNode(this._input))
+    if (this._input){
+    ReactDOM.findDOMNode(this._input).addEventListener("keydown", (ev)=>{
+      const keyName = event.key;
+      const { _ref, content, _key}  = this.props
+      //console.log("bindKeys:", content[_key])
+
+      if (keyName === 'Control') {
+        // not alert when only Control key is pressed.
+        return;
+      }
+      
+      if (event.ctrlKey) {
+        // Even though event.key is not 'Control' (i.e. 'a' is pressed),
+        // event.ctrlKey may be true if Ctrl key is pressed at the time.
+        //alert(`Combination of ctrlKey + ${keyName}`);
+         //console.log("key bind!!!:", _ref, content, _key)
+		     createChildNode( _ref, content, _key, {key: getUniqueId(), content:""}, console.log )
+		   
+      } else {
+        //alert(`Key pressed ${keyName}`);
+      }
+
+      
+    });
+    }
+
+
+  }
+
   render(){
-    const {isRoot, content, _key, _ref, nodeUpdate, nodeUpdateLayout} = this.props
+    const { flatIsDragable, isRoot, content, _key, _ref, nodeUpdate, nodeUpdateLayout } = this.props
     //console.log(isRoot, content, _key, _ref)
 
     let children = content[_key].children?content[_key].children.map(i=>{
       //must need a div to wrap the Node(for ReactGridLayout!!!)
       return <div  key={i}> 
                <Node 
+                 flatIsDragable={flatIsDragable}
                  className="tree-node-wrap"
                  nodeUpdate={nodeUpdate}
                  nodeUpdateLayout={nodeUpdateLayout}
@@ -72,10 +115,11 @@ export class Node extends React.Component {
 
           <div className="node-btn-wrap">
           {content[_key].children?<Glyphicon className="fold" glyph={content[_key].fold?"plus":"minus"} onClick={this.updateFold.bind(this, !content[_key].fold)}/>:null}
-            <div className="dot" onClick={()=>{ hashHistory.push(nodeUrl) }}></div>
+            <div className="dot" onClick={()=>{hashHistory.push(nodeUrl)}} onDrag={this.drag}></div>
             {content[_key].fold?<div className="dot-fold" ></div>:null}
           </div>
           <Textarea 
+          ref={(c) => this._input = c}
           className='tree-textarea'
           onChange={this.updateContent} 
           value={content[_key].content?content[_key].content:""}/>
@@ -95,7 +139,7 @@ export class Node extends React.Component {
             breakpoints={{lg: 1200,  xs: 480}}
             cols={{lg: 48, xs: 1 }}
             rowHeight={30} 
-            isDraggable={true}
+            isDraggable={flatIsDragable}
             isResizable={true}
             onLayoutChange={(current, all)=>{ this.layoutChange( current, all)}}
             >
@@ -111,6 +155,7 @@ export class Node extends React.Component {
           </div>
           <Textarea 
           className='tree-textarea'
+          ref={(c) => this._input = c}
           onChange={this.updateContent} 
           value={content[_key].content?content[_key].content:""}/>
           {content[_key].fold?null:children}
@@ -128,8 +173,25 @@ export class Newflat extends React.Component {
     this.nodeUpdate = nodeUpdate.bind(this)
     this.nodeUpdateLayout = nodeUpdateLayout.bind(this)
   }
+
+  componentDidMount(){
+    const {enableDragableFlat, disableDragableFlat} = this.props
+
+    document.body.addEventListener("keydown", (ev)=>{
+      if (ev.ctrlKey){
+        enableDragableFlat()
+      }
+    })
+
+    document.body.addEventListener("keyup", (ev)=>{
+      console.log(ev.keyCode)
+      if (ev.keyCode=="17"){
+        disableDragableFlat()
+      }
+    })
+  }
   render(){
-    const {flat, params} = this.props
+    const {flat, params, disableDragableFlat} = this.props
 
 
     return (
@@ -141,6 +203,7 @@ export class Newflat extends React.Component {
 
         <Col md={12}>
           {flat.content?  (<Node 
+             flatIsDragable={flat.flatIsDragable}
              nodeUpdate={this.nodeUpdate}
              nodeUpdateLayout={this.nodeUpdateLayout}
              isRoot={true} 
