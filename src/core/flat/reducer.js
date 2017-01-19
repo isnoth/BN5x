@@ -7,7 +7,7 @@ import {
 export const flatInitialState = {
   ref: null,
   content: null,
-  flatIsDragable: true,
+  flatIsDragable: false,
 };
 
 export function flatReducer(state = flatInitialState, action) {

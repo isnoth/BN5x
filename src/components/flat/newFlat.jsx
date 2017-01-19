@@ -12,6 +12,7 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive);
 import Textarea from 'react-textarea-autosize';
 
 import {createChildNode} from 'utils/firebase'
+import {createBrotherNode} from 'utils/firebase'
 import {getUniqueId, initLayout} from 'utils/node2'
 
 import 'styles/flat.less'
@@ -52,41 +53,32 @@ export class Node extends React.Component {
 
 
   layoutChange(current, all){
-    //console.log("layoutChange:", current, all)
     const {_key} = this.props
     this.nodeUpdateLayout(_key, current)
   }
 
   componentDidMount(){
-    //console.log(this._input)
-    //console.log(ReactDOM.findDOMNode(this._input))
     if (this._input){
-    ReactDOM.findDOMNode(this._input).addEventListener("keydown", (ev)=>{
-      const keyName = event.key;
-      const { _ref, content, _key}  = this.props
-      //console.log("bindKeys:", content[_key])
+      //bind keys
+      ReactDOM.findDOMNode(this._input).addEventListener("keydown", (ev)=>{
+        const keyName = event.key;
+        const { _ref, content, _key}  = this.props
 
-      if (keyName === 'Control') {
-        // not alert when only Control key is pressed.
-        return;
-      }
-      
-      if (event.ctrlKey) {
-        // Even though event.key is not 'Control' (i.e. 'a' is pressed),
-        // event.ctrlKey may be true if Ctrl key is pressed at the time.
-        //alert(`Combination of ctrlKey + ${keyName}`);
-         //console.log("key bind!!!:", _ref, content, _key)
-		     createChildNode( _ref, content, _key, {key: getUniqueId(), content:""}, console.log )
-		   
-      } else {
-        //alert(`Key pressed ${keyName}`);
-      }
+        if (keyName === 'Control') {
+          return;
+        }
+        
+        if (event.ctrlKey && keyName=="Enter") {
+		      createBrotherNode( _ref, content, _key, {key: getUniqueId(), content:""}, console.log )
+        }
 
-      
-    });
+        if (event.shiftKey && keyName=="Enter"){
+		      createChildNode( _ref, content, _key, {key: getUniqueId(), content:""}, console.log )
+          event.preventDefault()
+        }
+        
+      });
     }
-
-
   }
 
   render(){
@@ -115,7 +107,7 @@ export class Node extends React.Component {
 
           <div className="node-btn-wrap">
           {content[_key].children?<Glyphicon className="fold" glyph={content[_key].fold?"plus":"minus"} onClick={this.updateFold.bind(this, !content[_key].fold)}/>:null}
-            <div className="dot" onClick={()=>{hashHistory.push(nodeUrl)}} onDrag={this.drag}></div>
+            <div className="dot" onClick={()=>{hashHistory.push(nodeUrl)}} ></div>
             {content[_key].fold?<div className="dot-fold" ></div>:null}
           </div>
           <Textarea 
@@ -150,7 +142,7 @@ export class Node extends React.Component {
       return <div className="tree-node-wrap">
           <div className="node-btn-wrap">
           {content[_key].children?<Glyphicon className="fold" glyph={content[_key].fold?"plus":"minus"} onClick={this.updateFold.bind(this, !content[_key].fold)}/>:null}
-            <div className="dot" onClick={()=>{ hashHistory.push(nodeUrl) }}></div>
+            <div className="dot" onClick={()=>{ hashHistory.push(nodeUrl) }} onDrag={this.drag}></div>
             {content[_key].fold?<div className="dot-fold" ></div>:null}
           </div>
           <Textarea 
@@ -178,14 +170,14 @@ export class Newflat extends React.Component {
     const {enableDragableFlat, disableDragableFlat} = this.props
 
     document.body.addEventListener("keydown", (ev)=>{
-      if (ev.ctrlKey){
+      if (ev.keyCode=="18"){
         enableDragableFlat()
       }
     })
 
     document.body.addEventListener("keyup", (ev)=>{
       console.log(ev.keyCode)
-      if (ev.keyCode=="17"){
+      if (ev.keyCode=="18"){
         disableDragableFlat()
       }
     })

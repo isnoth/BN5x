@@ -4,7 +4,7 @@ export function getChildren(key, obj){
 export function getParent( key, obj ){
   let fnd = Object.keys(obj).filter(i=>{
     let children = obj[i].children
-    return children.indexOf(key)>-1
+    return children&&children.indexOf(key)>-1
   })
 
   return fnd?fnd[0]:null
@@ -43,7 +43,11 @@ export function getUniqueId() {
 
 
 export function initLayout(content, cNodeKey){
-  return content[cNodeKey].children.map(function(i){
-    return {i: i, x: 5, y:5, w:5, h:5}
-  })
+  if (content[cNodeKey.children]){
+    return content[cNodeKey].children.map(function(i){
+      return {i: i, x: 5, y:5, w:5, h:5}
+    })
+  }else{
+    return [{i:cNodeKey, x:5, y:5, w:5, h:5}]
+  }
 }
