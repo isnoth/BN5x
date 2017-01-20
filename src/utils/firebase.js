@@ -1,5 +1,11 @@
 import { getParent, nodeGetAllChildrenId} from "utils/node2"
 
+
+export function deleteNode(ref, obj, cNodeKey, callback){
+
+  
+}
+
 export function createChildNode(ref, obj, cNodeKey, nNode, callback){
 
   let cNode = obj[cNodeKey]

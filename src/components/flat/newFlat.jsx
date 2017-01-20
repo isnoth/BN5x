@@ -59,23 +59,18 @@ export class Node extends React.Component {
   }
 
   drag(_key){
-    console.log("drag")
     const {  nodeCut } = this.props
     nodeCut(_key)
-    console.log("cut:", _key)
   }
 
   drop(_key){
     const {  nodePaste } = this.props
-    console.log("drop:", _key)
     nodePaste(_key)
   }
 
   allowDrop(ev){
-    console.log('allowDrop')
     ev.preventDefault();
   }
-
 
   layoutChange(current, all){
     const {_key} = this.props
@@ -105,12 +100,12 @@ export class Node extends React.Component {
         }
 
         if (event.ctrlKey && event.shiftKey && keyName=="X"){
-          console.log("nodeCut")
+          //console.log("nodeCut")
           nodeCut(_key)
         }
 
         if (event.ctrlKey && event.shiftKey && keyName=="V"){
-          console.log("nodePaste")
+          //console.log("nodePaste")
           nodePaste(_key)
           event.preventDefault()
         }
@@ -143,15 +138,14 @@ export class Node extends React.Component {
 
     if (isRoot){
       return <div >
-
-          <div className="node-btn-wrap">
+          {/*<div className="node-btn-wrap">
           {content[_key].children?<Glyphicon className="fold" glyph={content[_key].fold?"plus":"minus"} onClick={this.updateFold.bind(this, !content[_key].fold)}/>:null}
             <div className="dot" onClick={()=>{hashHistory.push(nodeUrl)}} ></div>
             {content[_key].fold?<div className="dot-fold" ></div>:null}
-          </div>
+          </div>*/}
           <Textarea 
           ref={(c) => this._input = c}
-          className='tree-textarea'
+          className='tree-textarea-root'
           onChange={this.updateContent} 
           value={content[_key].content?content[_key].content:""}/>
 
@@ -214,13 +208,13 @@ export class Newflat extends React.Component {
     const {enableDragableFlat, disableDragableFlat} = this.props
 
     document.body.addEventListener("keydown", (ev)=>{
+      console.log()
       if (ev.keyCode=="18"){
         enableDragableFlat()
       }
     })
 
     document.body.addEventListener("keyup", (ev)=>{
-      console.log(ev.keyCode)
       if (ev.keyCode=="18"){
         disableDragableFlat()
       }
