@@ -1,9 +1,21 @@
 import { getParent, nodeGetAllChildrenId} from "utils/node2"
 
 
-export function deleteNode(ref, obj, cNodeKey, callback){
+export function nodeDelete(ref, obj, cNodeKey){
+  let parentKey = getParent(cNodeKey, obj)
+  let deleteList = nodeGetAllChildrenId(cNodeKey, obj)
+  deleteList.push(cNodeKey)
+  let children = obj[parentKey].children
+  children.splice(children.indexOf(cNodeKey), 1)
 
-  
+  ref.child(parentKey).update({
+    children: children
+  }, function(result){
+    //delete
+    deleteList.map(function(key){
+      ref.child(key).remove()
+    })
+  })
 }
 
 export function createChildNode(ref, obj, cNodeKey, nNode, callback){

@@ -10,6 +10,17 @@ export function getParent( key, obj ){
   return fnd?fnd[0]:null
 }
 
+export function getRootPath(key, obj){
+  let paths = []
+  let path = key
+  //paths.push(path)
+  while (path && path!="root"){
+    path = getParent(path, obj)
+    paths.push(path)
+  }
+  return paths.reverse()
+}
+
 export function nodeGetAllChildrenId(key, obj){
   let children = obj[key].children
 
@@ -22,12 +33,6 @@ export function nodeGetAllChildrenId(key, obj){
     return []
   }
 }
-
-export function nodeDelete(key, obj, ref){
-
-}
-
-
 
 export function getUniqueId() {
   function randomString(length, chars) {

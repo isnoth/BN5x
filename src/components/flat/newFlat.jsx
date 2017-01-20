@@ -11,16 +11,12 @@ import {Responsive, WidthProvider} from 'react-grid-layout';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 import Textarea from 'react-textarea-autosize';
 
-import {createChildNode} from 'utils/firebase'
-import {createBrotherNode} from 'utils/firebase'
-import {getUniqueId, initLayout} from 'utils/node2'
+import {createChildNode, createBrotherNode, nodeDelete} from 'utils/firebase'
+import {getUniqueId, initLayout, getRootPath} from 'utils/node2'
 
 import 'styles/flat.less'
 import 'styles/react-grid-layout.css'
 import 'styles/react-resizable.css'
-//import 'styles/styles.css'
-
-
 
 export class Node extends React.Component {
   constructor(props){
@@ -82,7 +78,7 @@ export class Node extends React.Component {
       //bind keys
       ReactDOM.findDOMNode(this._input).addEventListener("keydown", (event)=>{
         const keyName = event.key;
-        const { _ref, content, _key, nodeCut, nodePaste} = this.props
+        const { _ref, content, _key, nodeCut, nodePaste } = this.props
 
         if (keyName === 'Control') {
           return;
@@ -92,6 +88,10 @@ export class Node extends React.Component {
         
         if (event.ctrlKey && keyName=="Enter") {
 		      createBrotherNode( _ref, content, _key, {key: getUniqueId(), content:""}, console.log )
+        }
+
+        if (event.ctrlKey && keyName=="Delete") {
+		      nodeDelete( _ref, content, _key)
         }
 
         if (event.shiftKey && keyName=="Enter"){
@@ -137,18 +137,20 @@ export class Node extends React.Component {
     let nodeUrl = "/newflat/"+_key
 
     if (isRoot){
-      return <div >
-          {/*<div className="node-btn-wrap">
-          {content[_key].children?<Glyphicon className="fold" glyph={content[_key].fold?"plus":"minus"} onClick={this.updateFold.bind(this, !content[_key].fold)}/>:null}
-            <div className="dot" onClick={()=>{hashHistory.push(nodeUrl)}} ></div>
-            {content[_key].fold?<div className="dot-fold" ></div>:null}
-          </div>*/}
-          <Textarea 
-          ref={(c) => this._input = c}
-          className='tree-textarea-root'
-          onChange={this.updateContent} 
-          value={content[_key].content?content[_key].content:""}/>
+      let paths = getRootPath(_key, content).map((i)=>{
+        //let path = "#newflat/"+i
+        return <span><a href={'#/newflat/'+i+'/'}>{content[i].content!=""||content[i].content?content[i].content:"_"}</a> > </span>
+      })
 
+      return <div >
+            <div>
+              {paths}
+              <Textarea 
+                ref={(c) => this._input = c}
+                className='tree-textarea-root'
+                onChange={this.updateContent} 
+                value={content[_key].content?content[_key].content:""}/>
+            </div>
             <ResponsiveReactGridLayout 
             layouts={{lg:content[_key].layout?content[_key].layout:initLayout(content, _key)}}
             breakpoints={{lg: 1200,  xs: 480}}
@@ -221,16 +223,11 @@ export class Newflat extends React.Component {
     })
   }
   render(){
-    const {flat, params, nodeCut, nodePaste} = this.props
+    const {flat, params, nodeCut, nodePaste } = this.props
 
 
     return (
       <Col>
-      {/*<Col md={6}>
-          <b>newflat <button onClick={this.createRoot}>create root</button></b>
-        </Col>*/}
-
-
         <Col md={12}>
           {flat.content?  (<Node 
              flatIsDragable={flat.flatIsDragable}
