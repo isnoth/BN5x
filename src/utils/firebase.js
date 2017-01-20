@@ -1,4 +1,4 @@
-import { getParent } from "utils/node2"
+import { getParent, nodeGetAllChildrenId} from "utils/node2"
 
 export function createChildNode(ref, obj, cNodeKey, nNode, callback){
 
@@ -49,6 +49,55 @@ export function createBrotherNode(ref, obj, cNodeKey, nNode, callback){
 
       }
     })
-
   }
+}
+
+export function pasteNode(ref, obj, cid, nid){
+  return new Promise((resolve, reject)=>{
+    let cNode = obj[cid]
+    let nParent = getParent( nid, obj)
+    let cParent = getParent( cid, obj)
+    console.log(nid, cid, nParent, cParent)
+
+    if (cParent==nParent && 
+        (obj[nParent].children.indexOf(nid)-obj[nParent].children.indexOf(cid) == -1)){
+      console.log("1.2 -> 1.1")
+      resolve()
+    }else if(nodeGetAllChildrenId(cid, obj).indexOf(nid) > -1){
+      console.log('1.1 -> 1')
+      resolve()
+    }else{
+      //cut
+      let currentchildren = obj[cParent].children 
+      currentchildren.splice(currentchildren.indexOf(cid),1) //!!!!
+
+      //paste
+      let newchildren = obj[nParent].children 
+      let index = newchildren.indexOf(nid)+1
+      let _index =-( newchildren.length - index)
+
+      if ((index == newchildren.length) || (newchildren.length == 1)){
+        newchildren = [...newchildren, cid]
+      }else{
+        newchildren = [...newchildren.slice(0,index), cid, ...newchildren.slice(_index)]
+      }
+
+      console.log("newchildren after:", newchildren)
+
+
+      if (nParent != cParent){
+        ref.child(cParent).update({
+          children: currentchildren
+        })
+      }
+  
+      ref.child(nParent).update({
+        children: newchildren
+      }, function(){
+        resolve()
+      })
+
+    }
+  })
+
 }

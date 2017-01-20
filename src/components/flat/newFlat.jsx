@@ -32,6 +32,20 @@ export class Node extends React.Component {
     this.nodeUpdateLayout = nodeUpdateLayout.bind(this)
     this.drag = this.drag.bind(this)
     this.drop = this.drop.bind(this)
+    this.allowDrop = this.allowDrop.bind(this)
+    this.setHot = this.setHot.bind(this)
+    this.clearHot = this.clearHot.bind(this)
+    this.state={
+      hot: false
+    }
+  }
+
+  setHot(ev){
+    this.setState({hot:true})
+  }
+
+  clearHot(ev){
+    this.setState({hot: false})
   }
 
   updateContent(evt){
@@ -44,11 +58,22 @@ export class Node extends React.Component {
     this.nodeUpdate({key: _key, fold: fold})
   }
 
-  drag(evt){
+  drag(_key){
     console.log("drag")
+    const {  nodeCut } = this.props
+    nodeCut(_key)
+    console.log("cut:", _key)
   }
 
-  drop(evt){
+  drop(_key){
+    const {  nodePaste } = this.props
+    console.log("drop:", _key)
+    nodePaste(_key)
+  }
+
+  allowDrop(ev){
+    console.log('allowDrop')
+    ev.preventDefault();
   }
 
 
@@ -60,13 +85,15 @@ export class Node extends React.Component {
   componentDidMount(){
     if (this._input){
       //bind keys
-      ReactDOM.findDOMNode(this._input).addEventListener("keydown", (ev)=>{
+      ReactDOM.findDOMNode(this._input).addEventListener("keydown", (event)=>{
         const keyName = event.key;
-        const { _ref, content, _key}  = this.props
+        const { _ref, content, _key, nodeCut, nodePaste} = this.props
 
         if (keyName === 'Control') {
           return;
         }
+
+        //console.log(event)
         
         if (event.ctrlKey && keyName=="Enter") {
 		      createBrotherNode( _ref, content, _key, {key: getUniqueId(), content:""}, console.log )
@@ -76,13 +103,23 @@ export class Node extends React.Component {
 		      createChildNode( _ref, content, _key, {key: getUniqueId(), content:""}, console.log )
           event.preventDefault()
         }
-        
+
+        if (event.ctrlKey && event.shiftKey && keyName=="X"){
+          console.log("nodeCut")
+          nodeCut(_key)
+        }
+
+        if (event.ctrlKey && event.shiftKey && keyName=="V"){
+          console.log("nodePaste")
+          nodePaste(_key)
+          event.preventDefault()
+        }
       });
     }
   }
 
   render(){
-    const { flatIsDragable, isRoot, content, _key, _ref, nodeUpdate, nodeUpdateLayout } = this.props
+    const { flatIsDragable, isRoot, content, _key, _ref, nodeUpdate, nodeCut, nodePaste, nodeUpdateLayout } = this.props
     //console.log(isRoot, content, _key, _ref)
 
     let children = content[_key].children?content[_key].children.map(i=>{
@@ -92,6 +129,8 @@ export class Node extends React.Component {
                  flatIsDragable={flatIsDragable}
                  className="tree-node-wrap"
                  nodeUpdate={nodeUpdate}
+                 nodeCut={nodeCut}
+                 nodePaste={nodePaste}
                  nodeUpdateLayout={nodeUpdateLayout}
                  isRoot={false} 
                  content={content} 
@@ -116,17 +155,7 @@ export class Node extends React.Component {
           onChange={this.updateContent} 
           value={content[_key].content?content[_key].content:""}/>
 
-          {/*<ReactGridLayout 
-            className="layout" 
-            layout={initLayout(content, _key)} 
-            cols={48}
-            rowHeight={30} 
-            width={1580} >
-          {children}
-          </ReactGridLayout>*/}
-
             <ResponsiveReactGridLayout 
-            //className="layout" 
             layouts={{lg:content[_key].layout?content[_key].layout:initLayout(content, _key)}}
             breakpoints={{lg: 1200,  xs: 480}}
             cols={{lg: 48, xs: 1 }}
@@ -139,18 +168,33 @@ export class Node extends React.Component {
           </ResponsiveReactGridLayout>
         </div>
     }else{
-      return <div className="tree-node-wrap">
-          <div className="node-btn-wrap">
-          {content[_key].children?<Glyphicon className="fold" glyph={content[_key].fold?"plus":"minus"} onClick={this.updateFold.bind(this, !content[_key].fold)}/>:null}
-            <div className="dot" onClick={()=>{ hashHistory.push(nodeUrl) }} onDrag={this.drag}></div>
-            {content[_key].fold?<div className="dot-fold" ></div>:null}
-          </div>
-          <Textarea 
-          className='tree-textarea'
-          ref={(c) => this._input = c}
-          onChange={this.updateContent} 
-          value={content[_key].content?content[_key].content:""}/>
-          {content[_key].fold?null:children}
+      return <div 
+              onDragOver={this.allowDrop} 
+              className="tree-node-wrap">
+              <div
+                onDrop={this.drop.bind(this, _key)}  
+              >
+                <div className="node-btn-wrap" 
+                  onMouseEnter ={this.setHot}
+                  onMouseLeave={this.clearHot}
+                >
+                  {content[_key].children?<Glyphicon className="fold" glyph={content[_key].fold?"plus":"minus"} onClick={this.updateFold.bind(this, !content[_key].fold)}/>:null}
+                  <div className="dot" ></div>
+                  {content[_key].fold?<div className="dot-fold" ></div>:null}
+                  {this.state.hot?<div 
+                    draggable='true' 
+                    className="dot-hot" 
+                    onDragStart={this.drag.bind(this, _key)}
+                    onClick={()=>{ hashHistory.push(nodeUrl) }} 
+                    ></div>:null}
+                </div>
+                <Textarea 
+                  className='tree-textarea'
+                  ref={(c) => this._input = c}
+                  onChange={this.updateContent} 
+                  value={content[_key].content?content[_key].content:""}/>
+              </div>
+            {content[_key].fold?null:children}
         </div>
 
     }
@@ -183,7 +227,7 @@ export class Newflat extends React.Component {
     })
   }
   render(){
-    const {flat, params, disableDragableFlat} = this.props
+    const {flat, params, nodeCut, nodePaste} = this.props
 
 
     return (
@@ -197,6 +241,8 @@ export class Newflat extends React.Component {
           {flat.content?  (<Node 
              flatIsDragable={flat.flatIsDragable}
              nodeUpdate={this.nodeUpdate}
+             nodeCut={nodeCut}
+             nodePaste={nodePaste}
              nodeUpdateLayout={this.nodeUpdateLayout}
              isRoot={true} 
              content={flat.content} 

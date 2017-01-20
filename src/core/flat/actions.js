@@ -2,9 +2,30 @@ import {
   START_LISTERNING_TO_FLAT,
   DISABLE_DRAGABLE_FLAT,
   ENABLE_DRAGABLE_FLAT,
+  NODE_CUT
 } from './action-types';
 
 import { getUniqueId } from "utils/node"
+import { pasteNode } from "utils/firebase"
+
+
+
+export function nodeCut(key){
+  return (dispatch, getState) => {
+    dispatch({
+      type: NODE_CUT,
+      payload: key,
+    })
+  }
+}
+
+export function nodePaste(key){
+  return (dispatch, getState) => {
+    const { flat, firebase , auth} = getState();
+    let rootRef = firebase.tree.child(auth.userRef+"/flats/")
+    pasteNode(rootRef, flat.content, flat.cut, key )
+  }
+}
 
 
 export function disableDragableFlat(){

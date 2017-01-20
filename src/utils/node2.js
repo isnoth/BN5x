@@ -43,9 +43,9 @@ export function getUniqueId() {
 
 
 export function initLayout(content, cNodeKey){
-  if (content[cNodeKey.children]){
-    return content[cNodeKey].children.map(function(i){
-      return {i: i, x: 5, y:5, w:5, h:5}
+  if (content[cNodeKey].children){
+     return content[cNodeKey].children.map((i, index)=>{
+      return {i: i, x: 5*index, y:5, w:5, h:5}
     })
   }else{
     return [{i:cNodeKey, x:5, y:5, w:5, h:5}]
