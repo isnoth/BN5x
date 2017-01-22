@@ -21,8 +21,9 @@ import 'styles/react-resizable.css'
 export class Node extends React.Component {
   constructor(props){
     super(props)
-    const { nodeUpdate, nodeUpdateLayout,} = this.props
+    const { nodeUpdate, nodeUpdateLayout, nodeUpdateMd} = this.props
     this.nodeUpdate = nodeUpdate.bind(this)
+    this.nodeUpdateMd = nodeUpdateMd.bind(this)
     this.updateContent = this.updateContent.bind(this)
     this.layoutChange = this.layoutChange.bind(this)
     this.nodeUpdateLayout = nodeUpdateLayout.bind(this)
@@ -46,7 +47,12 @@ export class Node extends React.Component {
 
   updateContent(evt){
     const {_key} = this.props
-    this.nodeUpdate({key: _key, content: evt.target.value})
+    const val = evt.target.value
+    if (val.indexOf("_md_")>-1){
+      this.nodeUpdateMd({key: _key, content: val, md: val.slice(4)})
+    }else{
+      this.nodeUpdate({key: _key, content: val})
+    }
   }
 
   updateFold(fold){
@@ -114,7 +120,7 @@ export class Node extends React.Component {
   }
 
   render(){
-    const { flatIsDragable, isRoot, content, _key, _ref, nodeUpdate, nodeCut, nodePaste, nodeUpdateLayout } = this.props
+    const { flatIsDragable, isRoot, content, _key, _ref,  nodeCut, nodePaste, nodeUpdateLayout } = this.props
     //console.log(isRoot, content, _key, _ref)
 
     let children = content[_key].children?content[_key].children.map(i=>{
@@ -123,7 +129,8 @@ export class Node extends React.Component {
                <Node 
                  flatIsDragable={flatIsDragable}
                  className="tree-node-wrap"
-                 nodeUpdate={nodeUpdate}
+                 nodeUpdate={this.nodeUpdate}
+                 nodeUpdateMd={this.nodeUpdateMd}
                  nodeCut={nodeCut}
                  nodePaste={nodePaste}
                  nodeUpdateLayout={nodeUpdateLayout}
@@ -134,7 +141,7 @@ export class Node extends React.Component {
              </div>
     }):null
 
-    let nodeUrl = "/newflat/"+_key
+    let nodeUrl = content[_key].md?("/md/"+content[_key].md):("/newflat/"+_key)
 
     if (isRoot){
       let paths = getRootPath(_key, content).map((i)=>{
@@ -175,7 +182,7 @@ export class Node extends React.Component {
                   onMouseLeave={this.clearHot}
                 >
                   {content[_key].children?<Glyphicon className="fold" glyph={content[_key].fold?"plus":"minus"} onClick={this.updateFold.bind(this, !content[_key].fold)}/>:null}
-                  <div className="dot" ></div>
+                  <div className={content[_key].md?"dot-md":"dot"}></div>
                   {content[_key].fold?<div className="dot-fold" ></div>:null}
                   {this.state.hot?<div 
                     draggable='true' 
@@ -200,9 +207,10 @@ export class Node extends React.Component {
 export class Newflat extends React.Component {
   constructor(props){
     super(props)
-    const { createRoot, nodeUpdate, nodeUpdateLayout } = this.props
+    const { createRoot, nodeUpdate, nodeUpdateMd, nodeUpdateLayout } = this.props
     this.createRoot = createRoot.bind(this)
     this.nodeUpdate = nodeUpdate.bind(this)
+    this.nodeUpdateMd = nodeUpdateMd.bind(this)
     this.nodeUpdateLayout = nodeUpdateLayout.bind(this)
   }
 
@@ -232,6 +240,7 @@ export class Newflat extends React.Component {
           {flat.content?  (<Node 
              flatIsDragable={flat.flatIsDragable}
              nodeUpdate={this.nodeUpdate}
+             nodeUpdateMd={this.nodeUpdateMd}
              nodeCut={nodeCut}
              nodePaste={nodePaste}
              nodeUpdateLayout={this.nodeUpdateLayout}

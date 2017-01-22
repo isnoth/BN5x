@@ -72,6 +72,19 @@ export function nodeUpdate(payload) {
   }
 }
 
+//node with markdown
+export function nodeUpdateMd(payload) {
+  return (dispatch, getState) => {
+    const { flat, firebase, md} = getState();
+    let fnd = md.articles.filter(i=>{
+      return i.header == payload.md
+    })
+    payload.md = fnd[0]?fnd[0].key:null
+    flat.ref.child(payload.key).update(payload)
+  }
+}
+
+
 export function nodeUpdateLayout(key, payload) {
   return (dispatch, getState) => {
     const { flat, firebase } = getState();

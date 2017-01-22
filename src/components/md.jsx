@@ -16,7 +16,7 @@ class Md extends React.Component {
   constructor(props){
     super(props);
 
-    const { updateFile, editorChangeHeader, editorChangeContent, doEdit } = this.props
+    const { updateFile, editorChangeHeader, editorChangeContent, doEdit, getMdContent } = this.props
 
     this.editorChangeHeader = editorChangeHeader.bind(this)
     this.editorChangeContent = editorChangeContent.bind(this)
@@ -27,8 +27,8 @@ class Md extends React.Component {
   }
 
   componentDidMount(){
-   // const {params, getMdContent, md} = this.props
-   // getMdContent(params.id)
+    const {params, getMdContent, md} = this.props
+    getMdContent(params.id)
   }
 
   componentWillReceiveProps(nextProps) {
