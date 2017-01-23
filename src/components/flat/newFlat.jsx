@@ -151,7 +151,7 @@ export class Node extends React.Component {
 
       return <div >
             <div>
-              {paths}
+              <span className='bread-crumbs'>{paths}</span>
               <Textarea 
                 ref={(c) => this._input = c}
                 className='tree-textarea-root'
