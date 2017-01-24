@@ -11,7 +11,7 @@ import {Responsive, WidthProvider} from 'react-grid-layout';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 import Textarea from 'react-textarea-autosize';
 
-import {createChildNode, createBrotherNode, nodeDelete} from 'utils/firebase'
+import {createChildNode, createBrotherNode, nodeDelete, nodeUpdate} from 'utils/firebase'
 import {getUniqueId, initLayout, getRootPath} from 'utils/node2'
 
 import 'styles/flat.less'
@@ -21,12 +21,10 @@ import 'styles/react-resizable.css'
 export class Node extends React.Component {
   constructor(props){
     super(props)
-    const { nodeUpdate, nodeUpdateLayout, nodeUpdateMd} = this.props
-    this.nodeUpdate = nodeUpdate.bind(this)
+    const { nodeUpdateMd } = this.props
     this.nodeUpdateMd = nodeUpdateMd.bind(this)
     this.updateContent = this.updateContent.bind(this)
     this.layoutChange = this.layoutChange.bind(this)
-    this.nodeUpdateLayout = nodeUpdateLayout.bind(this)
     this.drag = this.drag.bind(this)
     this.drop = this.drop.bind(this)
     this.allowDrop = this.allowDrop.bind(this)
@@ -46,18 +44,18 @@ export class Node extends React.Component {
   }
 
   updateContent(evt){
-    const {_key} = this.props
+    const {_ref, _key} = this.props
     const val = evt.target.value
     if (val.indexOf("_md_")>-1){
       this.nodeUpdateMd({key: _key, content: val, md: val.slice(4)})
     }else{
-      this.nodeUpdate({key: _key, content: val})
+      nodeUpdate(_ref, {key: _key, content: val})
     }
   }
 
   updateFold(fold){
-    const {_key} = this.props
-    this.nodeUpdate({key: _key, fold: fold})
+    const {_ref, _key} = this.props
+    nodeUpdate(_ref, {key: _key, fold: fold})
   }
 
   drag(_key){
@@ -75,8 +73,16 @@ export class Node extends React.Component {
   }
 
   layoutChange(current, all){
-    const {_key} = this.props
-    this.nodeUpdateLayout(_key, current)
+    const {_ref, _key} = this.props
+    const newlayout = current.map(i=>(
+      {
+      i:i.i,
+      x:i.x,
+      y:i.y,
+      w:i.w,
+      h:i.h, }
+    ))
+    nodeUpdate(_ref, {key: _key, layout: newlayout})
   }
 
   componentDidMount(){
@@ -120,7 +126,7 @@ export class Node extends React.Component {
   }
 
   render(){
-    const { flatIsDragable, isRoot, content, _key, _ref,  nodeCut, nodePaste, nodeUpdateLayout } = this.props
+    const { flatIsDragable, isRoot, content, _key, _ref,  nodeCut, nodePaste } = this.props
     //console.log(isRoot, content, _key, _ref)
 
     let children = content[_key].children?content[_key].children.map(i=>{
@@ -129,11 +135,9 @@ export class Node extends React.Component {
                <Node 
                  flatIsDragable={flatIsDragable}
                  className="tree-node-wrap"
-                 nodeUpdate={this.nodeUpdate}
                  nodeUpdateMd={this.nodeUpdateMd}
                  nodeCut={nodeCut}
                  nodePaste={nodePaste}
-                 nodeUpdateLayout={nodeUpdateLayout}
                  isRoot={false} 
                  content={content} 
                  _ref={_ref}
@@ -144,20 +148,23 @@ export class Node extends React.Component {
     let nodeUrl = content[_key].md?("/md/"+content[_key].md):("/newflat/"+_key)
 
     if (isRoot){
+      /*
       let paths = getRootPath(_key, content).map((i)=>{
         //let path = "#newflat/"+i
         return <span><a href={'#/newflat/'+i+'/'}>{content[i].content!=""||content[i].content?content[i].content:"_"}</a> > </span>
       })
+      */
 
       return <div >
             <div>
-              <span className='bread-crumbs'>{paths}</span>
+            {/*<span className='bread-crumbs'>{paths}</span>*/}
               <Textarea 
                 ref={(c) => this._input = c}
                 className='tree-textarea-root'
                 onChange={this.updateContent} 
                 value={content[_key].content?content[_key].content:""}/>
             </div>
+
             <ResponsiveReactGridLayout 
             layouts={{lg:content[_key].layout?content[_key].layout:initLayout(content, _key)}}
             breakpoints={{lg: 1200,  xs: 480}}
@@ -207,11 +214,9 @@ export class Node extends React.Component {
 export class Newflat extends React.Component {
   constructor(props){
     super(props)
-    const { createRoot, nodeUpdate, nodeUpdateMd, nodeUpdateLayout } = this.props
+    const { createRoot, nodeUpdateMd } = this.props
     this.createRoot = createRoot.bind(this)
-    this.nodeUpdate = nodeUpdate.bind(this)
     this.nodeUpdateMd = nodeUpdateMd.bind(this)
-    this.nodeUpdateLayout = nodeUpdateLayout.bind(this)
   }
 
   componentDidMount(){
@@ -230,20 +235,35 @@ export class Newflat extends React.Component {
       }
     })
   }
+
+  // check id if avaliable in the root ref
+  componentWillReceiveProps(nextProps) {
+    const {flat, params, startRegisterListeners, startListeningToFiles} = nextProps
+    //not find in then root ref, check files
+    if (flat.content && !flat.content[params.id]){
+      if (flat.filesRef.indexOf(params.id)<0){
+        console.log('listening to files!')
+        startListeningToFiles(params.id)
+      }
+    }
+
+  }
+
   render(){
     const {flat, params, nodeCut, nodePaste } = this.props
-
+    if (flat.content){
+      //console.log(params.id)
+      //console.log('new:', flat.content, flat.content[params.id])
+    }
 
     return (
       <Col>
         <Col md={12}>
-          {flat.content?  (<Node 
+          {(flat.content && flat.content[params.id]) ?  (<Node 
              flatIsDragable={flat.flatIsDragable}
-             nodeUpdate={this.nodeUpdate}
              nodeUpdateMd={this.nodeUpdateMd}
              nodeCut={nodeCut}
              nodePaste={nodePaste}
-             nodeUpdateLayout={this.nodeUpdateLayout}
              isRoot={true} 
              content={flat.content} 
              _ref={flat.ref}

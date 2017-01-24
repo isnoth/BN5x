@@ -1,6 +1,11 @@
 import { getParent, nodeGetAllChildrenId} from "utils/node2"
 
 
+
+export function nodeUpdate(ref, payload){
+  ref.child(payload.key).update(payload)
+}
+
 export function nodeDelete(ref, obj, cNodeKey){
   let parentKey = getParent(cNodeKey, obj)
   let deleteList = nodeGetAllChildrenId(cNodeKey, obj)

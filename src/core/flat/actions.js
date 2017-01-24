@@ -1,5 +1,7 @@
 import {
   START_LISTERNING_TO_FLAT,
+  START_LISTERNING_TO_FILE,
+  LISTERNING_TO_FILE_RECEIVE_CONTENT,
   DISABLE_DRAGABLE_FLAT,
   ENABLE_DRAGABLE_FLAT,
   NODE_CUT
@@ -115,17 +117,47 @@ export function nodeCreateChild(key) {
 
 
 
+
+export function startListeningToFiles(key){
+  return (dispatch, getstate) => {
+    const { auth, firebase, flat } = getstate();
+
+    let rootref = firebase.tree.child(auth.userRef+"/files/"+key)
+
+    dispatch({
+      type: START_LISTERNING_TO_FILE,
+      payload: key,
+    })
+
+    console.log("start listening to file:", key)
+    rootref.on("value", (snap)=>{
+      dispatch({
+        type: LISTERNING_TO_FILE_RECEIVE_CONTENT,
+        payload: {
+          ref: rootref, 
+          content: snap.val(),
+        }
+      })
+    })
+  }
+}
+
+
 export function startListening(){
-  return (dispatch, getState) => {
-    const { auth, firebase } = getState();
+  console.log('startListening')
+  return (dispatch, getstate) => {
+    const { auth, firebase } = getstate();
 
-    let rootRef = firebase.tree.child(auth.userRef+"/flats/")
+    console.log('user ref is :', auth.userRef)
+    let rootref = firebase.tree.child(auth.userRef+"/flats/")
 
-    rootRef.on("value", (snap)=>{
+    console.log(rootref)
+    rootref.on("value", (snap)=>{
+      console.log('get value!')
       dispatch({
         type: START_LISTERNING_TO_FLAT,
         payload: {
-          ref: rootRef, 
+          ref: rootref, 
           content: snap.val(),
         }
       })
