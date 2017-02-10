@@ -10,3 +10,6 @@ map localhost.firebaseio.test to localhost in hosts, like bellow
 `127.0.0.1 localhost.firebaseio.test`
 then run npm test
 
+# info 
+** muti-file deprecated use wilddog query and paging method **
+

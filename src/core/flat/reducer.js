@@ -1,36 +1,40 @@
 import {
     START_LISTERNING_TO_FLAT,
-    START_LISTERNING_TO_FILE,
-    LISTERNING_TO_FILE_RECEIVE_CONTENT,
     DISABLE_DRAGABLE_FLAT,
     ENABLE_DRAGABLE_FLAT,
     NODE_CUT
 } from './action-types';
 
+
+
 export const flatInitialState = {
+  key: null,
+  ref: null,
+  content: null
+}
+
+
+
+export function flatReducer(state = flatInitialState, action) {
+}
+
+
+export const flatsInitialState = {
   ref: null,
   filesRef: [],
   content: null,
+
+  files: {},
   flatIsDragable: false,
   cut: null,
 };
 
-export function flatReducer(state = flatInitialState, action) {
+
+export function flatsReducer(state = flatsInitialState, action) {
 
   switch (action.type) {
-    case START_LISTERNING_TO_FLAT: // only when init
-      //return Object.assign({}, state, action.payload)
-      return Object.assign({}, state, 
-                           {content: Object.assign({}, state.content, action.payload.content),
-                           ref: action.payload.ref}
-                          )
-
-    case START_LISTERNING_TO_FILE:
-      return Object.assign({}, state, 
-                           {filesRef: state.filesRef.indexOf(action.payload)>-1?state.filesRef:[...state.filesRef, action.payload]})
-
-    case LISTERNING_TO_FILE_RECEIVE_CONTENT:
-      return Object.assign({}, state, {content: Object.assign({}, state.content, action.payload.content )})
+    case START_LISTERNING_TO_FLAT: // add  a new to listening 
+      return Object.assign({}, state, {files: Object.assign({}, state.files, {[action.payload.key]: action.payload})})
 
     case DISABLE_DRAGABLE_FLAT: 
       return Object.assign({}, state, {flatIsDragable:false})

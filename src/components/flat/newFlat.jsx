@@ -220,7 +220,7 @@ export class Newflat extends React.Component {
   }
 
   componentDidMount(){
-    const {enableDragableFlat, disableDragableFlat} = this.props
+    const {enableDragableFlat, disableDragableFlat } = this.props
 
     document.body.addEventListener("keydown", (ev)=>{
       console.log()
@@ -238,36 +238,59 @@ export class Newflat extends React.Component {
 
   // check id if avaliable in the root ref
   componentWillReceiveProps(nextProps) {
-    const {flat, params, startRegisterListeners, startListeningToFiles} = nextProps
+    const {flat, params, startListening} = nextProps
     //not find in then root ref, check files
-    if (flat.content && !flat.content[params.id]){
-      if (flat.filesRef.indexOf(params.id)<0){
-        console.log('listening to files!')
-        startListeningToFiles(params.id)
-      }
+    
+    let allContent = []
+    Object.keys(flat.files).map(i=>(allContent = Object.assign({}, allContent, flat.files[i].content)))
+    if (!flat.files[params.id] && !allContent[params.id]){
+      startListening(params.id)
     }
 
+    console.log(allContent)
+    let l = 0;
+    Object.keys(allContent).forEach(i=>{
+      let node = allContent[i]
+      if (node.children){
+        let lc = node.children.length
+        l = l+lc
+        if(node.layout){
+          l = l+lc*5
+        }
+      }
+      l = l+3 //content & key & current
+    })
+
+    console.log('length is: ', l)
   }
+
 
   render(){
     const {flat, params, nodeCut, nodePaste } = this.props
-    if (flat.content){
-      //console.log(params.id)
-      //console.log('new:', flat.content, flat.content[params.id])
-    }
+
+    let allContent = []
+    let _ref;
+    Object.keys(flat.files).map(i=>{
+      //search and get ref
+      if (flat.files[i].content[params.id]){
+        _ref = flat.files[i].ref
+      }
+
+      allContent = Object.assign({}, allContent, flat.files[i].content)
+    })
 
     return (
       <Col>
         <Col md={12}>
-          {(flat.content && flat.content[params.id]) ?  (<Node 
+          {(Object.keys(allContent).length) && allContent[params.id] ?  (<Node 
              flatIsDragable={flat.flatIsDragable}
              nodeUpdateMd={this.nodeUpdateMd}
              nodeCut={nodeCut}
              nodePaste={nodePaste}
              isRoot={true} 
-             content={flat.content} 
-             _ref={flat.ref}
-             _key={params.id}/>):"loading"}
+             content={allContent} 
+             _ref={_ref}
+             _key={params.id?params.id:"root"}/>):"loading"}
         </Col>
       </Col>
     )

@@ -1,7 +1,5 @@
 import {
   START_LISTERNING_TO_FLAT,
-  START_LISTERNING_TO_FILE,
-  LISTERNING_TO_FILE_RECEIVE_CONTENT,
   DISABLE_DRAGABLE_FLAT,
   ENABLE_DRAGABLE_FLAT,
   NODE_CUT
@@ -116,49 +114,43 @@ export function nodeCreateChild(key) {
 }
 
 
-
-
-export function startListeningToFiles(key){
-  return (dispatch, getstate) => {
-    const { auth, firebase, flat } = getstate();
-
-    let rootref = firebase.tree.child(auth.userRef+"/files/"+key)
-
-    dispatch({
-      type: START_LISTERNING_TO_FILE,
-      payload: key,
-    })
-
-    console.log("start listening to file:", key)
-    rootref.on("value", (snap)=>{
-      dispatch({
-        type: LISTERNING_TO_FILE_RECEIVE_CONTENT,
-        payload: {
-          ref: rootref, 
-          content: snap.val(),
-        }
-      })
-    })
-  }
-}
-
-
-export function startListening(){
-  console.log('startListening')
+export function startListening(key){
+  console.log('startListening:', key)
   return (dispatch, getstate) => {
     const { auth, firebase } = getstate();
 
     console.log('user ref is :', auth.userRef)
-    let rootref = firebase.tree.child(auth.userRef+"/flats/")
+    let rootref = firebase.tree.child(auth.userRef+"/flats/"+key)
 
-    console.log(rootref)
+    //console.log(rootref)
     rootref.on("value", (snap)=>{
       console.log('get value!')
+      let content = snap.val()
+
+
+      //calculate length
+      let l = 0;
+      Object.keys(content).forEach(i=>{
+        let node = content[i]
+        if (node.children){
+          let lc = node.children.length
+          l = l+lc
+          if(node.layout){
+            l = l+lc*5
+          }
+        }
+        l = l+3 //content & key & current
+      })
+
+
+
       dispatch({
         type: START_LISTERNING_TO_FLAT,
         payload: {
+          key: key,
           ref: rootref, 
-          content: snap.val(),
+          content: content,
+          l: l,
         }
       })
     })
