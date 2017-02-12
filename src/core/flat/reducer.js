@@ -5,7 +5,10 @@ import {
     RECEIVE_NODES_FAILED,
     UPDATE_REF,
 
-
+    //single node actions
+    CREATE_NODE,
+    UPDATE_NODE,
+    DELETE_NODE,
     START_LISTERNING_TO_FLAT,
     DISABLE_DRAGABLE_FLAT,
     ENABLE_DRAGABLE_FLAT,
@@ -40,6 +43,17 @@ export function flatReducer(state = flatInitialState, action) {
       return Object.assign({}, state, {ref: action.payload})
 
 
+
+    case CREATE_NODE:
+      return Object.assign({}, state, {content: Object.assign({}, state.content, action.payload)})
+
+    case UPDATE_NODE:
+      return Object.assign({}, state, {content: Object.assign({}, state.content, action.payload)})
+
+    case DELETE_NODE:
+      let deleted = Object.assign({}, state.content)
+      delete(deleted[action.payload.key])
+      return Object.assign({}, state, {content: deleted})
 
     case START_LISTERNING_TO_FLAT: // only when init
       return Object.assign({}, state, action.payload)

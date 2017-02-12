@@ -3,6 +3,9 @@ import {
   RECEIVE_NODES_FINISHED,
   UPDATE_REF,
 
+  UPDATE_NODE,
+  CREATE_NODE,
+
 
   START_LISTERNING_TO_FLAT,
   DISABLE_DRAGABLE_FLAT,
@@ -71,11 +74,54 @@ export function createRoot(){
 
 
 export function nodeUpdate(payload) {
+  console.log("nodeUpdate", payload)
   return (dispatch, getState) => {
     const { flat, firebase } = getState();
     flat.ref.child(payload.key).update(payload)
+
+    dispatch({
+      type: UPDATE_NODE,
+      payload: {[payload.key]:payload}
+    })
   }
 }
+
+export function nodeCreate(payload) {
+
+  console.log("nodeCreate", payload)
+  return (dispatch, getState) => {
+    const { flat, firebase } = getState();
+
+    //add rollback
+    flat.ref.child(payload.key).set(payload, (err)=>{
+      console.log(err)
+    })
+
+    dispatch({
+      type: CREATE_NODE,
+      payload: {[payload.key]:payload}
+    })
+
+  }
+}
+
+export function nodeDelete(payload){
+  return (dispatch, getState) => {
+    const { flat, firebase } = getState();
+    flat.ref.child(payload.key).remove()
+
+    dispatch({
+      type: DELETE_NODE,
+      payload: {payload}
+    })
+  }
+
+}
+
+
+
+
+
 
 //node with markdown
 export function nodeUpdateMd(payload) {
@@ -102,6 +148,7 @@ export function nodeUpdateLayout(key, payload) {
       w:i.w,
       h:i.h, }
     ))
+    //dispatch(nodeUpdate({key: key, layout:newlayout}))
     flat.ref.child(key).update({layout: newlayout})
   }
 }
@@ -179,6 +226,9 @@ export function startListening(){
     get(rootRef, null, 10)
 
 
+    //rootRef.on('child_added', (snap)=>{
+    //  console.log(snap.val())
+    //})
 
     /*
     rootRef.on("value", (snap)=>{
