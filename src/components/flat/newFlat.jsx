@@ -12,7 +12,7 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive);
 import Textarea from 'react-textarea-autosize';
 
 import {createChildNode, createBrotherNode, nodeDelete} from 'utils/firebase'
-import {getUniqueId, initLayout, getRootPath} from 'utils/node2'
+import {getParent, getUniqueId, initLayout, getRootPath} from 'utils/node2'
 
 import 'styles/flat.less'
 import 'styles/react-grid-layout.css'
@@ -21,7 +21,8 @@ import 'styles/react-resizable.css'
 export class Node extends React.Component {
   constructor(props){
     super(props)
-    const { nodeUpdate, nodeUpdateLayout, nodeUpdateMd} = this.props
+    const { nodeCreate, nodeUpdate, nodeUpdateLayout, nodeUpdateMd} = this.props
+    this.nodeCreate = nodeCreate.bind(this)
     this.nodeUpdate = nodeUpdate.bind(this)
     this.nodeUpdateMd = nodeUpdateMd.bind(this)
     this.updateContent = this.updateContent.bind(this)
@@ -46,18 +47,18 @@ export class Node extends React.Component {
   }
 
   updateContent(evt){
-    const {_key} = this.props
+    const {_key, content} = this.props
     const val = evt.target.value
     if (val.indexOf("_md_")>-1){
       this.nodeUpdateMd({key: _key, content: val, md: val.slice(4)})
     }else{
-      this.nodeUpdate({key: _key, content: val})
+      this.nodeUpdate(Object.assign({}, content[_key], {content: val}))
     }
   }
 
   updateFold(fold){
-    const {_key} = this.props
-    this.nodeUpdate({key: _key, fold: fold})
+    const {_key, content} = this.props
+    this.nodeUpdate(Object.assign({}, content[_key], {fold: fold}))
   }
 
   drag(_key){
@@ -84,24 +85,47 @@ export class Node extends React.Component {
       //bind keys
       ReactDOM.findDOMNode(this._input).addEventListener("keydown", (event)=>{
         const keyName = event.key;
-        const { _ref, content, _key, nodeCut, nodePaste } = this.props
+        const { _ref, content, _key, nodeCreate, nodeUpdate, nodeCut, nodePaste } = this.props
 
         if (keyName === 'Control') {
           return;
         }
 
-        //console.log(event)
+        console.log(event)
         
         if (event.ctrlKey && keyName=="Enter") {
-		      createBrotherNode( _ref, content, _key, {key: getUniqueId(), content:""}, console.log )
+          let nNodeKey = getUniqueId()
+          console.log("nodeCreate is :", nodeCreate)
+          nodeCreate({key: nNodeKey, content:""})
+
+          let parent = getParent( _key, content)
+          if (parent){
+            let children = content[parent].children
+            console.log("children:", children)
+            children?children.splice(children.indexOf(_key)+1,0,nNodeKey):[nNodeKey]
+            console.log("children:", children)
+            console.log("parent", parent)
+            nodeUpdate( Object.assign({}, content[parent], { children: children}))
+          }
+
         }
 
-        if (event.ctrlKey && keyName=="Delete") {
+        if (event.ctrlKey && (keyName=="Delete" || keyName=="\\")) {
 		      nodeDelete( _ref, content, _key)
         }
 
         if (event.shiftKey && keyName=="Enter"){
-		      createChildNode( _ref, content, _key, {key: getUniqueId(), content:""}, console.log )
+
+          let nNodeKey = getUniqueId()
+          console.log("nodeCreate is :", nodeCreate)
+          nodeCreate({key: nNodeKey, content:""})
+
+          let cNode = content[_key]
+          nodeUpdate(
+            Object.assign({}, cNode, { children: cNode.children?[...cNode.children, nNodeKey]:[nNodeKey] })
+          )
+
+		      //createChildNode( _ref, content, _key, {key: getUniqueId(), content:""}, console.log )
           event.preventDefault()
         }
 
@@ -129,6 +153,7 @@ export class Node extends React.Component {
                <Node 
                  flatIsDragable={flatIsDragable}
                  className="tree-node-wrap"
+                 nodeCreate={this.nodeCreate}
                  nodeUpdate={this.nodeUpdate}
                  nodeUpdateMd={this.nodeUpdateMd}
                  nodeCut={nodeCut}
@@ -149,6 +174,10 @@ export class Node extends React.Component {
         return <span><a href={'#/newflat/'+i+'/'}>{content[i].content!=""||content[i].content?content[i].content:"_"}</a> > </span>
       })
 
+
+      const layouts={lg:content[_key].layout?content[_key].layout:initLayout(content, _key)}
+      console.log("layouts is:", layouts)
+
       return <div >
             <div>
               <span className='bread-crumbs'>{paths}</span>
@@ -159,7 +188,7 @@ export class Node extends React.Component {
                 value={content[_key].content?content[_key].content:""}/>
             </div>
             <ResponsiveReactGridLayout 
-            layouts={{lg:content[_key].layout?content[_key].layout:initLayout(content, _key)}}
+            layouts={layouts}
             breakpoints={{lg: 1200,  xs: 480}}
             cols={{lg: 48, xs: 1 }}
             rowHeight={30} 
@@ -207,8 +236,9 @@ export class Node extends React.Component {
 export class Newflat extends React.Component {
   constructor(props){
     super(props)
-    const { createRoot, nodeUpdate, nodeUpdateMd, nodeUpdateLayout } = this.props
+    const { createRoot, nodeCreate, nodeUpdate, nodeUpdateMd, nodeUpdateLayout } = this.props
     this.createRoot = createRoot.bind(this)
+    this.nodeCreate = nodeCreate.bind(this)
     this.nodeUpdate = nodeUpdate.bind(this)
     this.nodeUpdateMd = nodeUpdateMd.bind(this)
     this.nodeUpdateLayout = nodeUpdateLayout.bind(this)
@@ -239,6 +269,7 @@ export class Newflat extends React.Component {
         <Col md={12}>
           {flat.state == "FINISHED"?  (<Node 
              flatIsDragable={flat.flatIsDragable}
+             nodeCreate={this.nodeCreate}
              nodeUpdate={this.nodeUpdate}
              nodeUpdateMd={this.nodeUpdateMd}
              nodeCut={nodeCut}
