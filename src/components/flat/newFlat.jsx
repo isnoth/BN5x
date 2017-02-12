@@ -237,7 +237,7 @@ export class Newflat extends React.Component {
     return (
       <Col>
         <Col md={12}>
-          {flat.content?  (<Node 
+          {flat.state == "FINISHED"?  (<Node 
              flatIsDragable={flat.flatIsDragable}
              nodeUpdate={this.nodeUpdate}
              nodeUpdateMd={this.nodeUpdateMd}

@@ -1,4 +1,9 @@
 import {
+  RECEIVE_NODES_CONTENT,
+  RECEIVE_NODES_FINISHED,
+  UPDATE_REF,
+
+
   START_LISTERNING_TO_FLAT,
   DISABLE_DRAGABLE_FLAT,
   ENABLE_DRAGABLE_FLAT,
@@ -115,12 +120,67 @@ export function nodeCreateChild(key) {
 
 
 
+//get all nodes and listening to delete/update/add
 export function startListening(){
   return (dispatch, getState) => {
     const { auth, firebase } = getState();
 
     let rootRef = firebase.tree.child(auth.userRef+"/flats/")
+    dispatch({
+      type: UPDATE_REF,
+      payload: rootRef,
+    })
 
+    function get(ref, key, limit ){
+      console.log("get!")
+      console.log(ref)
+       if (key){
+         ref.orderByKey().startAt(key).limitToFirst(limit).once("value",function(snapshot){
+             let val = snapshot.val()
+             console.log(val)
+             dispatch({
+               type: RECEIVE_NODES_CONTENT,
+               payload: val,
+             })
+             let keys = Object.keys(val).sort()
+             //keys.forEach(i=>console.log(i))
+             if (keys.length==limit){
+               get(ref, keys[limit-1], limit)
+             }else{
+               dispatch({
+                 type: RECEIVE_NODES_FINISHED,
+               })
+             }
+         })
+       }else{
+         ref.orderByKey().limitToFirst(limit).once("value",function(snapshot){
+             let val = snapshot.val()
+             console.log(val)
+             dispatch({
+               type: RECEIVE_NODES_CONTENT,
+               payload: val,
+             })
+    
+             let keys = Object.keys(val).sort()
+             //keys.forEach(i=>console.log(i))
+             if (keys.length==limit){
+               get(ref, keys[limit-1], limit)
+             }else{
+               dispatch({
+                 type: RECEIVE_NODES_FINISHED,
+               })
+             }
+         })
+       }
+    }
+
+
+    //get till last
+    get(rootRef, null, 10)
+
+
+
+    /*
     rootRef.on("value", (snap)=>{
       dispatch({
         type: START_LISTERNING_TO_FLAT,
@@ -130,6 +190,7 @@ export function startListening(){
         }
       })
     })
+    */
   }
 }
 
