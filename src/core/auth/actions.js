@@ -37,7 +37,7 @@ export function registerAuthListener(){
 
         dispatch(mdActions.getFileList()) //for markdown
         dispatch(flatActions.startListening())
-        setTimeout( dispatch(filesActions.getFiles()), 1000)
+        //setTimeout( dispatch(filesActions.getFiles()), 1000)
 
       }else{
         dispatch({
