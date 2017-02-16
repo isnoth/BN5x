@@ -77,8 +77,6 @@ export function login(pra) {
           type: SIGN_IN_SUCCESS,
         })
 
-        dispatch(mdActions.getFileList()) //for markdown
-
       } else {
         console.log("auth failed,msg:",err);
         dispatch({
