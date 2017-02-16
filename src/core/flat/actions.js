@@ -140,7 +140,7 @@ export function nodeUpdateLayout(key, payload) {
   return (dispatch, getState) => {
     const { flat, firebase } = getState();
 
-    const newlayout = payload.map(i=>(
+    const newlayout = payload.layout.map(i=>(
       {
       i:i.i,
       x:i.x,
@@ -148,8 +148,8 @@ export function nodeUpdateLayout(key, payload) {
       w:i.w,
       h:i.h, }
     ))
-    //dispatch(nodeUpdate({key: key, layout:newlayout}))
-    flat.ref.child(key).update({layout: newlayout})
+    payload.layout = newlayout
+    dispatch(nodeUpdate(payload))
   }
 }
 

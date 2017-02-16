@@ -76,8 +76,8 @@ export class Node extends React.Component {
   }
 
   layoutChange(current, all){
-    const {_key} = this.props
-    this.nodeUpdateLayout(_key, current)
+    const {_key, content} = this.props
+    this.nodeUpdateLayout(_key, Object.assign({}, content[_key], {layout:current}))
   }
 
   componentDidMount(){
