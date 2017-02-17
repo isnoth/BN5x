@@ -5,6 +5,7 @@ import {
 
   UPDATE_NODE,
   CREATE_NODE,
+  DELETE_NODE,
 
 
   START_LISTERNING_TO_FLAT,
@@ -147,21 +148,29 @@ export function nodeCreate(payload) {
 export function nodeDelete(payload){
   return (dispatch, getState) => {
     const { flat, firebase } = getState();
-    flat.ref.child(payload.key).remove()
 
-    dispatch({
-      type: DELETE_NODE,
-      payload: {payload}
+    const cNodeKey = payload
+    const obj = flat.content
+
+    let parentKey = getParent(cNodeKey, obj)
+    let parent = obj[parentKey]
+    let deleteList = nodeGetAllChildrenId(cNodeKey, obj)
+    deleteList.push(cNodeKey)
+    let children = obj[parentKey].children
+    children.splice(children.indexOf(cNodeKey), 1)
+    parent.children = children
+
+    dispatch(nodeUpdate(parent))
+
+    deleteList.forEach(i=>{
+      flat.ref.child(i).remove()
+      dispatch({
+        type: DELETE_NODE,
+        payload: {key: i}
+      })
     })
   }
-
 }
-
-
-
-
-
-
 //node with markdown
 export function nodeUpdateMd(payload) {
   return (dispatch, getState) => {
@@ -260,26 +269,9 @@ export function startListening(){
        }
     }
 
-
     //get till last
     get(rootRef, null, 10)
 
-
-    //rootRef.on('child_added', (snap)=>{
-    //  console.log(snap.val())
-    //})
-
-    /*
-    rootRef.on("value", (snap)=>{
-      dispatch({
-        type: START_LISTERNING_TO_FLAT,
-        payload: {
-          ref: rootRef, 
-          content: snap.val(),
-        }
-      })
-    })
-    */
   }
 }
 

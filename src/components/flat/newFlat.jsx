@@ -11,7 +11,7 @@ import {Responsive, WidthProvider} from 'react-grid-layout';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 import Textarea from 'react-textarea-autosize';
 
-import {createChildNode, createBrotherNode, nodeDelete} from 'utils/firebase'
+import {createChildNode, createBrotherNode } from 'utils/firebase'
 import {getParent, getUniqueId, initLayout, getRootPath} from 'utils/node2'
 
 import 'styles/flat.less'
@@ -21,9 +21,10 @@ import 'styles/react-resizable.css'
 export class Node extends React.Component {
   constructor(props){
     super(props)
-    const { nodeCreate, nodeUpdate, nodeUpdateLayout, nodeUpdateMd} = this.props
+    const { nodeCreate, nodeUpdate, nodeDelete, nodeUpdateLayout, nodeUpdateMd} = this.props
     this.nodeCreate = nodeCreate.bind(this)
     this.nodeUpdate = nodeUpdate.bind(this)
+    this.nodeDelete = nodeDelete.bind(this)
     this.nodeUpdateMd = nodeUpdateMd.bind(this)
     this.updateContent = this.updateContent.bind(this)
     this.layoutChange = this.layoutChange.bind(this)
@@ -111,7 +112,7 @@ export class Node extends React.Component {
         }
 
         if (event.ctrlKey && (keyName=="Delete" || keyName=="\\")) {
-		      nodeDelete( _ref, content, _key)
+		      this.nodeDelete(_key)
         }
 
         if (event.shiftKey && keyName=="Enter"){
@@ -155,6 +156,7 @@ export class Node extends React.Component {
                  className="tree-node-wrap"
                  nodeCreate={this.nodeCreate}
                  nodeUpdate={this.nodeUpdate}
+                 nodeDelete={this.nodeDelete}
                  nodeUpdateMd={this.nodeUpdateMd}
                  nodeCut={nodeCut}
                  nodePaste={nodePaste}
@@ -236,12 +238,14 @@ export class Node extends React.Component {
 export class Newflat extends React.Component {
   constructor(props){
     super(props)
-    const { createRoot, nodeCreate, nodeUpdate, nodeUpdateMd, nodeUpdateLayout } = this.props
+    const { createRoot, nodeCreate, nodeUpdate, nodeDelete, nodeUpdateMd, nodeUpdateLayout } = this.props
     this.createRoot = createRoot.bind(this)
     this.nodeCreate = nodeCreate.bind(this)
     this.nodeUpdate = nodeUpdate.bind(this)
+    this.nodeDelete = nodeDelete.bind(this)
     this.nodeUpdateMd = nodeUpdateMd.bind(this)
     this.nodeUpdateLayout = nodeUpdateLayout.bind(this)
+    
   }
 
   componentDidMount(){
@@ -274,6 +278,7 @@ export class Newflat extends React.Component {
              nodeUpdateMd={this.nodeUpdateMd}
              nodeCut={nodeCut}
              nodePaste={nodePaste}
+             nodeDelete={this.nodeDelete}
              nodeUpdateLayout={this.nodeUpdateLayout}
              isRoot={true} 
              content={flat.content} 
