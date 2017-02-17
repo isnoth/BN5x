@@ -15,6 +15,7 @@ import {
 
 import { getUniqueId } from "utils/node"
 import { pasteNode } from "utils/firebase"
+import { getParent, nodeGetAllChildrenId} from "utils/node2"
 
 
 
@@ -31,7 +32,45 @@ export function nodePaste(key){
   return (dispatch, getState) => {
     const { flat, firebase , auth} = getState();
     let rootRef = firebase.tree.child(auth.userRef+"/flats/")
-    pasteNode(rootRef, flat.content, flat.cut, key )
+
+    let ref = rootRef
+    let obj = flat.content
+    let cid = flat.cut
+    let nid = key
+
+    let cNode = obj[cid]
+    let nParent = getParent( nid, obj)
+    let cParent = getParent( cid, obj)
+
+    if (cParent==nParent && 
+        (obj[nParent].children.indexOf(nid)-obj[nParent].children.indexOf(cid) == -1)){
+      console.log("1.2 -> 1.1")
+    }else if(nodeGetAllChildrenId(cid, obj).indexOf(nid) > -1){
+      console.log('1.1 -> 1')
+    }else{
+      //cut
+      let currentchildren = obj[cParent].children 
+      currentchildren.splice(currentchildren.indexOf(cid),1) //!!!!
+
+      //paste
+      let newchildren = obj[nParent].children 
+      let index = newchildren.indexOf(nid)+1
+      let _index =-( newchildren.length - index)
+
+      if ((index == newchildren.length) || (newchildren.length == 1)){
+        newchildren = [...newchildren, cid]
+      }else{
+        newchildren = [...newchildren.slice(0,index), cid, ...newchildren.slice(_index)]
+      }
+
+      if (nParent != cParent){
+        dispatch(nodeUpdate(Object.assign({}, obj[cParent], {children: currentchildren})))
+      }
+  
+      dispatch(nodeUpdate(Object.assign({}, obj[nParent], {children: newchildren})))
+
+    }
+
   }
 }
 
