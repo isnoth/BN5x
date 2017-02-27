@@ -270,7 +270,7 @@ export function startListening(){
     }
 
     //get till last
-    get(rootRef, null, 10)
+    get(rootRef, null, 100)
 
   }
 }

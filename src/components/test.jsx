@@ -1,7 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { connect } from 'react-redux'; 
 import {Panel} from "react-bootstrap"
-import mousetrap from "mousetrap"
+
+
+import { flatActions } from 'core/flat';
+import { getUniqueId } from "utils/node"
 
 //import { BarChart } from 'react-d3';
 
@@ -14,6 +18,59 @@ class TestApp extends React.Component {
     //ReactDOM.findDOMNode(this.refs.nameInput).focus(function(){
     //  console.log('focus')
     //}); 
+    const{nodeCreate} = this.props
+    this.onChange = this.onChange.bind(this)
+    this.nodeCreate = nodeCreate.bind(this)
+  }
+
+  onChange(event){
+    console.log(event)
+    let reader = new FileReader();
+    let file = event.target.files[0];
+    let url = reader.readAsText(file);
+    //console.log(url) // Would see a path?
+    //console.log(file)
+
+    reader.onloadend = () => {
+      console.log(reader.result)
+      let obj = JSON.parse(reader.result)
+      console.log(obj)
+
+
+
+      let id1 = getUniqueId()
+      let id2 = getUniqueId()
+      console.log(id1, id2)
+
+      //change firstChild
+      let first = obj['first_node']
+      if (first){
+        first.id = id1
+        delete(obj['first_node'])
+        obj[id1] = first
+      }
+
+      //change root
+      let root = obj.root
+      delete(obj.root)
+
+      if (first){
+        //update children
+        root.children.splice(root.children.indexOf('first_node'), 1, id1)
+      }
+      root.id = id2
+      obj[id2] = root
+      console.log(obj)
+
+
+      //upload
+      Object.keys(obj).forEach((_key, index)=>{
+        setTimeout(_=>{
+          this.nodeCreate(Object.assign({}, obj[_key], {key: _key}))
+        }, index*1000*1)
+      })
+
+    }
   }
 
   render(){
@@ -23,31 +80,7 @@ class TestApp extends React.Component {
     );
     const panelsInstance = (
       <div>
-        <Panel id='testPanel' header={title}>
-          Panel content
-        </Panel>
-        <Panel id='testPanel2' header={title} bsStyle="primary">
-          Panel content
-        </Panel>
-        <div>
-          <input name="two" value="Won't focus" />
-          <input name="one" ref="nameInput" value="will focus"/>
-        </div>
-        
-        {/*
-        <Panel header={title} bsStyle="success">
-          Panel content
-        </Panel>
-        <Panel header={title} bsStyle="info">
-          Panel content
-        </Panel>
-        <Panel header={title} bsStyle="warning">
-          Panel content
-        </Panel>
-        <Panel header={title} bsStyle="danger">
-          Panel content
-        </Panel>
-        */}
+        <input type="file" id="myFile" onChange={this.onChange.bind(this)}/>
       </div>
     );
     
@@ -116,4 +149,4 @@ class TestBarChart extends React.Component {
 
 
 
-export default TestBarChart 
+export default connect( state=>({flat: state.flat}), flatActions)(TestApp);

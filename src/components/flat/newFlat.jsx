@@ -140,6 +140,23 @@ export class Node extends React.Component {
           nodePaste(_key)
           event.preventDefault()
         }
+
+        if (event.ctrlKey && event.shiftKey && keyName=="!"){
+          //console.log("nodePaste")
+          nodeUpdate( Object.assign({}, content[_key], { styles: 1}))
+
+          event.preventDefault()
+        }
+
+        if (event.ctrlKey && event.shiftKey && keyName=="~"){
+          //console.log("nodePaste")
+          nodeUpdate( Object.assign({}, content[_key], { styles: 0}))
+
+          event.preventDefault()
+        }
+
+
+
       });
     }
   }
@@ -169,6 +186,15 @@ export class Node extends React.Component {
     }):null
 
     let nodeUrl = content[_key].md?("/md/"+content[_key].md):("/newflat/"+_key)
+    
+    //const textAreastyle = content[_key].styles? "tree-textarea node-text-"+content[_key].styles: "tree-textarea"
+    let textAreastyle = "tree-textarea "
+    if (content[_key].styles){
+      textAreastyle += "node-text-" + content[_key].styles +' '
+    }
+    if (content[_key].icon){
+      textAreastyle += "node-icon-" + content[_key].icon +' '
+    }
 
     if (isRoot){
       let paths = getRootPath(_key, content).map((i)=>{
@@ -223,7 +249,7 @@ export class Node extends React.Component {
                     ></div>:null}
                 </div>
                 <Textarea 
-                  className='tree-textarea'
+                  className={textAreastyle}
                   ref={(c) => this._input = c}
                   onChange={this.updateContent} 
                   value={content[_key].content?content[_key].content:""}/>
