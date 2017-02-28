@@ -5,7 +5,7 @@ import { hashHistory } from 'react-router'
 
 import { flatActions } from 'core/flat';
 
-import {Col, Glyphicon} from 'react-bootstrap'
+import {Col, Glyphicon, ButtonGroup, Button} from 'react-bootstrap'
 var ReactGridLayout = require('react-grid-layout');
 import {Responsive, WidthProvider} from 'react-grid-layout';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
@@ -14,9 +14,21 @@ import Textarea from 'react-textarea-autosize';
 import {createChildNode, createBrotherNode } from 'utils/firebase'
 import {getParent, getUniqueId, initLayout, getRootPath} from 'utils/node2'
 
+
+
 import 'styles/flat.less'
 import 'styles/react-grid-layout.css'
 import 'styles/react-resizable.css'
+
+class NodeMenu extends React.Component {
+  render(){
+    return <div className="node-menu">
+      <button>btn1 </button>
+      <button>btn2 </button>
+    </div>
+
+  }
+}
 
 export class Node extends React.Component {
   constructor(props){
@@ -35,16 +47,31 @@ export class Node extends React.Component {
     this.setHot = this.setHot.bind(this)
     this.clearHot = this.clearHot.bind(this)
     this.state={
-      hot: false
+      hot: false,
+      showMenu: false,
+      menuTmr: null
     }
   }
 
   setHot(ev){
     this.setState({hot:true})
+    this.state.menuTmr = setTimeout(()=>{
+      this.setState({showMenu: true});
+      console.log("tmr set");
+      this.state.menuTmr = null;
+    }, 500)
   }
+
 
   clearHot(ev){
     this.setState({hot: false})
+    this.setState({showMenu: false});
+
+    if (this.state.menuTmr){
+      clearTimeout(this.state.menuTmr)
+      this.state.menuTmr = null;
+      console.log("tmr clear")
+    }
   }
 
   updateContent(evt){
@@ -204,7 +231,7 @@ export class Node extends React.Component {
 
 
       const layouts={lg:content[_key].layout?content[_key].layout:initLayout(content, _key)}
-      console.log("layouts is:", layouts)
+      //console.log("layouts is:", layouts)
 
       return <div >
             <div>
@@ -231,13 +258,11 @@ export class Node extends React.Component {
       return <div 
               onDragOver={this.allowDrop} 
               className="tree-node-wrap">
-              <div
-                onDrop={this.drop.bind(this, _key)}  
-              >
+              <div 
+              onMouseLeave={this.clearHot}
+              onDrop={this.drop.bind(this, _key)}>
                 <div className="node-btn-wrap" 
-                  onMouseEnter ={this.setHot}
-                  onMouseLeave={this.clearHot}
-                >
+                  onMouseEnter ={this.setHot}>
                   {content[_key].children?<Glyphicon className="fold" glyph={content[_key].fold?"plus":"minus"} onClick={this.updateFold.bind(this, !content[_key].fold)}/>:null}
                   <div className={content[_key].md?"dot-md":"dot"}></div>
                   {content[_key].fold?<div className="dot-fold" ></div>:null}
@@ -247,6 +272,7 @@ export class Node extends React.Component {
                     onDragStart={this.drag.bind(this, _key)}
                     onClick={()=>{ hashHistory.push(nodeUrl) }} 
                     ></div>:null}
+                    {this.state.showMenu?<NodeMenu/>:null}
                 </div>
                 <Textarea 
                   className={textAreastyle}
