@@ -56,15 +56,16 @@ var CountDown = React.createClass({
   
   render: function(){
     var remain = this.state.timer - this.state.count
+    const remainText = Math.floor(remain/60) +' : '+  remain%60
 
     return (
       <div> 
         <Col xs={4}>
           <ProgressBar active 
             now={(this.state.count/ this.state.timer)*100}
+            label={remainText}
           />
         </Col>
-        {Math.floor(remain/60)} : {remain%60}
       </div>
     )
   },
@@ -190,4 +191,6 @@ class CountDownWithInput extends React.Component {
   }
 }
 
-export default connect(state =>({pomodario: state.pomodario}), Object.assign({}, pomodarioActions))(CountDownWithInput);
+
+export default CountDown
+//export default connect(state =>({pomodario: state.pomodario}), Object.assign({}, pomodarioActions))(CountDownWithInput);

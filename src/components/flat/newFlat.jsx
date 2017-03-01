@@ -10,10 +10,10 @@ var ReactGridLayout = require('react-grid-layout');
 import {Responsive, WidthProvider} from 'react-grid-layout';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 import Textarea from 'react-textarea-autosize';
+import CountDown from 'components/pomodario/pomodario'
 
 import {createChildNode, createBrotherNode } from 'utils/firebase'
 import {getParent, getUniqueId, initLayout, getRootPath} from 'utils/node2'
-
 
 
 import 'styles/flat.less'
@@ -21,10 +21,42 @@ import 'styles/react-grid-layout.css'
 import 'styles/react-resizable.css'
 
 class NodeMenu extends React.Component {
+  constructor(props){
+    super(props)
+    const {nodeUpdate, node} = this.props
+    this.nodeUpdate = nodeUpdate
+    this.node = node
+    this.styles = [
+      {"background-color": "#b53f45", "color":"#fff", "border-radius":"4px"},
+      {"background-color": "#acba9d", "color":"#fff", "border-radius":"4px"},
+      {"background-color": "#eed19c", "color":"#fff", "border-radius":"4px"},
+      {"background-color": "#efb28c", "color":"#fff", "border-radius":"4px"},
+      {"background-color": "#749db9", "color":"#fff", "border-radius":"4px"},
+      {"background-color": "#fff", "color":"#000", "border-radius":"4px"},
+      {'text-decoration':'line-through', "color":"rgb(186, 186, 186)"},
+    ]
+    this.updateIcon = this.updateIcon.bind(this)
+  }
+
+  updateIcon(index){
+    this.nodeUpdate(Object.assign({}, this.node, {style: this.styles[index]}))
+  }
+
+  togglePomodario(pomodario){
+    this.nodeUpdate(Object.assign({}, this.node, {pomodario: !pomodario, type: "POMODARIO"}))
+  }
+
   render(){
+    const {node} = this.props
     return <div className="node-menu">
-      <button>btn1 </button>
-      <button>btn2 </button>
+      <button onClick={this.updateIcon.bind(this, 6)}> complete </button>
+      <button onClick={this.togglePomodario.bind(this, node.pomodario)}> pomodario </button>
+      <span className="color-item" onClick={this.updateIcon.bind(this, 0)} style={this.styles[ 0 ]}> </span>
+      <span className="color-item" onClick={this.updateIcon.bind(this, 1)} style={this.styles[ 1 ]}> </span>
+      <span className="color-item" onClick={this.updateIcon.bind(this, 2)} style={this.styles[ 2 ]}> </span>
+      <span className="color-item" onClick={this.updateIcon.bind(this, 3)} style={this.styles[ 3 ]}> </span>
+      <span className="color-item" onClick={this.updateIcon.bind(this, 4)} style={this.styles[ 4 ]}> </span>
+      <span className="color-item" onClick={this.updateIcon.bind(this, 5)} style={this.styles[ 5 ]}> </span>
     </div>
 
   }
@@ -118,8 +150,7 @@ export class Node extends React.Component {
         if (keyName === 'Control') {
           return;
         }
-
-        console.log(event)
+        //console.log(event)
         
         if (event.ctrlKey && keyName=="Enter") {
           let nNodeKey = getUniqueId()
@@ -255,33 +286,34 @@ export class Node extends React.Component {
           </ResponsiveReactGridLayout>
         </div>
     }else{
-      return <div 
-              onDragOver={this.allowDrop} 
-              className="tree-node-wrap">
-              <div 
-              onMouseLeave={this.clearHot}
-              onDrop={this.drop.bind(this, _key)}>
-                <div className="node-btn-wrap" 
-                  onMouseEnter ={this.setHot}>
-                  {content[_key].children?<Glyphicon className="fold" glyph={content[_key].fold?"plus":"minus"} onClick={this.updateFold.bind(this, !content[_key].fold)}/>:null}
-                  <div className={content[_key].md?"dot-md":"dot"}></div>
-                  {content[_key].fold?<div className="dot-fold" ></div>:null}
-                  {this.state.hot?<div 
-                    draggable='true' 
-                    className="dot-hot" 
-                    onDragStart={this.drag.bind(this, _key)}
-                    onClick={()=>{ hashHistory.push(nodeUrl) }} 
-                    ></div>:null}
-                    {this.state.showMenu?<NodeMenu/>:null}
-                </div>
-                <Textarea 
-                  className={textAreastyle}
-                  ref={(c) => this._input = c}
-                  onChange={this.updateContent} 
-                  value={content[_key].content?content[_key].content:""}/>
-              </div>
-            {content[_key].fold?null:children}
-        </div>
+
+      const btnWrap = (
+        <div className="node-btn-wrap" onMouseEnter ={this.setHot}>
+          {content[_key].children?<Glyphicon className="fold" glyph={content[_key].fold?"plus":"minus"} onClick={this.updateFold.bind(this, !content[_key].fold)}/>:null}
+          <div className={content[_key].md?"dot-md":"dot"}></div>
+          {content[_key].fold?<div className="dot-fold" ></div>:null}
+          {this.state.hot?<div 
+            draggable='true' 
+            className="dot-hot" 
+            onDragStart={this.drag.bind(this, _key)}
+            onClick={()=>{ hashHistory.push(nodeUrl) }} 
+            ></div>:null}
+            {this.state.showMenu?<NodeMenu nodeUpdate={this.nodeUpdate} node={content[_key]}/>:null}
+        </div>)
+
+      return (<div onDragOver={this.allowDrop} className="tree-node-wrap">
+          <div onMouseLeave={this.clearHot} onDrop={this.drop.bind(this, _key)}>
+            {btnWrap}
+            <Textarea 
+              className={textAreastyle}
+              style={content[_key].style}
+              ref={(c) => this._input = c}
+              onChange={this.updateContent} 
+              value={content[_key].content?content[_key].content:""}/>
+            {content[_key].pomodario?<CountDown timer={60*25} onTimeOut={()=>{console.log("timeout")}}/>:""}
+          </div>
+          {content[_key].fold?null:children}
+        </div>)
 
     }
   }
