@@ -3,6 +3,7 @@ import {
   CLOSE_LOGIN_MODAL,
   OPEN_MODIFY_FILE_MODAL,
   CLOSE_MODIFY_FILE_MODAL,
+  TOGGLE_POMODARIO,
 } from './action-types';
 
 export function openLoginModal() {
@@ -37,6 +38,14 @@ export function closeModifyFilenameModal() {
     dispatch({
       type: CLOSE_MODIFY_FILE_MODAL,
       //payload: {key: key}
+    })
+  }
+}
+
+export function togglePomodario() {
+  return (dispatch, getState) => {
+    dispatch({
+      type: TOGGLE_POMODARIO,
     })
   }
 }

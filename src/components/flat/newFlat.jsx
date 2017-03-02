@@ -10,7 +10,11 @@ var ReactGridLayout = require('react-grid-layout');
 import {Responsive, WidthProvider} from 'react-grid-layout';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 import Textarea from 'react-textarea-autosize';
+
 import Flat from './flat'
+import CountDown from 'components/pomodario/pomodario'
+
+import { uiActions } from 'core/ui';
 
 import {createChildNode, createBrotherNode } from 'utils/firebase'
 import {getParent, getUniqueId, initLayout, getRootPath} from 'utils/node2'
@@ -23,18 +27,18 @@ import 'styles/react-resizable.css'
 export class Newflat extends React.Component {
   constructor(props){
     super(props)
-    const { createRoot, nodeCreate, nodeUpdate, nodeDelete, nodeUpdateMd, nodeUpdateLayout } = this.props
+    const { createRoot, nodeCreate, nodeUpdate, nodeDelete, nodeUpdateMd, nodeUpdateLayout, togglePomodario } = this.props
     this.createRoot = createRoot.bind(this)
     this.nodeCreate = nodeCreate.bind(this)
     this.nodeUpdate = nodeUpdate.bind(this)
     this.nodeDelete = nodeDelete.bind(this)
     this.nodeUpdateMd = nodeUpdateMd.bind(this)
     this.nodeUpdateLayout = nodeUpdateLayout.bind(this)
-    
+    this.togglePomodario = togglePomodario.bind(this)
   }
 
   render(){
-    const {flat, params, nodeCut, nodePaste, enableDragableFlat, disableDragableFlat } = this.props
+    const {flat, params, nodeCut, nodePaste, enableDragableFlat, disableDragableFlat, ui } = this.props
 
 
     return (
@@ -55,10 +59,13 @@ export class Newflat extends React.Component {
              content={flat.content} 
              _ref={flat.ref}
              _key={params.id}/>):"loading"}
+             <div onClick={this.togglePomodario}>
+               {ui.showPomodario?<CountDown timer={60*25} onTimeOut={()=>{console.log("timeout")}}/>:"not show"}
+             </div>
         </Col>
       </Col>
     )
   }
 }
 
-export default connect( state=>({flat: state.flat}), flatActions)(Newflat);
+export default connect( state=>({flat: state.flat, ui: state.uiState}), Object.assign(flatActions, uiActions))(Newflat);

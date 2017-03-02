@@ -10,12 +10,11 @@ var ReactGridLayout = require('react-grid-layout');
 import {Responsive, WidthProvider} from 'react-grid-layout';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 import {getParent, getUniqueId, initLayout, getRootPath} from 'utils/node2'
-import CountDown from 'components/pomodario/pomodario'
 
 import Node from './node'
 import Tree from './tree'
 
-export class Flat extends Node{
+export default class Flat extends Node{
   constructor(props){
     super(props)
     const { nodeCreate, nodeUpdate, nodeDelete, nodeUpdateLayout, nodeUpdateMd} = this.props
@@ -117,4 +116,3 @@ export class Flat extends Node{
   }
 }
 
-export default Flat
