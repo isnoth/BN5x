@@ -45,6 +45,8 @@ export default class Flat extends Node{
   componentDidMount(){
     const {enableDragableFlat, disableDragableFlat} = this.props
 
+    this.bindKeys()
+
     document.body.addEventListener("keydown", (ev)=>{
       console.log()
       if (ev.keyCode=="18"){
@@ -57,6 +59,7 @@ export default class Flat extends Node{
         disableDragableFlat()
       }
     })
+
   }
 
   render(){

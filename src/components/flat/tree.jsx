@@ -87,7 +87,9 @@ export class Tree extends Node{
     this.nodeUpdateLayout(_key, Object.assign({}, content[_key], {layout:current}))
   }
 
-  componentDidMount(){ }
+  componentDidMount(){
+    this.bindKeys()
+  }
 
   render(){
     const { flatIsDragable, isRoot, content, _key, _ref,  nodeCut, nodePaste, nodeUpdateLayout } = this.props

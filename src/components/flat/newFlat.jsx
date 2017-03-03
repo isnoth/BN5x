@@ -12,7 +12,7 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive);
 import Textarea from 'react-textarea-autosize';
 
 import Flat from './flat'
-import CountDown from 'components/pomodario/pomodario'
+import PomodarioBar from 'components/pomodario/pomodario'
 
 import { uiActions } from 'core/ui';
 
@@ -60,7 +60,7 @@ export class Newflat extends React.Component {
              _ref={flat.ref}
              _key={params.id}/>):"loading"}
              <div onClick={this.togglePomodario}>
-               {ui.showPomodario?<CountDown timer={60*25} onTimeOut={()=>{console.log("timeout")}}/>:"not show"}
+               {ui.showPomodario?<PomodarioBar timer={60*5} onTimeOut={()=>{console.log("timeout")}}/>:"not show"}
              </div>
         </Col>
       </Col>

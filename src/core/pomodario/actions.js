@@ -8,7 +8,9 @@ CHANGE_REF_KEY,
 SET_REF_OBJ,
 POMODARIO_START,
 POMODARIO_DONE,
-GET_POMODARIOS_SUCCESS
+GET_POMODARIOS_SUCCESS,
+
+POMODARIO_SET_VALUE,
 
 } from "./action-types"
 
@@ -137,3 +139,14 @@ export function changeQid(qid) {
   dispatch(changePomodarioKey(qid))
 }
 
+
+
+//------------
+export function setPomodarioMeta(node) { 
+  return (dispatch) => {
+    dispatch({
+      type: POMODARIO_SET_VALUE,
+      payload: node,
+    })
+  }
+}

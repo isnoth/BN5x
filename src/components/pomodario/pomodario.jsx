@@ -60,9 +60,10 @@ var CountDown = React.createClass({
 
     return (
       <div> 
-        <Col xs={4}>
+        <Col md={12}>
           <ProgressBar active 
             now={(this.state.count/ this.state.timer)*100}
+            bsStyle={this.state.count>=this.state.timer?"danger":"success"}
             label={remainText}
           />
         </Col>
@@ -192,5 +193,34 @@ class CountDownWithInput extends React.Component {
 }
 
 
-export default CountDown
-//export default connect(state =>({pomodario: state.pomodario}), Object.assign({}, pomodarioActions))(CountDownWithInput);
+class PomodarioBar extends React.Component {
+  constructor(props){
+    super(props)
+    const {timer, onTimeOut} = this.props
+    this.timer = timer;
+    this.onTimeOut = onTimeOut
+  }
+
+  timeOut(){
+    this.onTimeOut()
+  }
+
+
+  render(){
+    const {timer, onTimeOut,  pomodario} = this.props
+    console.log(pomodario.data)
+    const content = pomodario.data?pomodario.data.content:""
+
+    return<div>
+      <Col md={8}>
+        <CountDown timer={this.timer} onTimeOut={this.timeOut} />
+      </Col>
+      <Col md={4}>
+        {content}
+      </Col>
+    </div>
+  }
+}
+
+//export default CountDown
+export default connect(state =>({pomodario: state.pomodario}), Object.assign({}, pomodarioActions))(PomodarioBar);

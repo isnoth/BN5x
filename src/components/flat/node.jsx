@@ -38,7 +38,8 @@ export class Node extends React.Component {
     this.nodeUpdateLayout(_key, Object.assign({}, content[_key], {layout:current}))
   }
 
-  componentDidMount(){
+
+  bindKeys(){
     if (this._input){
       //bind keys
       ReactDOM.findDOMNode(this._input).addEventListener("keydown", (event)=>{

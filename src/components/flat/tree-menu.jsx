@@ -1,10 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { connect } from 'react-redux'; 
 
-export default class TreeMenu extends React.Component {
+import { uiActions } from 'core/ui';
+import { pomodarioActions } from 'core/pomodario';
+
+class TreeMenu extends React.Component {
   constructor(props){
     super(props)
-    const {nodeUpdate, node} = this.props
+    const {nodeUpdate, node, togglePomodario, setPomodarioMeta} = this.props
     this.nodeUpdate = nodeUpdate
     this.node = node
     this.styles = [
@@ -17,21 +21,25 @@ export default class TreeMenu extends React.Component {
       {'text-decoration':'line-through', "color":"rgb(186, 186, 186)"},
     ]
     this.updateIcon = this.updateIcon.bind(this)
+    this.togglePomodario = togglePomodario.bind(this, node)
+    this.setPomodarioMeta = setPomodarioMeta.bind(this)
+    this.startPomodario = this.startPomodario.bind(this)
   }
 
   updateIcon(index){
     this.nodeUpdate(Object.assign({}, this.node, {style: this.styles[index]}))
   }
 
-  togglePomodario(pomodario){
-    this.nodeUpdate(Object.assign({}, this.node, {pomodario: !pomodario, type: "POMODARIO"}))
+  startPomodario(){
+    this.togglePomodario()
+    this.setPomodarioMeta(this.node)
   }
 
   render(){
     const {node} = this.props
     return <div className="node-menu">
       <button onClick={this.updateIcon.bind(this, 6)}> complete </button>
-      <button onClick={this.togglePomodario.bind(this, node.pomodario)}> pomodario </button>
+      <button onClick={this.startPomodario}> pomodario </button>
       <span className="color-item" onClick={this.updateIcon.bind(this, 0)} style={this.styles[ 0 ]}> </span>
       <span className="color-item" onClick={this.updateIcon.bind(this, 1)} style={this.styles[ 1 ]}> </span>
       <span className="color-item" onClick={this.updateIcon.bind(this, 2)} style={this.styles[ 2 ]}> </span>
@@ -43,4 +51,4 @@ export default class TreeMenu extends React.Component {
   }
 }
 
-
+export default connect(state =>({ui: state.uiState}), Object.assign(uiActions, pomodarioActions))(TreeMenu);
