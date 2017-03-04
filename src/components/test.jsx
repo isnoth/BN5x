@@ -23,6 +23,22 @@ class TestApp extends React.Component {
     this.nodeCreate = nodeCreate.bind(this)
   }
 
+
+  saveData (data, fileName){
+    var a = document.createElement("a");
+    document.body.appendChild(a);
+    a.style = "display: none";
+    var json = JSON.stringify(data),
+        blob = new Blob([json], {type: "octet/stream"}),
+        url = window.URL.createObjectURL(blob);
+    console.log(url)
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }
+
+
   onChange(event){
     console.log(event)
     let reader = new FileReader();
@@ -75,12 +91,17 @@ class TestApp extends React.Component {
 
   render(){
 
+    const {flat} = this.props
+    const now = new Date()
+    const fileName = "bn5x_" + (now.getMonth()+1)+'_' +now.getDate()+".json"
     const title = (
       <h3>Panel title</h3>
     );
     const panelsInstance = (
       <div>
         <input type="file" id="myFile" onChange={this.onChange.bind(this)}/>
+
+        <button onClick={()=>this.saveData(flat.content, fileName)}>backup</button>
       </div>
     );
     

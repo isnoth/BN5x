@@ -38,7 +38,7 @@ export class Newflat extends React.Component {
   }
 
   render(){
-    const {flat, params, nodeCut, nodePaste, enableDragableFlat, disableDragableFlat, ui } = this.props
+    const {flat, params, nodeCut, nodePaste, enableDragableFlat, disableDragableFlat, ui, pomodario } = this.props
 
 
     return (
@@ -60,7 +60,7 @@ export class Newflat extends React.Component {
              _ref={flat.ref}
              _key={params.id}/>):"loading"}
              <div onClick={this.togglePomodario}>
-               {ui.showPomodario?<PomodarioBar timer={60*5} onTimeOut={()=>{console.log("timeout")}}/>:"not show"}
+               {ui.showPomodario?<PomodarioBar timer={pomodario.duration} onTimeOut={()=>{console.log("timeout")}}/>:"not show"}
              </div>
         </Col>
       </Col>
@@ -68,4 +68,4 @@ export class Newflat extends React.Component {
   }
 }
 
-export default connect( state=>({flat: state.flat, ui: state.uiState}), Object.assign(flatActions, uiActions))(Newflat);
+export default connect( state=>({flat: state.flat, ui: state.uiState, pomodario: state.pomodario}), Object.assign(flatActions, uiActions))(Newflat);

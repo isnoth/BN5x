@@ -12,7 +12,9 @@ const initialState={
   state: "EDIT",
   startTime: null,
   endTime: null,
-  data: {}
+  data: {},
+
+  duration: 60*25
 }
 
 export function pomodarioReducer(currentstate=initialState, action) {

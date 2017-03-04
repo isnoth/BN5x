@@ -15,9 +15,9 @@ export class Tree extends Node{
   constructor(props){
     super(props)
     const { nodeCreate, nodeUpdate, nodeDelete, nodeUpdateLayout, nodeUpdateMd} = this.props
-    this.nodeCreate = nodeCreate.bind(this)
-    this.nodeUpdate = nodeUpdate.bind(this)
-    this.nodeDelete = nodeDelete.bind(this)
+    //this.nodeCreate = nodeCreate.bind(this)
+    //this.nodeUpdate = nodeUpdate.bind(this)
+    //this.nodeDelete = nodeDelete.bind(this)
     this.nodeUpdateMd = nodeUpdateMd.bind(this)
     this.updateContent = this.updateContent.bind(this)
     this.drag = this.drag.bind(this)
@@ -143,12 +143,12 @@ export class Tree extends Node{
     return (<div onDragOver={this.allowDrop} className="tree-node-wrap">
         <div onMouseLeave={this.clearHot} onDrop={this.drop.bind(this, _key)}>
           {btnWrap}
-          <Textarea 
+          <div contentEditable
             className={textAreastyle}
             style={content[_key].style}
             ref={(c) => this._input = c}
             onChange={this.updateContent} 
-            value={content[_key].content?content[_key].content:""}/>
+            > {content[_key].content?content[_key].content:""} </div>
           {content[_key].pomodario?<CountDown timer={60*25} onTimeOut={()=>{console.log("timeout")}}/>:""}
         </div>
         {content[_key].fold?null:children}
