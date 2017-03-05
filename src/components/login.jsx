@@ -1,6 +1,5 @@
 import React, { Component, PropTypes} from 'react';
 import ReactDOM from "react-dom"
-import { treeActions } from 'core/tree';
 import { connect } from 'react-redux';
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
@@ -45,4 +44,4 @@ class Login extends React.Component {
 }
 
 
-export default connect(state => ({}), Object.assign({}, treeActions ))(Login); 
+export default connect(state => ({}), )(Login); 

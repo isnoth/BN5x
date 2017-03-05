@@ -7,7 +7,6 @@ import {Glyphicon, Button, Input, FormGroup, FormControl, ControlLabel} from "re
 import ReactMarkdown from 'react-markdown'
 import Textarea from 'react-textarea-autosize';
 
-import { treeActions } from 'core/tree';
 import { mdActions } from 'core/md';
 
 import 'styles/md.less'
@@ -104,7 +103,6 @@ class Md extends React.Component {
 
 export default connect(state =>({
     auth: state.auth,
-    tree: state.files2,
     firebase: state.firebase,
     md: state.md
-  }),  Object.assign({}, treeActions, mdActions))(Md);
+  }),  Object.assign({},  mdActions))(Md);

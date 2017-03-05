@@ -14,7 +14,6 @@ POMODARIO_SET_VALUE,
 
 } from "./action-types"
 
-import { articleActions } from 'core/article';
 
 
 export function startRegisterListeners(fileId) {
@@ -95,7 +94,7 @@ export function pushPomodarioToServer(){
 
 export function setPomodarioDone(qid, type){
   return (dispatch, getState) => {
-    const {firebase, pomodario, auth, articles } = getState();
+    const {firebase, pomodario, auth } = getState();
     const pomodarioRef = firebase.tree.child(auth.userRef+"pomodarios/")
     console.log("pomodarioRef: ", qid)
     if (pomodario.refkey != null){
@@ -129,7 +128,7 @@ export function toglePomodario(qid, type){
 
 export function onTimeOut(qid, type) { 
   console.log('disp=>', qid)
-  dispatch(articleActions.testPlusTomato(qid, {type: C.ACTUAL_POMODARIO_PLUS}));
+  //dispatch(articleActions.testPlusTomato(qid, {type: C.ACTUAL_POMODARIO_PLUS}));
   dispatch(toglePomodarioOff(qid, "reserve"));
   dispatch(setPomodarioDone(qid, type));
 }

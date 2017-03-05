@@ -10,7 +10,6 @@ import {
   CREATE_USER_ONGOING
 } from './action-types';
 import { uiActions } from 'core/ui';
-import { filesActions } from 'core/files';
 import { mdActions } from 'core/md';
 import { flatActions } from 'core/flat';
 

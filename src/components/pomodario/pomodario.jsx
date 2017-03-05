@@ -1,9 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { pomodarioActions } from 'core/pomodario';
-import articleActions from 'core/article/actions';
-//import actions from '../../actions';
-import C from 'core/article/action-types';
 import {
   SHOW_POMODARIO,
   HIDE_POMODARIO,
