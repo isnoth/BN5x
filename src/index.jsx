@@ -10,6 +10,15 @@ import { FIREBASE_URL } from './config';
 import { POMODARIO_FIREBASE_URL } from './config';
 import configureStore from './store';
 
+// disable warnning from editor see https://github.com/facebook/draft-js/issues/53                                                                                                              
+console.error = (function() {
+  var error = console.error
+  return function(exception) {
+    if ((exception + '').indexOf('Warning: A component is `contentEditable`') != 0) {                                                                                                           
+        error.apply(console, arguments)
+    }
+  }
+})()
 
 const store = configureStore({
   firebase: {

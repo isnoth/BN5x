@@ -19,7 +19,7 @@ export class Tree extends Node{
     //this.nodeUpdate = nodeUpdate.bind(this)
     //this.nodeDelete = nodeDelete.bind(this)
     this.nodeUpdateMd = nodeUpdateMd.bind(this)
-    this.updateContent = this.updateContent.bind(this)
+    //this.updateContent = this.updateContent.bind(this)
     this.drag = this.drag.bind(this)
     this.drop = this.drop.bind(this)
     this.allowDrop = this.allowDrop.bind(this)
@@ -56,6 +56,12 @@ export class Tree extends Node{
   updateContent(evt){
     const {_key, content} = this.props
     const val = evt.target.value
+
+    this._input.style.height = "1px";
+    evt.target.style.height  = evt.target.scrollHeight+ "px"
+    evt.preventDefault()
+
+    //console.log(val)
     if (val.indexOf("_md_")>-1){
       this.nodeUpdateMd({key: _key, content: val, md: val.slice(4)})
     }else{
@@ -89,6 +95,8 @@ export class Tree extends Node{
 
   componentDidMount(){
     this.bindKeys()
+    this._input.style.height = "1px";
+    this._input.style.height  = this._input.scrollHeight+ "px"
   }
 
   render(){
@@ -143,12 +151,12 @@ export class Tree extends Node{
     return (<div onDragOver={this.allowDrop} className="tree-node-wrap">
         <div onMouseLeave={this.clearHot} onDrop={this.drop.bind(this, _key)}>
           {btnWrap}
-          <div contentEditable
+          <textarea
             className={textAreastyle}
             style={content[_key].style}
             ref={(c) => this._input = c}
             onChange={this.updateContent} 
-            > {content[_key].content?content[_key].content:""} </div>
+            value={content[_key].content?content[_key].content:""} />
           {content[_key].pomodario?<CountDown timer={60*25} onTimeOut={()=>{console.log("timeout")}}/>:""}
         </div>
         {content[_key].fold?null:children}
