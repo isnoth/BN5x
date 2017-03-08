@@ -256,14 +256,28 @@ export function startListening(){
                payload: val,
              })
     
-             let keys = Object.keys(val).sort()
-             //keys.forEach(i=>console.log(i))
-             if (keys.length==limit){
-               get(ref, keys[limit-1], limit)
-             }else{
+
+
+             console.log(val)
+
+             if (val === null){ //when init
+
+
+               dispatch( nodeCreate({key:"root", content:"root"}))
+
                dispatch({
                  type: RECEIVE_NODES_FINISHED,
                })
+             }else{
+               let keys = Object.keys(val).sort()
+               //keys.forEach(i=>console.log(i))
+               if (keys.length==limit){
+                 get(ref, keys[limit-1], limit)
+               }else{
+                 dispatch({
+                   type: RECEIVE_NODES_FINISHED,
+                 })
+               }
              }
          })
        }
