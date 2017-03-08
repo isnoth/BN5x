@@ -11,15 +11,15 @@ import Node from './node'
 import TreeMenu from './tree-menu'
 import CountDown from 'components/pomodario/pomodario'
 
-export class Tree extends Node{
+class Tree extends React.Component{
   constructor(props){
     super(props)
     const { nodeCreate, nodeUpdate, nodeDelete, nodeUpdateLayout, nodeUpdateMd} = this.props
-    //this.nodeCreate = nodeCreate.bind(this)
-    //this.nodeUpdate = nodeUpdate.bind(this)
-    //this.nodeDelete = nodeDelete.bind(this)
+    this.nodeCreate = nodeCreate.bind(this)
+    this.nodeUpdate = nodeUpdate.bind(this)
+    this.nodeDelete = nodeDelete.bind(this)
     this.nodeUpdateMd = nodeUpdateMd.bind(this)
-    //this.updateContent = this.updateContent.bind(this)
+    this.updateContent = this.updateContent.bind(this)
     this.drag = this.drag.bind(this)
     this.drop = this.drop.bind(this)
     this.allowDrop = this.allowDrop.bind(this)
@@ -53,12 +53,20 @@ export class Tree extends Node{
     }
   }
 
+  //calulate auto height of input
+  resizeHeight(el){
+    if (el){
+      el.style.height = "1px";
+      el.style.height  = el.scrollHeight+ "px"
+    }
+  }
+
+
   updateContent(evt){
     const {_key, content} = this.props
-    const val = evt.target.value
 
-    this._input.style.height = "1px";
-    evt.target.style.height  = evt.target.scrollHeight+ "px"
+    this.resizeHeight(evt.target)
+    const val = evt.target.value
     evt.preventDefault()
 
     //console.log(val)
@@ -95,8 +103,85 @@ export class Tree extends Node{
 
   componentDidMount(){
     this.bindKeys()
-    this._input.style.height = "1px";
-    this._input.style.height  = this._input.scrollHeight+ "px"
+    this.resizeHeight(this._input)
+  }
+
+  bindKeys(){
+    if (this._input){
+      //bind keys
+      ReactDOM.findDOMNode(this._input).addEventListener("keydown", (event)=>{
+        const keyName = event.key;
+        const { _ref, content, _key, nodeCreate, nodeUpdate, nodeCut, nodePaste } = this.props
+
+        if (keyName === 'Control') {
+          return;
+        }
+
+        // nodeCreateNebour
+        if (event.ctrlKey && keyName=="Enter") {
+          let nNodeKey = getUniqueId()
+          console.log("nodeCreate is :", nodeCreate)
+          nodeCreate({key: nNodeKey, content:""})
+
+          let parent = getParent( _key, content)
+          if (parent){
+            let children = content[parent].children
+            console.log("children:", children)
+            children?children.splice(children.indexOf(_key)+1,0,nNodeKey):[nNodeKey]
+            console.log("children:", children)
+            console.log("parent", parent)
+            nodeUpdate( Object.assign({}, content[parent], { children: children}))
+          }
+
+        }
+
+        if (event.ctrlKey && (keyName=="Delete" || keyName=="\\")) {
+		      this.nodeDelete(_key)
+        }
+
+        if (event.shiftKey && keyName=="Enter"){
+
+          let nNodeKey = getUniqueId()
+          console.log("nodeCreate is :", nodeCreate)
+          nodeCreate({key: nNodeKey, content:""})
+
+          let cNode = content[_key]
+          nodeUpdate(
+            Object.assign({}, cNode, { children: cNode.children?[...cNode.children, nNodeKey]:[nNodeKey] })
+          )
+
+		      //createChildNode( _ref, content, _key, {key: getUniqueId(), content:""}, console.log )
+          event.preventDefault()
+        }
+
+        if (event.ctrlKey && event.shiftKey && keyName=="X"){
+          //console.log("nodeCut")
+          nodeCut(_key)
+        }
+
+        if (event.ctrlKey && event.shiftKey && keyName=="V"){
+          //console.log("nodePaste")
+          nodePaste(_key)
+          event.preventDefault()
+        }
+
+        if (event.ctrlKey && event.shiftKey && keyName=="!"){
+          //console.log("nodePaste")
+          nodeUpdate( Object.assign({}, content[_key], { styles: 1}))
+
+          event.preventDefault()
+        }
+
+        if (event.ctrlKey && event.shiftKey && keyName=="~"){
+          //console.log("nodePaste")
+          nodeUpdate( Object.assign({}, content[_key], { styles: 0}))
+
+          event.preventDefault()
+        }
+
+
+      });
+    }
   }
 
   render(){
@@ -124,15 +209,6 @@ export class Tree extends Node{
     }):null
 
     let nodeUrl = content[_key].md?("/md/"+content[_key].md):("/newflat/"+_key)
-    
-    //const textAreastyle = content[_key].styles? "tree-textarea node-text-"+content[_key].styles: "tree-textarea"
-    let textAreastyle = "tree-textarea "
-    if (content[_key].styles){
-      textAreastyle += "node-text-" + content[_key].styles +' '
-    }
-    if (content[_key].icon){
-      textAreastyle += "node-icon-" + content[_key].icon +' '
-    }
 
     const btnWrap = (
       <div className="node-btn-wrap" onMouseEnter ={this.setHot}>
@@ -152,7 +228,7 @@ export class Tree extends Node{
         <div onMouseLeave={this.clearHot} onDrop={this.drop.bind(this, _key)}>
           {btnWrap}
           <textarea
-            className={textAreastyle}
+            className="tree-textarea"
             style={content[_key].style}
             ref={(c) => this._input = c}
             onChange={this.updateContent} 

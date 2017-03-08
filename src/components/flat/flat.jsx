@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux'; 
 import { hashHistory } from 'react-router'
 
@@ -11,10 +10,12 @@ import {Responsive, WidthProvider} from 'react-grid-layout';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 import {getParent, getUniqueId, initLayout, getRootPath} from 'utils/node2'
 
+import {IntervalEnhance} from "./keyboard"
+
 import Node from './node'
 import Tree from './tree'
 
-export default class Flat extends Node{
+class Flat extends React.Component {
   constructor(props){
     super(props)
     const { nodeCreate, nodeUpdate, nodeDelete, nodeUpdateLayout, nodeUpdateMd} = this.props
@@ -45,7 +46,7 @@ export default class Flat extends Node{
   componentDidMount(){
     const {enableDragableFlat, disableDragableFlat} = this.props
 
-    this.bindKeys()
+    this.props.bindKeys(this._input)
 
     document.body.addEventListener("keydown", (ev)=>{
       console.log()
@@ -119,3 +120,4 @@ export default class Flat extends Node{
   }
 }
 
+export default IntervalEnhance(Flat)

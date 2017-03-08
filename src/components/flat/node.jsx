@@ -49,8 +49,8 @@ export class Node extends React.Component {
         if (keyName === 'Control') {
           return;
         }
-        //console.log(event)
-        
+
+        // nodeCreateNebour
         if (event.ctrlKey && keyName=="Enter") {
           let nNodeKey = getUniqueId()
           console.log("nodeCreate is :", nodeCreate)
