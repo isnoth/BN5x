@@ -14,7 +14,7 @@ import {
   NODE_CUT
 } from './action-types';
 
-import { getUniqueId } from "utils/node"
+import { getUniqueId } from "utils/node2"
 import { pasteNode } from "utils/firebase"
 import { getParent, nodeGetAllChildrenId} from "utils/node2"
 
@@ -201,15 +201,18 @@ export function nodeUpdateLayout(key, payload) {
   }
 }
 
-export function nodeCreateChild(key) {
+export function nodeCreateChild(_key) {
   return (dispatch, getState) => {
     const { flat, firebase } = getState();
-    let list = flat.list
+    let content = flat.content
 
-    const newNode = {
-      key: getUniqueId()
-    }
-    createChildNode(key, list, flat.ref, newNode )
+    const nNodeKey = getUniqueId()
+    dispatch(nodeCreate({key: nNodeKey, content:""}))
+
+    let cNode = content[_key]
+    dispatch(nodeUpdate(
+      Object.assign({}, cNode, { children: cNode.children?[...cNode.children, nNodeKey]:[nNodeKey] })
+    ))
   }
 }
 

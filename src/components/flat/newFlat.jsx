@@ -27,9 +27,10 @@ import 'styles/react-resizable.css'
 export class Newflat extends React.Component {
   constructor(props){
     super(props)
-    const { createRoot, nodeCreate, nodeUpdate, nodeDelete, nodeUpdateMd, nodeUpdateLayout, togglePomodario } = this.props
+    const { createRoot, nodeCreate, nodeCreateChild, nodeUpdate, nodeDelete, nodeUpdateMd, nodeUpdateLayout, togglePomodario } = this.props
     this.createRoot = createRoot.bind(this)
     this.nodeCreate = nodeCreate.bind(this)
+    this.nodeCreateChild = nodeCreateChild.bind(this)
     this.nodeUpdate = nodeUpdate.bind(this)
     this.nodeDelete = nodeDelete.bind(this)
     this.nodeUpdateMd = nodeUpdateMd.bind(this)
@@ -49,6 +50,7 @@ export class Newflat extends React.Component {
              enableDragableFlat={enableDragableFlat}
              disableDragableFlat={disableDragableFlat}
              nodeCreate={this.nodeCreate}
+             nodeCreateChild={this.nodeCreateChild}
              nodeUpdate={this.nodeUpdate}
              nodeUpdateMd={this.nodeUpdateMd}
              nodeCut={nodeCut}

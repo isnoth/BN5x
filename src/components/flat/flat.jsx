@@ -18,14 +18,19 @@ import Tree from './tree'
 class Flat extends React.Component {
   constructor(props){
     super(props)
-    const { nodeCreate, nodeUpdate, nodeDelete, nodeUpdateLayout, nodeUpdateMd} = this.props
+    const { nodeCreate, nodeCreateChild, nodeUpdate, nodeDelete, nodeUpdateLayout, nodeUpdateMd} = this.props
     this.nodeCreate = nodeCreate.bind(this)
+    this.nodeCreateChild = nodeCreateChild.bind(this)
     this.nodeUpdate = nodeUpdate.bind(this)
     this.nodeDelete = nodeDelete.bind(this)
     this.nodeUpdateMd = nodeUpdateMd.bind(this)
     this.updateContent = this.updateContent.bind(this)
     this.layoutChange = this.layoutChange.bind(this)
     this.nodeUpdateLayout = nodeUpdateLayout.bind(this)
+    this.onResize = this.onResize.bind(this)
+    this.state = {
+      resized: false
+    }
   }
 
   updateContent(evt){
@@ -36,6 +41,10 @@ class Flat extends React.Component {
     }else{
       this.nodeUpdate(Object.assign({}, content[_key], {content: val}))
     }
+  }
+
+  onResize(){
+    this.setState({resized: !this.state.resized})
   }
 
   layoutChange(current, all){
@@ -74,6 +83,7 @@ class Flat extends React.Component {
                  flatIsDragable={flatIsDragable}
                  className="tree-node-wrap"
                  nodeCreate={this.nodeCreate}
+                 nodeCreateChild={this.nodeCreateChild}
                  nodeUpdate={this.nodeUpdate}
                  nodeDelete={this.nodeDelete}
                  nodeUpdateMd={this.nodeUpdateMd}
@@ -83,7 +93,9 @@ class Flat extends React.Component {
                  isRoot={false} 
                  content={content} 
                  _ref={_ref}
-                 _key={i}/>
+                 _key={i}
+                 resized={this.state.resized}
+                 />
              </div>
     }):null
 
@@ -113,6 +125,7 @@ class Flat extends React.Component {
             isDraggable={flatIsDragable}
             isResizable={true}
             onLayoutChange={(current, all)=>{ this.layoutChange( current, all)}}
+            onResizeStop={this.onResize}
           >
           {children}
         </ResponsiveReactGridLayout>

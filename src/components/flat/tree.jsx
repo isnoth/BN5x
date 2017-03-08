@@ -14,8 +14,9 @@ import CountDown from 'components/pomodario/pomodario'
 class Tree extends React.Component{
   constructor(props){
     super(props)
-    const { nodeCreate, nodeUpdate, nodeDelete, nodeUpdateLayout, nodeUpdateMd} = this.props
+    const { nodeCreate, nodeCreateChild, nodeUpdate, nodeDelete, nodeUpdateLayout, nodeUpdateMd, resized} = this.props
     this.nodeCreate = nodeCreate.bind(this)
+    this.nodeCreateChild = nodeCreateChild.bind(this)
     this.nodeUpdate = nodeUpdate.bind(this)
     this.nodeDelete = nodeDelete.bind(this)
     this.nodeUpdateMd = nodeUpdateMd.bind(this)
@@ -28,7 +29,16 @@ class Tree extends React.Component{
     this.state={
       hot: false,
       showMenu: false,
-      menuTmr: null
+      menuTmr: null,
+    }
+    this.resized = resized
+  }
+
+  componentWillReceiveProps(nextProps){
+    const {resized} = nextProps
+    if (this.resized !== resized){
+      this.resizeHeight(this._input)
+      this.resized = resized
     }
   }
 
@@ -60,7 +70,6 @@ class Tree extends React.Component{
       el.style.height  = el.scrollHeight+ "px"
     }
   }
-
 
   updateContent(evt){
     const {_key, content} = this.props
@@ -119,6 +128,8 @@ class Tree extends React.Component{
 
         // nodeCreateNebour
         if (event.ctrlKey && keyName=="Enter") {
+
+
           let nNodeKey = getUniqueId()
           console.log("nodeCreate is :", nodeCreate)
           nodeCreate({key: nNodeKey, content:""})
@@ -140,17 +151,7 @@ class Tree extends React.Component{
         }
 
         if (event.shiftKey && keyName=="Enter"){
-
-          let nNodeKey = getUniqueId()
-          console.log("nodeCreate is :", nodeCreate)
-          nodeCreate({key: nNodeKey, content:""})
-
-          let cNode = content[_key]
-          nodeUpdate(
-            Object.assign({}, cNode, { children: cNode.children?[...cNode.children, nNodeKey]:[nNodeKey] })
-          )
-
-		      //createChildNode( _ref, content, _key, {key: getUniqueId(), content:""}, console.log )
+          this.nodeCreateChild(_key)
           event.preventDefault()
         }
 
@@ -185,7 +186,7 @@ class Tree extends React.Component{
   }
 
   render(){
-    const { flatIsDragable, isRoot, content, _key, _ref,  nodeCut, nodePaste, nodeUpdateLayout } = this.props
+    const { flatIsDragable, isRoot, content, _key, _ref,  nodeCut, nodePaste, nodeUpdateLayout, resized } = this.props
     //console.log(isRoot, content, _key, _ref)
 
     let children = content[_key].children?content[_key].children.map(i=>{
@@ -195,6 +196,7 @@ class Tree extends React.Component{
                  flatIsDragable={flatIsDragable}
                  className="tree-node-wrap"
                  nodeCreate={this.nodeCreate}
+                 nodeCreateChild={this.nodeCreateChild}
                  nodeUpdate={this.nodeUpdate}
                  nodeDelete={this.nodeDelete}
                  nodeUpdateMd={this.nodeUpdateMd}
@@ -204,7 +206,8 @@ class Tree extends React.Component{
                  isRoot={false} 
                  content={content} 
                  _ref={_ref}
-                 _key={i}/>
+                 _key={i}
+                 resized={resized}/ >
              </div>
     }):null
 
