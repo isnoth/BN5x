@@ -14,13 +14,10 @@ class TestApp extends React.Component {
 
   componentDidMount(){
     var that= this
-    Mousetrap.bind('-', function() { console.log(that.props); })
-    //ReactDOM.findDOMNode(this.refs.nameInput).focus(function(){
-    //  console.log('focus')
-    //}); 
-    const{nodeCreate} = this.props
+    const{nodeCreate, nodeUpdate} = this.props
     this.onChange = this.onChange.bind(this)
     this.nodeCreate = nodeCreate.bind(this)
+    this.nodeUpdate = nodeUpdate.bind(this)
   }
 
 
@@ -41,6 +38,7 @@ class TestApp extends React.Component {
 
   onChange(event){
     console.log(event)
+    const {flat} = this.props
     let reader = new FileReader();
     let file = event.target.files[0];
     let url = reader.readAsText(file);
@@ -79,12 +77,24 @@ class TestApp extends React.Component {
       console.log(obj)
 
 
+      //console.log("outside:", this, that)
       //upload
       Object.keys(obj).forEach((_key, index)=>{
         setTimeout(_=>{
           this.nodeCreate(Object.assign({}, obj[_key], {key: _key}))
         }, index*1000*1)
       })
+
+
+      //update root
+      let rootNode = flat.content["root"]
+      if (rootNode){
+        let newNode = Object.assign({}, rootNode, {children: [...rootNode.children, id2]})
+        console.log(newNode)
+        this.nodeUpdate(newNode)
+      }
+
+
 
     }
   }
