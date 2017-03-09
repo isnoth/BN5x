@@ -14,7 +14,7 @@ class NavApp extends React.Component {
 
   render(){
     const {auth, login, logout , openLoginModal, pushToTab, createFile, renameFile,  openModifyFilenameModal, startEditFileName, enableEditLayout, disableEditLayout} = this.props
-    let title = auth.uid?auth.uid:'loading'
+    let title = auth.uid?auth.password.email:'loading'
 
     const navbarInstance = (
       <Navbar inverse>
