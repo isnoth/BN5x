@@ -93,6 +93,7 @@ class Flat extends React.Component {
                  isRoot={false} 
                  content={content} 
                  _ref={_ref}
+                 _parent={_key}
                  _key={i}
                  resized={this.state.resized}
                  />

@@ -188,6 +188,10 @@ class Tree extends React.Component{
   render(){
     const { flatIsDragable, isRoot, content, _key, _ref,  nodeCut, nodePaste, nodeUpdateLayout, resized } = this.props
     //console.log(isRoot, content, _key, _ref)
+    //
+    if (!content[_key]){
+      return <textarea value={"some error occured:"+ this.props._parent+ "->" +_key}></textarea>
+    }
 
     let children = content[_key].children?content[_key].children.map(i=>{
       //must need a div to wrap the Node(for ReactGridLayout!!!)
@@ -207,6 +211,7 @@ class Tree extends React.Component{
                  content={content} 
                  _ref={_ref}
                  _key={i}
+                 _parent={_key}
                  resized={resized}/ >
              </div>
     }):null
