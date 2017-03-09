@@ -106,8 +106,20 @@ class Flat extends React.Component {
     })
 
 
-    const layouts={lg:content[_key].layout?content[_key].layout:initLayout(content, _key)}
-    //console.log("layouts is:", layouts)
+
+    //update layout when width/height = 1
+    let layout = content[_key].layout
+    if (layout){
+      layout.forEach(i=>{
+        if (i.h < 2){
+          i.h = 2
+        }
+        if (i.w <2){
+          i.w = 2
+        }
+      })
+    }
+    const layouts={lg:layout?layout:initLayout(content, _key)}
 
     return <div >
           <div>
