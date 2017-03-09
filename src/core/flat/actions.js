@@ -265,9 +265,9 @@ export function startListening(){
 
              if (val === null){ //when init
 
-
                dispatch( nodeCreate({key:"root", content:"root"}))
-
+               dispatch(nodeCreateChild("root"))
+               dispatch(nodeCreateChild("root"))
                dispatch({
                  type: RECEIVE_NODES_FINISHED,
                })

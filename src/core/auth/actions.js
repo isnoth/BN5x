@@ -13,6 +13,8 @@ import { uiActions } from 'core/ui';
 import { mdActions } from 'core/md';
 import { flatActions } from 'core/flat';
 
+import { hashHistory } from 'react-router'
+
 
 export function registerAuthListener(){
   return (dispatch, getState) => {
@@ -109,6 +111,11 @@ export function createUser(email, password) {
       } else {
         dispatch({type: CREATE_USER_SUCCESS})
         //create user success
+        //
+        dispatch(login({email: email, password: password} ))
+
+        hashHistory.push('/newFlat/root')
+        //init structure of flat
       }
     });
 
