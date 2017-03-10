@@ -49,13 +49,11 @@ class Flat extends React.Component {
 
   layoutChange(current, all){
     const {_key, content} = this.props
-    this.nodeUpdateLayout(_key, Object.assign({}, content[_key], {layout:current}))
+    this.nodeUpdateLayout(_key, Object.assign({}, content[_key], {layouts:all}))
   }
 
   componentDidMount(){
     const {enableDragableFlat, disableDragableFlat} = this.props
-
-    this.props.bindKeys(this._input)
 
     document.body.addEventListener("keydown", (ev)=>{
       console.log()
@@ -105,31 +103,49 @@ class Flat extends React.Component {
       return <span><a href={'#/newflat/'+i+'/'}>{content[i].content!=""||content[i].content?content[i].content:"_"}</a> > </span>
     })
 
+    let layouts = content[_key].layouts
 
+    //console.log("layout is:", layout)
+
+    layouts = layouts?layouts:initLayout(content, _key)
 
     //update layout when width/height = 1
-    let layout = content[_key].layout
-    if (layout){
-      layout.forEach(i=>{
-        if (i.h < 2){
-          i.h = 2
-        }
-        if (i.w <2){
-          i.w = 2
-        }
-      })
+    console.log("layout is:", layouts)
+    if (layouts){
+      if (layouts.lg){
+        layouts.lg.forEach(i=>{
+          if (i.h < 2){
+            i.h = 2
+          }
+          if (i.w <2){
+            i.w = 2
+          }
+        })
+      }
+
+      if (layouts.xs){
+        layouts.xs.forEach(i=>{
+          if (i.h < 2){
+            i.h = 2
+          }
+          if (i.w <2){
+            i.w = 2
+          }
+        })
+      }
     }
-    const layouts={lg:layout?layout:initLayout(content, _key)}
+
+    console.log("layouts is:", layouts)
+
+    //const layouts={lg:layout?layout:initLayout(content, _key)}
 
     return <div >
-          <div>
             <span className='bread-crumbs'>{paths}</span>
-            <Textarea 
+            <textarea 
               ref={(c) => this._input = c}
               className='tree-textarea-root'
               onChange={this.updateContent} 
               value={content[_key].content?content[_key].content:""}/>
-          </div>
           <ResponsiveReactGridLayout 
             layouts={layouts}
             breakpoints={{lg: 1200,  xs: 480}}
@@ -146,4 +162,4 @@ class Flat extends React.Component {
   }
 }
 
-export default IntervalEnhance(Flat)
+export default Flat

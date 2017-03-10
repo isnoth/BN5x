@@ -188,15 +188,28 @@ export function nodeUpdateLayout(key, payload) {
   return (dispatch, getState) => {
     const { flat, firebase } = getState();
 
-    const newlayout = payload.layout.map(i=>(
+    const lg = payload.layouts.lg.map(i=>(
       {
-      i:i.i,
-      x:i.x,
-      y:i.y,
-      w:i.w,
-      h:i.h, }
+        i:i.i,
+        x:i.x,
+        y:i.y,
+        w:i.w,
+        h:i.h, }
     ))
-    payload.layout = newlayout
+
+    const xs = payload.layouts.xs.map(i=>(
+      {
+        i:i.i,
+        x:i.x,
+        y:i.y,
+        w:i.w,
+        h:i.h, }
+    ))
+
+    payload.layouts = {lg: lg, xs: xs}
+
+
+    console.log("nodeUpdate:", payload)
     dispatch(nodeUpdate(payload))
   }
 }

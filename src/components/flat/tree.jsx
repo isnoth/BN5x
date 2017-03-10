@@ -229,7 +229,7 @@ class Tree extends React.Component{
           onDragStart={this.drag.bind(this, _key)}
           onClick={()=>{ hashHistory.push(nodeUrl) }} 
           ></div>:null}
-          {this.state.showMenu?<TreeMenu nodeUpdate={this.nodeUpdate} node={content[_key]}/>:null}
+          <TreeMenu show={this.state.showMenu} nodeUpdate={this.nodeUpdate} node={content[_key]} onMouseBlur={this.clearHot}/>
       </div>)
 
     return (<div onDragOver={this.allowDrop} className="tree-node-wrap">
