@@ -28,7 +28,8 @@ class TreeMenu extends React.Component {
   }
 
   updateIcon(index){
-    this.nodeUpdate(Object.assign({}, this.node, {style: this.styles[index]}))
+    const {node} = this.props
+    this.nodeUpdate(Object.assign({}, node, {style: this.styles[index]}))
   }
 
   startPomodario(){
