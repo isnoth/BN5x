@@ -6,6 +6,7 @@ import {Glyphicon, Button, Input, FormGroup, FormControl, ControlLabel} from "re
 //var ReactMarkdown = require('react-markdown');
 import ReactMarkdown from 'react-markdown'
 import Textarea from 'react-textarea-autosize';
+//var markdown = require( "markdown" ).markdown
 
 import { mdActions } from 'core/md';
 
@@ -62,6 +63,7 @@ class Md extends React.Component {
       header = fnd[0].header
       status = fnd[0].status
     }
+    //const parsedString = markdown.toHTML(content)
 
     const editor = ()=>{
       if (md.onEdit){
@@ -93,7 +95,11 @@ class Md extends React.Component {
             <hr/>
       {editor()}
       <Col className="view" md={5}>
-        {<ReactMarkdown source={content} />}
+        <ReactMarkdown source={content} />
+        {/*<div style={{display: 'inline-block'}}
+        dangerouslySetInnerHTML=
+              {{__html: parsedString}}>
+        </div>*/}
       </Col>
 
     </div>)
