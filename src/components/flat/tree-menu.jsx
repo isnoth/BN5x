@@ -33,8 +33,19 @@ class TreeMenu extends React.Component {
   }
 
   startPomodario(){
-    this.togglePomodario()
-    this.setPomodarioMeta(this.node)
+    const {node, pushPomodarioToServer}  = this.props
+    console.log('startPomodario', node)
+    pushPomodarioToServer({
+      key: node.key,
+      type: 'normal',
+      startTime: new Date().getTime()+300000,
+      endTime: new Date().getTime()+1800000,
+      content: node.content
+    })
+
+
+    //this.togglePomodario()
+    //this.setPomodarioMeta(this.node)
   }
 
   render(){

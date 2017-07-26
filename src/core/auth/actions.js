@@ -12,6 +12,7 @@ import {
 import { uiActions } from 'core/ui';
 import { mdActions } from 'core/md';
 import { flatActions } from 'core/flat';
+import { pomodarioActions } from 'core/pomodario';
 
 import { hashHistory } from 'react-router'
 
@@ -38,6 +39,7 @@ export function registerAuthListener(){
 
         dispatch(mdActions.getFileList()) //for markdown
         dispatch(flatActions.startListening())
+        dispatch(pomodarioActions.startRegisterListeners())
         //setTimeout( dispatch(filesActions.getFiles()), 1000)
 
       }else{
@@ -77,6 +79,9 @@ export function login(pra) {
         dispatch({
           type: SIGN_IN_SUCCESS,
         })
+        setTimeout(()=>{
+          dispatch(pomodarioActions.startRegisterListeners())
+        }, 500)
 
       } else {
         console.log("auth failed,msg:",err);
@@ -84,6 +89,7 @@ export function login(pra) {
           type: SIGN_IN_FAILED,
           payload: err.toString()
         })
+
 
       }
     })

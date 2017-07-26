@@ -59,7 +59,7 @@
     "redux-logger": "^2.6.1",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
-    "vis": "^4.16.1",
+    "vis": "^4.20.0",
     "webpack": "^1.12.14",
     "webpack-dev-server": "^1.14.1",
     "wilddog": "^0.7.0"
@@ -71,6 +71,7 @@
     "react-markdown": "^2.4.2",
     "react-redux": "^4.4.2",
     "react-router": "^2.1.1",
+    "recharts": "^1.0.0-alpha.1",
     "redux": "^3.4.0",
     "redux-thunk": "^2.0.1"
   }

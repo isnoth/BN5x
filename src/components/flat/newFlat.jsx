@@ -13,6 +13,8 @@ import Textarea from 'react-textarea-autosize';
 
 import Flat from './flat'
 import PomodarioBar from 'components/pomodario/pomodario'
+import TestVis from "components/testVis"
+import TestVis2 from "components/testVis2"
 
 import { uiActions } from 'core/ui';
 
@@ -38,6 +40,31 @@ export class Newflat extends React.Component {
     this.togglePomodario = togglePomodario.bind(this)
   }
 
+  componentDidMount(){
+    this.bindKeys()
+  }
+
+  bindKeys(){
+    const {toggleTimeline} = this.props
+
+    console.log('document is', document)
+    document.addEventListener("keydown", (event)=>{
+      console.log('keydown', event.key)
+
+        const keyName = event.key;
+
+        if (keyName === 'Control') {
+          return;
+        }
+
+        if (event.ctrlKey && keyName=="`") {
+          toggleTimeline()
+        }
+
+
+    })
+  }
+
   render(){
     const {flat, params, nodeCut, nodePaste, enableDragableFlat, disableDragableFlat, ui, pomodario } = this.props
 
@@ -45,6 +72,9 @@ export class Newflat extends React.Component {
     return (
       <Col>
         <Col md={12}>
+          <Col md={12}>
+            <TestVis/>
+          </Col>
           {flat.state == "FINISHED"?  (<Flat 
              flatIsDragable={flat.flatIsDragable}
              enableDragableFlat={enableDragableFlat}
@@ -61,9 +91,6 @@ export class Newflat extends React.Component {
              content={flat.content} 
              _ref={flat.ref}
              _key={params.id}/>):"loading"}
-             <div onClick={this.togglePomodario}>
-               {ui.showPomodario?<PomodarioBar timer={pomodario.duration} onTimeOut={()=>{console.log("timeout")}}/>:"not show"}
-             </div>
         </Col>
       </Col>
     )

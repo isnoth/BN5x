@@ -28,6 +28,7 @@ class NavApp extends React.Component {
           <Nav>
             <NavItem eventKey={4} href="#newFlat/root">NewFlat</NavItem>
             <NavItem eventKey={3} href="#md">MarkDown</NavItem>
+            <NavItem eventKey={3} href="#stat">Stat</NavItem>
           </Nav>
           <LoginModal/>
             {auth.authenticated === "TRUE"?(

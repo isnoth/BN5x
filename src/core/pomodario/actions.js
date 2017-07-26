@@ -20,6 +20,7 @@ export function startRegisterListeners(fileId) {
   return (dispatch, getState) => {
     const { pomodario, auth, firebase } = getState();
     const pomodarioRef = firebase.tree.child(auth.userRef+"pomodarios/")
+    console.log('pomodarioRef is:',auth.userRef,  pomodarioRef)
 
     pomodarioRef.on('value', snapshot => (
       dispatch({
@@ -63,7 +64,7 @@ export function pomodarioTimeout(){
 export function pomodarioAbort(){
 }
 
-export function pushPomodarioToServer(){
+export function pushPomodarioToServer(item){
   return (dispatch, getState) => {
     const {firebase, pomodario, auth} = getState();
     const pomodarioRef = firebase.tree.child(auth.userRef+"pomodarios/")
@@ -76,11 +77,41 @@ export function pushPomodarioToServer(){
                         content: pomodario.refObj.content
       })
     }
+
+    if(item){
+      console.log('pushPomodarioToServer', item )
+      pomodarioRef.push(item)
+    }
+
+
   }
 }
 
 
+export function updatePomodario(item){
+  console.log('updatePomodario, item:', item)
+  return (dispatch, getState) => {
+    const {firebase, pomodario, auth} = getState();
+    const pomodarioRef = firebase.tree.child(auth.userRef+"pomodarios/")
+    if (item){
+      console.log("update to server: ")
+      pomodarioRef.child(item.id).update(item)
+    }
+  }
+}
 
+
+export function deletePomodario(item){
+  console.log('deletePomodario, item:', item)
+  return (dispatch, getState) => {
+    const {firebase, pomodario, auth} = getState();
+    const pomodarioRef = firebase.tree.child(auth.userRef+"pomodarios/")
+    if (item){
+      console.log("update to server: ")
+      pomodarioRef.child(item.id).remove()
+    }
+  }
+}
 
 
 
@@ -140,7 +171,7 @@ export function changeQid(qid) {
 
 
 
-//------------
+//------------ new!!
 export function setPomodarioMeta(node) { 
   return (dispatch) => {
     dispatch({

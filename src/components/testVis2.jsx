@@ -13,7 +13,7 @@ import 'styles/timeline.css'
 import Timeline from 'react-visjs-timeline'
 
 
-class TestVis extends React.Component {
+class TestVis2 extends React.Component {
   constructor(props){
     super(props)
 
@@ -38,6 +38,10 @@ class TestVis extends React.Component {
     })
   }
 
+  clickHandler(){
+
+  }
+
 
 
   componentDidMount(){
@@ -47,8 +51,9 @@ class TestVis extends React.Component {
 
   render(){
 
-    const {pomodario } = this.props
+    const {pomodario, ui } = this.props
     const value = pomodario.data
+
     let items
     if (!value){
       items = [{id:0, content:"initial", start:new Date(), end:new Date(), className: "green"}]
@@ -60,6 +65,7 @@ class TestVis extends React.Component {
         return ({id: i, content: value[i].content, start:start, end: end , className: styleClass  })
       })
     }
+    console.log('items is:', items)
 
     const options = {
       //width: '100%',
@@ -80,13 +86,19 @@ class TestVis extends React.Component {
     }
     console.log(options)
 
+    const styles = {display: ui.showTimeline?"block":'none'}
+
     return (
-      <Col>
+      <div style={styles}>
         <p>hello vis</p>
-        <Timeline options={options} items={items} />
+        <Timeline 
+          options={options} 
+          items={items} 
+          clickHandler={this.clickHandler}
+          />
         <Button onClick={this.setTime.bind(this, 9, 23)}>Today</Button>
         <Button onClick={this.setTime.bind(this, 9-24, 23-24)}>Yesterday</Button>
-      </Col>
+      </div>
     )
   }
 
@@ -95,5 +107,6 @@ class TestVis extends React.Component {
 export default connect(state => ({
   auth: state.auth,
   firebase: state.firebase,
-  pomodario: state.pomodario
-}), pomodarioActions)(TestVis);
+  pomodario: state.pomodario,
+  ui: state.uiState,
+}), pomodarioActions)(TestVis2);

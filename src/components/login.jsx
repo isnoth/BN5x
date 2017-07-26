@@ -1,42 +1,52 @@
 import React, { Component, PropTypes} from 'react';
 import ReactDOM from "react-dom"
 import { connect } from 'react-redux';
+import { hashHistory } from 'react-router'
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+
+import { authActions } from 'core/auth';
+import { uiActions } from 'core/ui';
+
+import 'styles/electron.less'
 
 class Login extends React.Component {
 
   constructor(props){
     super(props);
-    this.state={
-      email : '',
-      password : ''
-    }
+    this.email = ''
+    this.password = ''
   }
 
-  changeEmail(e){
-    this.setState({email: e.target.value})
-  }
-
-  changePasswd(e){
-    this.setState({password: e.target.value})
+  componentWillMount() {
+    this.props.registerAuthListener();
   }
 
   handleSubmit(e){
     const {login} = this.props
-    console.log(this.state)
-    login(this.state)
+    console.log(this.email.value, this.password.value)
+    login({
+      email: this.email.value,
+      password: this.password.value,
+    })
+  }
+  componentWillReceiveProps(nextProps){
+    const {auth} = nextProps
+     if(auth.authenticated === "TRUE"){
+       window.location.href = window.location.origin +"#/pomodario/"
+       //hashHistory.push(/pomodario/)
+     }
   }
 
   render(){
     return (
-      <div>
-        <div>
-          <span>email</span><input onChange={this.changeEmail.bind(this)}></input>
+      <div className="login">
+        <div className="login__form">
+          <span>email</span><input ref={(el)=>{this.email = el}}></input>
         </div>
-        <div>
-          <span>email</span><input onChange={this.changePasswd.bind(this)}></input>
+        <div className="login__form">
+          <span>passwd</span><input ref={(el)=>{this.password = el}}></input>
         </div>
-        <button onClick={this.handleSubmit.bind(this)}>submit</button>
+        <button className="login__btn" onClick={this.handleSubmit.bind(this)}>submit</button>
      </div>
     
     )
@@ -44,4 +54,8 @@ class Login extends React.Component {
 }
 
 
-export default connect(state => ({}), )(Login); 
+export default connect((state, ownProps) => ({
+  ui: state.uiState,
+  auth: state.auth,
+}), Object.assign({}, authActions, uiActions ))(Login);
+

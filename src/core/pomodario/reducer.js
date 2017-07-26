@@ -2,7 +2,9 @@ import {
   POMODARIO_SET_VALUE,
   POMODARIO_START,
   POMODARIO_DONE,
-  POMODARIO_ABORT
+  POMODARIO_ABORT,
+
+  GET_POMODARIOS_SUCCESS
 } from "./action-types"
 
 const initialState={
@@ -10,6 +12,7 @@ const initialState={
   refObj: null,
   refkey: null,
   state: "EDIT",
+  current: null,
   startTime: null,
   endTime: null,
   data: {},
@@ -28,8 +31,8 @@ export function pomodarioReducer(currentstate=initialState, action) {
     //  return Object.assign({}, currentstate, {startTime: new Date()})
     //case POMODARIO_DONE:
     //  return Object.assign({}, currentstate, {endTime: new Date()})
-    //case GET_POMODARIOS_SUCCESS:
-    //  return Object.assign({}, currentstate, {data: action.payload})
+    case GET_POMODARIOS_SUCCESS:
+      return Object.assign({}, currentstate, {data: action.payload})
 
     //case SHOW_POMODARIO:
     //  return Object.assign({}, currentstate, {toggle:true})
@@ -41,7 +44,7 @@ export function pomodarioReducer(currentstate=initialState, action) {
     //case CHANGE_REF_KEY:
     //  return Object.assign({}, currentstate, action.payload)
     case POMODARIO_SET_VALUE:
-      return Object.assign({}, currentstate, {data: action.payload})
+      return Object.assign({}, currentstate, {current: action.payload})
 
     case POMODARIO_START:
       return Object.assign({}, currentstate, {state: "ONGOING", startDate: new Date()})

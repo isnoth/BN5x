@@ -13,19 +13,38 @@ import {Col, Input, Button, ProgressBar } from "react-bootstrap"
 
 var Notify = require('notifyjs');
 
-var CountDown = React.createClass({
-  getInitialState: function(){
-    return {
+export class CountDownOutside extends React.Component {
+  render(){
+    const { content, start, end } = this.props
+    const remain = Math.floor((end.getTime()-Date.now())/1000)
+    const remainText = Math.floor(remain/60) +' : '+  remain%60
+    const label = remainText + ' - ' +(content?content:"")
+
+    return (
+      <ProgressBar active 
+        now={(Date.now() - start.getTime())/ (end.getTime() - start.getTime())*100}
+        bsStyle={"success"}
+        label={label}
+      />
+    )
+  }
+}
+
+
+export class CountDown extends React.Component {
+  constructor(props){
+    super(props)
+    this.state= {
       timer: this.props.timer,
       count:0
     }
-  },
-  onTimeOut: function(evt){
+  }
+
+  onTimeOut(evt){
     this.props.onTimeOut()
-  },
+  }
 
-
-  componentDidMount: function(){
+  componentDidMount(){
     this.timer = setInterval(function () {
       this.setState({
         count: this.state.count +1
@@ -37,11 +56,10 @@ var CountDown = React.createClass({
         this.onTimeOut()
         clearInterval(this.timer)
       }
-
     }.bind(this), 1000)
-  },
+  }
 
-  componentWillUnmount: function() {
+  componentWillUnmount() {
     clearInterval(this.timer)
 
     //stop sound
@@ -49,31 +67,33 @@ var CountDown = React.createClass({
       this.audio.pause();
       this.audio.currentTime = 0;
     }
-  },
+  }
+  k
   
-  render: function(){
+  render(){
+    const { content } = this.props
     var remain = this.state.timer - this.state.count
     const remainText = Math.floor(remain/60) +' : '+  remain%60
+    console.log(remainText)
+    const label = remainText + ' - ' +(content?content:"")
+
+    console.log(label)
 
     return (
-      <div> 
-        <Col md={12}>
-          <ProgressBar active 
-            now={(this.state.count/ this.state.timer)*100}
-            bsStyle={this.state.count>=this.state.timer?"danger":"success"}
-            label={remainText}
-          />
-        </Col>
-      </div>
+      <ProgressBar active 
+        now={(this.state.count/ this.state.timer)*100}
+        bsStyle={this.state.count>=this.state.timer?"danger":"success"}
+        label={label}
+      />
     )
-  },
+  }
 
-  onPermissionGranted: function() {
+  onPermissionGranted() {
       console.log('Permission has been granted by the user');
       doNotification();
-  },
+  }
 
-  doNotification: function () {
+  doNotification() {
       var myNotification = new Notify('Yo dawg!', {
           body: 'This is an awesome notification',
           tag: 'unique tag',
@@ -86,18 +106,16 @@ var CountDown = React.createClass({
       this.audio = new Audio('Kalimba.mp3');
       this.audio.play()
 
-  },
+  }
 
-  doNotify: function(){
+  doNotify(){
     if (!Notify.needsPermission) {
         this.doNotification();
     } else if (Notify.isSupported()) {
         Notify.requestPermission(this.onPermissionGranted, this.onPermissionDenied);
     }
-  },
-
-
-})
+  }
+}
 
 
 
@@ -190,7 +208,7 @@ class CountDownWithInput extends React.Component {
 }
 
 
-class PomodarioBar extends React.Component {
+class PomodarioBar_ extends React.Component {
   constructor(props){
     super(props)
     const {timer, onTimeOut} = this.props
@@ -209,15 +227,14 @@ class PomodarioBar extends React.Component {
     const content = pomodario.data?pomodario.data.content:""
 
     return<div>
-      <Col md={8}>
-        <CountDown timer={this.timer} onTimeOut={this.timeOut} />
-      </Col>
-      <Col md={4}>
-        {content}
-      </Col>
+      <CountDown timer={this.timer} onTimeOut={this.timeOut} />
+      {content}
     </div>
   }
 }
 
 //export default CountDown
-export default connect(state =>({pomodario: state.pomodario}), Object.assign({}, pomodarioActions))(PomodarioBar);
+//export default connect(state =>({pomodario: state.pomodario}), Object.assign({}, pomodarioActions))(PomodarioBar);
+
+export let PomodarioBar = connect(state =>({pomodario: state.pomodario}), Object.assign({}, pomodarioActions))(PomodarioBar_);
+

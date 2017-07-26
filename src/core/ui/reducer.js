@@ -4,6 +4,7 @@ import {
   OPEN_MODIFY_FILE_MODAL,
   CLOSE_MODIFY_FILE_MODAL,
   TOGGLE_POMODARIO,
+  TOGGLE_TIMELINE,
   } from './action-types';
 
 export const initialState = {
@@ -11,6 +12,7 @@ export const initialState = {
   showCreateModal: false,
   showModifyFileNameModal: false,
   showPomodario: false,
+  showTimeline: false,
 };
 
 export function uiReducer(state = initialState, action) {
@@ -31,6 +33,10 @@ export function uiReducer(state = initialState, action) {
 
       case TOGGLE_POMODARIO:
         return Object.assign({}, state, {showPomodario: !state.showPomodario})
+
+      case TOGGLE_TIMELINE:
+        return Object.assign({}, state, {showTimeline: !state.showTimeline})
+
 
     default:
       return state

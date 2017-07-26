@@ -4,6 +4,7 @@ import {
   OPEN_MODIFY_FILE_MODAL,
   CLOSE_MODIFY_FILE_MODAL,
   TOGGLE_POMODARIO,
+  TOGGLE_TIMELINE
 } from './action-types';
 
 export function openLoginModal() {
@@ -46,6 +47,14 @@ export function togglePomodario() {
   return (dispatch, getState) => {
     dispatch({
       type: TOGGLE_POMODARIO,
+    })
+  }
+}
+
+export function toggleTimeline() {
+  return (dispatch, getState) => {
+    dispatch({
+      type: TOGGLE_TIMELINE,
     })
   }
 }
