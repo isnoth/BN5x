@@ -8,6 +8,7 @@
     "test2": "mocha --compilers js:babel-core/register test/date.test.js -t 100000",
     "test3": "mocha --compilers js:babel-core/register test/panls.test.js -t 100000",
     "test-flat": "mocha --compilers js:babel-core/register src/core/flat/reducer.spec.js --watch",
+    "test-keys": "mocha --compilers js:babel-core/register test/utils/keys.spec.js",
     "start": "webpack-dev-server --progress --host 0.0.0.0",
     "dev": "webpack-dev-server  --config webpack.dev.js --progress --host 0.0.0.0",
     "build": "webpack --config webpack.dist.js --progress -p"
@@ -40,7 +41,7 @@
     "firebase-server": "^0.6.0",
     "flux": "^2.1.1",
     "html-webpack-plugin": "^2.21.0",
-    "jsdom": "^8.2.0",
+    "jsdom": "^11.1.0",
     "less": "^2.7.2",
     "less-loader": "^2.2.3",
     "lodash": "^4.11.1",

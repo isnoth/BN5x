@@ -11,6 +11,10 @@ import Node from './node'
 import TreeMenu from './tree-menu'
 import CountDown from 'components/pomodario/pomodario'
 
+const bindKeys = ({el, keys, fn})=>{
+  fn()
+}
+
 class Tree extends React.Component{
   constructor(props){
     super(props)
@@ -117,6 +121,12 @@ class Tree extends React.Component{
 
   bindKeys(){
     if (this._input){
+
+      bindKeys({
+        el: ReactDOM.findDOMNode(this._input),
+        keys: 'ctrl+delete',
+        fn: function(){console.log('delete')}
+      });
       //bind keys
       ReactDOM.findDOMNode(this._input).addEventListener("keydown", (event)=>{
         const keyName = event.key;
