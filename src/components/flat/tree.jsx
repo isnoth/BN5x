@@ -6,14 +6,11 @@ import { hashHistory } from 'react-router'
 import {Col, Glyphicon, ButtonGroup, Button} from 'react-bootstrap'
 import Textarea from 'react-textarea-autosize';
 import {getParent, getUniqueId, initLayout, getRootPath} from 'utils/node2'
+import { bindKeys } from "utils/keys"
 
 import Node from './node'
 import TreeMenu from './tree-menu'
 import CountDown from 'components/pomodario/pomodario'
-
-const bindKeys = ({el, keys, fn})=>{
-  fn()
-}
 
 class Tree extends React.Component{
   constructor(props){
@@ -115,26 +112,34 @@ class Tree extends React.Component{
   }
 
   componentDidMount(){
-    this.bindKeys()
+    this.bindShortCuts()
     this.resizeHeight(this._input)
   }
 
-  bindKeys(){
+  bindShortCuts(){
     if (this._input){
 
-      bindKeys({
-        el: ReactDOM.findDOMNode(this._input),
-        keys: 'ctrl+delete',
-        fn: function(){console.log('delete')}
-      });
       //bind keys
       ReactDOM.findDOMNode(this._input).addEventListener("keydown", (event)=>{
         const keyName = event.key;
-        const { _ref, content, _key, nodeCreate, nodeUpdate, nodeCut, nodePaste } = this.props
+        const { _ref, content, _key, nodeCreate, nodeDelete, nodeUpdate, nodeCut, nodePaste } = this.props
 
         if (keyName === 'Control') {
           return;
         }
+
+
+        bindKeys({
+          el: ReactDOM.findDOMNode(this._input),
+          keyList: [{
+            keys: {ctrlKey: true, key: 'Delete'},
+            fn: function(){
+              console.log('delete')
+              nodeDelete.bind(this, _key);
+            }
+          },]
+        });
+
 
         // nodeCreateNebour
         if (event.ctrlKey && keyName=="Enter") {
@@ -156,9 +161,9 @@ class Tree extends React.Component{
 
         }
 
-        if (event.ctrlKey && (keyName=="Delete" || keyName=="\\")) {
-		      this.nodeDelete(_key)
-        }
+        //if (event.ctrlKey && (keyName=="Delete" || keyName=="\\")) {
+		    //  this.nodeDelete(_key)
+        //}
 
         if (event.shiftKey && keyName=="Enter"){
           this.nodeCreateChild(_key)
