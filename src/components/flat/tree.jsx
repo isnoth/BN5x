@@ -119,26 +119,28 @@ class Tree extends React.Component{
   bindShortCuts(){
     if (this._input){
 
+      const { _ref, content, _key, nodeCreate, nodeDelete, nodeUpdate, nodeCut, nodePaste } = this.props
+      bindKeys({
+        el: ReactDOM.findDOMNode(this._input),
+        keyList: [{
+          keys: {ctrlKey: true, key: 'Delete'},
+          fn: function(){
+            console.log('delete')
+            nodeDelete(_key);
+          }
+        },]
+      });
+
+
       //bind keys
       ReactDOM.findDOMNode(this._input).addEventListener("keydown", (event)=>{
         const keyName = event.key;
-        const { _ref, content, _key, nodeCreate, nodeDelete, nodeUpdate, nodeCut, nodePaste } = this.props
 
         if (keyName === 'Control') {
           return;
         }
 
 
-        bindKeys({
-          el: ReactDOM.findDOMNode(this._input),
-          keyList: [{
-            keys: {ctrlKey: true, key: 'Delete'},
-            fn: function(){
-              console.log('delete')
-              nodeDelete.bind(this, _key);
-            }
-          },]
-        });
 
 
         // nodeCreateNebour
