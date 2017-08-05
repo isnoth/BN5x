@@ -124,10 +124,7 @@ class Tree extends React.Component{
         el: ReactDOM.findDOMNode(this._input),
         keyList: [{
           keys: {ctrlKey: true, key: 'Delete'},
-          fn: function(){
-            console.log('delete')
-            nodeDelete(_key);
-          }
+          fn: nodeDelete.bind(this, _key)
         },]
       });
 
