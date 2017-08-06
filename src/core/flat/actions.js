@@ -214,6 +214,22 @@ export function nodeUpdateLayout(key, payload) {
   }
 }
 
+export function nodeCreateNebour(_key) {
+  return (dispatch, getState) => {
+    const { flat, firebase } = getState();
+    let content = flat.content
+
+    const nNodeKey = getUniqueId()
+    dispatch(nodeCreate({key: nNodeKey, content:""}))
+
+    const parentKey = getParent( _key, content)
+    const parentNode = content[parentKey]
+    dispatch(nodeUpdate(
+      Object.assign({}, parentNode, { children: parentNode.children?[...parentNode.children, nNodeKey]:[nNodeKey] })
+    ))
+  }
+}
+
 export function nodeCreateChild(_key) {
   return (dispatch, getState) => {
     const { flat, firebase } = getState();

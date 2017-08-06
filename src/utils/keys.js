@@ -10,9 +10,10 @@ export let bindKeys = ({el, keyList})=>{
     const keyName = event.key;
     keyList.forEach(({keys:{ctrlKey=false, shiftKey=false, key}, fn})=>{
 
-      if ((ctrlKey === event.ctrlKey) && (shiftKey===event.shiftKey) && (key === event.key) )
+      if ((ctrlKey === event.ctrlKey) && (shiftKey===event.shiftKey) && (key === event.key) ){
         fn()
-
+        event.preventDefault()
+      }
     })
   }
 }

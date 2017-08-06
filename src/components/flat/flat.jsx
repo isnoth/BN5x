@@ -71,7 +71,7 @@ class Flat extends React.Component {
   }
 
   render(){
-    const { flatIsDragable, isRoot, content, _key, _ref,  nodeCut, nodePaste, nodeUpdateLayout } = this.props
+    const { flatIsDragable, isRoot, content, _key, _ref,  nodeCut, nodePaste, nodeUpdateLayout, nodeCreateNebour } = this.props
     //console.log(isRoot, content, _key, _ref)
 
     let children = content[_key].children?content[_key].children.map(i=>{
@@ -81,6 +81,7 @@ class Flat extends React.Component {
                  flatIsDragable={flatIsDragable}
                  className="tree-node-wrap"
                  nodeCreate={this.nodeCreate}
+                 nodeCreateNebour={nodeCreateNebour}
                  nodeCreateChild={this.nodeCreateChild}
                  nodeUpdate={this.nodeUpdate}
                  nodeDelete={this.nodeDelete}

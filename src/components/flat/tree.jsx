@@ -117,92 +117,25 @@ class Tree extends React.Component{
   }
 
   bindShortCuts(){
+    const { _ref, content, _key, nodeCreate, nodeCreateNebour, nodeCreateChild, nodeDelete, nodeUpdate, nodeCut, nodePaste } = this.props
     if (this._input){
-
-      const { _ref, content, _key, nodeCreate, nodeDelete, nodeUpdate, nodeCut, nodePaste } = this.props
       bindKeys({
         el: ReactDOM.findDOMNode(this._input),
-        keyList: [{
-          keys: {ctrlKey: true, key: 'Delete'},
-          fn: nodeDelete.bind(this, _key)
-        },]
-      });
-
-
-      //bind keys
-      ReactDOM.findDOMNode(this._input).addEventListener("keydown", (event)=>{
-        const keyName = event.key;
-
-        if (keyName === 'Control') {
-          return;
-        }
-
-
-
-
-        // nodeCreateNebour
-        if (event.ctrlKey && keyName=="Enter") {
-
-
-          let nNodeKey = getUniqueId()
-          console.log("nodeCreate is :", nodeCreate)
-          nodeCreate({key: nNodeKey, content:""})
-
-          let parent = getParent( _key, content)
-          if (parent){
-            let children = content[parent].children
-            console.log("children:", children)
-            children?children.splice(children.indexOf(_key)+1,0,nNodeKey):[nNodeKey]
-            console.log("children:", children)
-            console.log("parent", parent)
-            nodeUpdate( Object.assign({}, content[parent], { children: children}))
-          }
-
-        }
-
-        //if (event.ctrlKey && (keyName=="Delete" || keyName=="\\")) {
-		    //  this.nodeDelete(_key)
-        //}
-
-        if (event.shiftKey && keyName=="Enter"){
-          this.nodeCreateChild(_key)
-          event.preventDefault()
-        }
-
-        if (event.ctrlKey && event.shiftKey && keyName=="X"){
-          //console.log("nodeCut")
-          nodeCut(_key)
-        }
-
-        if (event.ctrlKey && event.shiftKey && keyName=="V"){
-          //console.log("nodePaste")
-          nodePaste(_key)
-          event.preventDefault()
-        }
-
-        if (event.ctrlKey && event.shiftKey && keyName=="!"){
-          //console.log("nodePaste")
-          nodeUpdate( Object.assign({}, content[_key], { styles: 1}))
-
-          event.preventDefault()
-        }
-
-        if (event.ctrlKey && event.shiftKey && keyName=="~"){
-          //console.log("nodePaste")
-          nodeUpdate( Object.assign({}, content[_key], { styles: 0}))
-
-          event.preventDefault()
-        }
-
-
+        keyList: [
+          { keys: {ctrlKey: true, key: 'Delete'}, fn: nodeDelete.bind(this, _key) },
+          { keys: {ctrlKey: true, shiftKey: false, key: 'Enter'}, fn: nodeCreateNebour.bind(this, _key, '') },
+          { keys: {shiftKey: true, key: 'Enter'}, fn: nodeCreateChild.bind(this, _key) },
+          { keys: {ctrlKey: true, shiftKey: true, key: 'X'}, fn: nodeCut.bind(this, _key) },
+          { keys: {ctrlKey: true, shiftKey: true, key: 'V'}, fn: nodePaste.bind(this, _key) }
+        ]
       });
     }
   }
 
   render(){
-    const { flatIsDragable, isRoot, content, _key, _ref,  nodeCut, nodePaste, nodeUpdateLayout, resized } = this.props
+    const { flatIsDragable, isRoot, content, _key, _ref,  nodeCut, nodePaste, nodeCreateNebour, nodeUpdateLayout, resized } = this.props
     //console.log(isRoot, content, _key, _ref)
-    //
+
     if (!content[_key]){
       return <textarea value={"some error occured:"+ this.props._parent+ "->" +_key}></textarea>
     }
@@ -214,6 +147,7 @@ class Tree extends React.Component{
                  flatIsDragable={flatIsDragable}
                  className="tree-node-wrap"
                  nodeCreate={this.nodeCreate}
+                 nodeCreateNebour={nodeCreateNebour}
                  nodeCreateChild={this.nodeCreateChild}
                  nodeUpdate={this.nodeUpdate}
                  nodeDelete={this.nodeDelete}

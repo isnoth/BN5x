@@ -39,7 +39,7 @@ export class Newflat extends React.Component {
   }
 
   render(){
-    const {flat, params, nodeCut, nodePaste, enableDragableFlat, disableDragableFlat, ui, pomodario } = this.props
+    const {flat, params, nodeCut, nodePaste, enableDragableFlat, disableDragableFlat, ui, pomodario, nodeCreateNebour} = this.props
 
 
     return (
@@ -50,6 +50,7 @@ export class Newflat extends React.Component {
              enableDragableFlat={enableDragableFlat}
              disableDragableFlat={disableDragableFlat}
              nodeCreate={this.nodeCreate}
+             nodeCreateNebour={nodeCreateNebour}
              nodeCreateChild={this.nodeCreateChild}
              nodeUpdate={this.nodeUpdate}
              nodeUpdateMd={this.nodeUpdateMd}
