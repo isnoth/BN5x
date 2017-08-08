@@ -224,8 +224,12 @@ export function nodeCreateNebour(_key) {
 
     const parentKey = getParent( _key, content)
     const parentNode = content[parentKey]
+
+    const newChildren = parentNode.children.slice()
+    newChildren.splice(newChildren.indexOf(_key)+1, 0, nNodeKey)
+
     dispatch(nodeUpdate(
-      Object.assign({}, parentNode, { children: parentNode.children?[...parentNode.children, nNodeKey]:[nNodeKey] })
+      Object.assign({}, parentNode, { children: parentNode.children?newChildren:[nNodeKey] })
     ))
   }
 }
