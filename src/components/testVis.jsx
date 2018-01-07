@@ -114,7 +114,9 @@ class TestVis extends React.Component {
     console.log('onAdd: ', item)
     const { pushPomodarioToServer } = this.props
 
-    item.content = "test"
+    const data = window.prompt()
+    //item.content = "test"
+    item.content = data
     item.endTime = item.start.getTime()+ 25*60*1000
     item.startTime = item.start.getTime()
     console.log('end is:', item.end)
